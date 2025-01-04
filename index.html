@@ -99,49 +99,6 @@
         text-align: center;
     }
 
-    .result .survey-name {
-        font-size: 1.3em;
-        color: #e0e0e0;
-        margin-bottom: 15px;
-    }
-
-    .result #notchLink {
-        font-size: 1.2em;
-        color: #007bff;
-        cursor: pointer;
-        text-decoration: underline;
-        font-weight: 600;
-        transition: color 0.3s ease, box-shadow 0.3s ease;
-        padding: 10px;
-        border-radius: 8px;
-    }
-
-    .result #notchLink:hover {
-        color: #0056b3;
-        box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-    }
-
-    #notchLink.copied {
-        color: #28a745;
-        animation: copiedAnimation 1s ease;
-    }
-
-    @keyframes copiedAnimation {
-        0% {
-            transform: scale(1.1);
-        }
-        50% {
-            transform: scale(1);
-        }
-        100% {
-            transform: scale(1.1);
-        }
-    }
-
-    .hidden {
-        display: none;
-    }
-
     .error {
         margin-top: 10px;
         padding: 10px;
@@ -161,10 +118,9 @@
 
     <form id="urlForm">
       <label for="urlInput">Ingresa la URL: </label>
-      <input type="text" id="urlInput" name="url" required placeholder="Ej. https://hanover-research.qualtrics.com/">
+      <input type="text" id="urlInput" name="url" required placeholder="Ej. https://hanover-research.qualtrics.com/" autocomplete="off">
       <button type="submit">Generar URL</button>
     </form>
-
 
     <h2 id="generatedTitle" class="hidden">URL Generada:</h2>
     <p id="generatedUrl" class="hidden"></p>    
@@ -181,19 +137,18 @@
         let generatedUrl = '';
 
         if (domain.includes('qualtrics.com')) {
-          token = '5a9c985a-f633-46a5-925c-6ca593f1a8b0'; // Token de Qualtrics
+          token = '5a9c985a-f633-46a5-925c-6ca593f1a8b0';
           rid = new URL(url).searchParams.get('rnid');
           generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}`;
         } else if (domain.includes('questionlab.com')) {
-          token = '9575fc16-0317-4608-93e9-b477730e37ac'; // Token de Questionlab
+          token = '9575fc16-0317-4608-93e9-b477730e37ac';
           rid = new URL(url).searchParams.get('RID');
           generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}`;
         } else if (domain.includes('lumen-research.com')) {
-          token = '034287b2-1ca0-48d1-9e45-f5ca740ef529'; // Token de Lumen
+          token = '034287b2-1ca0-48d1-9e45-f5ca740ef529';
           rid = new URL(url).searchParams.get('RID');
           generatedUrl = `https://notch.insights.supply/cb?RID=${rid}&token=${token}`;
         } else if (domain.includes('ipsosinteractive.com')) {
-          // Para Ipsos, la URL generada es diferente
           let proj = new URL(url).searchParams.get('id');
           let param = new URL(url).searchParams.get('param1');
           generatedUrl = `https://redirect.mindsharesurveys.com/v1/M7FMAqNSgNBiTKRoDbiNJ4YiXPN2cBin?proj=${param}&id=${proj}&status=1`;
@@ -211,9 +166,9 @@
       navigator.clipboard.writeText(url).then(() => {
         let notification = document.getElementById('notification');
         notification.classList.remove('hidden');
-        notification.style.display = 'block'; // Mostrar mensaje inmediatamente
+        notification.style.display = 'block';
         setTimeout(() => {
-          notification.style.display = 'none'; // Ocultar mensaje después de 3 segundos
+          notification.style.display = 'none';
         }, 3000); 
       }).catch(() => {
         alert('Error al copiar al portapapeles');
@@ -230,7 +185,7 @@
         document.getElementById('generatedUrl').classList.remove('hidden');
         setTimeout(() => {
           document.getElementById('generatedUrl').classList.add('hidden');
-        }, 20000); // Limpiar datos después de 20 segundos
+        }, 20000); 
 
         copyToClipboard(generatedUrl);
         document.getElementById('error').classList.add('hidden');
