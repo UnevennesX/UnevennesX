@@ -6,166 +6,127 @@
   <title>Generador de URLs</title>
   <style>
     body {
-        font-family: 'Poppins', Arial, sans-serif;
-        background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
-        color: #eaeaea;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
+      color: #eaeaea;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
 
     .container {
-        background: #333333;
-        padding: 40px;
-        border-radius: 12px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        max-width: 600px;
-        width: 100%;
-        text-align: center;
+      background: #333333;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
     }
 
     h1 {
-        font-size: 2rem;
-        margin-bottom: 20px;
-        color: #b6e3a1;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #b6e3a1;
     }
 
     input[type="text"] {
-        width: 100%;
-        padding: 12px;
-        margin: 10px 0;
-        border: 1px solid #444444;
-        border-radius: 8px;
-        background: #444444;
-        color: #f0f0f0;
-        font-size: 16px;
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #444444;
+      border-radius: 8px;
+      background: #444444;
+      color: #f0f0f0;
+      font-size: 16px;
     }
 
     input[type="text"]:focus {
-        outline: none;
-        border: 1px solid #b6e3a1;
-        background: #555555;
+      outline: none;
+      border: 1px solid #b6e3a1;
+      background: #555555;
     }
 
     button {
-        background: #4caf50;
-        color: #ffffff;
-        padding: 12px 24px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: bold;
+      background: #4caf50;
+      color: #ffffff;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
     }
 
     button:hover {
-        background: #45a049;
+      background: #45a049;
     }
 
     .result {
-        margin-top: 20px;
-        padding: 12px;
-        background: #444444;
-        border: 1px solid #444444;
-        border-radius: 8px;
-        word-wrap: break-word;
-        font-size: 14px;
-        text-align: left;
-        color: #f0f0f0;
-        opacity: 0;
-        animation: fadeIn 0.6s forwards;
+      margin-top: 20px;
+      padding: 12px;
+      background: #444444;
+      border: 1px solid #444444;
+      border-radius: 8px;
+      word-wrap: break-word;
+      font-size: 14px;
+      text-align: left;
+      color: #f0f0f0;
+      opacity: 0;
+      animation: fadeIn 0.6s forwards;
     }
 
     @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
 
     .notification {
-        margin-top: 10px;
-        padding: 10px;
-        background: #4caf50;
-        color: #ffffff;
-        font-size: 14px;
-        font-weight: bold;
-        border-radius: 8px;
-        display: none;
-        text-align: center;
-    }
-
-    .result .survey-name {
-        font-size: 1.3em;
-        color: #e0e0e0;
-        margin-bottom: 15px;
-    }
-
-    .result #notchLink {
-        font-size: 1.2em;
-        color: #007bff;
-        cursor: pointer;
-        text-decoration: underline;
-        font-weight: 600;
-        transition: color 0.3s ease, box-shadow 0.3s ease;
-        padding: 10px;
-        border-radius: 8px;
-    }
-
-    .result #notchLink:hover {
-        color: #0056b3;
-        box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-    }
-
-    #notchLink.copied {
-        color: #28a745;
-        animation: copiedAnimation 1s ease;
-    }
-
-    @keyframes copiedAnimation {
-        0% {
-            transform: scale(1.1);
-        }
-        50% {
-            transform: scale(1);
-        }
-        100% {
-            transform: scale(1.1);
-        }
+      margin-top: 10px;
+      padding: 10px;
+      background: #4caf50;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 8px;
+      display: none;
+      text-align: center;
     }
 
     .hidden {
-        display: none;
+      display: none;
     }
 
     .error {
-        margin-top: 10px;
-        padding: 10px;
-        background: #f44336;
-        color: #ffffff;
-        font-size: 14px;
-        font-weight: bold;
-        border-radius: 8px;
-        display: none;
-        text-align: center;
+      margin-top: 10px;
+      padding: 10px;
+      background: #f44336;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 8px;
+      display: none;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Generador de URLs</h1>
 
     <form id="urlForm">
+      <h1>Generador de URLs</h1>
       <label for="urlInput">Ingresa la URL: </label>
-      <input type="text" id="urlInput" name="url" required placeholder="Ej. https://hanover-research.qualtrics.com/">
+      <input type="text" id="urlInput" name="url" required placeholder="Ej. https://enter.ipsosinteractive.com/...">
       <button type="submit">Generar URL</button>
     </form>
 
-    <h2>URL Generada:</h2>
+    <h2 id="generatedUrlTitle" class="hidden">URL Generada:</h2>
     <p id="generatedUrl" class="hidden"></p>
     <p id="notification" class="notification hidden">¡URL Copiada!</p>
     <p id="error" class="error hidden">¡Solo se permiten URLs válidas!</p>
@@ -175,27 +136,16 @@
     function processUrl(url) {
       try {
         let domain = new URL(url).hostname;
-        let token = '';
-        let rid = '';
+        let id = new URL(url).searchParams.get('id');
+        let param1 = new URL(url).searchParams.get('param1');
         let generatedUrl = '';
 
-        if (domain.includes('qualtrics.com')) {
-          token = '5a9c985a-f633-46a5-925c-6ca593f1a8b0'; // Token de Qualtrics
-          rid = new URL(url).searchParams.get('rnid');
-          generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}`;
-        } else if (domain.includes('questionlab.com')) {
-          token = '9575fc16-0317-4608-93e9-b477730e37ac'; // Token de Questionlab
-          rid = new URL(url).searchParams.get('RID');
-          generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}`;
-        } else if (domain.includes('lumen-research.com')) {
-          token = '034287b2-1ca0-48d1-9e45-f5ca740ef529'; // Token de Lumen
-          rid = new URL(url).searchParams.get('RID');
-          generatedUrl = `https://notch.insights.supply/cb?RID=${rid}&token=${token}`;
-        } else if (domain.includes('ipsosinteractive.com')) {
-          // Para Ipsos, la URL generada es diferente
-          let proj = new URL(url).searchParams.get('id');
-          let param = new URL(url).searchParams.get('param1');
-          generatedUrl = `https://redirect.mindsharesurveys.com/v1/M7FMAqNSgNBiTKRoDbiNJ4YiXPN2cBin?proj=${proj}&id=${param}&status=1`;
+        if (domain.includes('ipsosinteractive.com')) {
+          if (id && param1) {
+            generatedUrl = `https://redirect.mindsharesurveys.com/v1/M7FMAqNSgNBiTKRoDbiNJ4YiXPN2cBin?id=${id}&proj=${param1}&status=1`;
+          } else {
+            return null;
+          }
         } else {
           return null;
         }
@@ -206,14 +156,23 @@
       }
     }
 
+    function clearFields() {
+      document.getElementById('urlInput').value = '';
+      document.getElementById('generatedUrl').textContent = '';
+      document.getElementById('generatedUrl').classList.add('hidden');
+      document.getElementById('generatedUrlTitle').classList.add('hidden');
+      document.getElementById('notification').classList.add('hidden');
+      document.getElementById('error').classList.add('hidden');
+    }
+
     function copyToClipboard(url) {
       navigator.clipboard.writeText(url).then(() => {
         let notification = document.getElementById('notification');
         notification.classList.remove('hidden');
-        notification.style.display = 'block'; // Mostrar mensaje inmediatamente
+        notification.style.display = 'block';
         setTimeout(() => {
-          notification.style.display = 'none'; // Ocultar mensaje después de 3 segundos
-        }, 3000); 
+          notification.style.display = 'none';
+        }, 3000);
       }).catch(() => {
         alert('Error al copiar al portapapeles');
       });
@@ -227,10 +186,7 @@
       if (generatedUrl) {
         document.getElementById('generatedUrl').textContent = generatedUrl;
         document.getElementById('generatedUrl').classList.remove('hidden');
-        setTimeout(() => {
-          document.getElementById('generatedUrl').classList.add('hidden');
-        }, 20000); // Limpiar datos después de 20 segundos
-
+        document.getElementById('generatedUrlTitle').classList.remove('hidden');
         copyToClipboard(generatedUrl);
         document.getElementById('error').classList.add('hidden');
       } else {
@@ -238,6 +194,8 @@
         document.getElementById('generatedUrl').classList.remove('hidden');
         document.getElementById('error').classList.remove('hidden');
       }
+
+      setTimeout(clearFields, 20000); // Limpia los campos después de 20 segundos
     });
   </script>
 </body>
