@@ -6,7 +6,7 @@
   <title>Herramienta URL</title>
   <link rel="icon" type="image/png" href="https://cdn.dribbble.com/users/7549673/screenshots/17206704/media/1210a9d0ec8af427967e735935861eeb.png?resize=400x300&vertical=center" />
 
-  <style>
+   <style>
     body {
         font-family: 'Poppins', Arial, sans-serif;
         background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
@@ -17,7 +17,7 @@
         height: 100vh;
         margin: 0;
         padding: 0;
-        overflow: hidden; /* Desactiva el scroll si la página cabe */
+        overflow-x: hidden; /* Evita el desplazamiento horizontal */
     }
 
     .container {
@@ -110,16 +110,22 @@
         margin-bottom: 15px;
     }
 
-    .result #notchLink {
-        font-size: 1.2em;
-        color: #007bff;
-        cursor: pointer;
-        text-decoration: underline;
-        font-weight: 600;
-        transition: color 0.3s ease, box-shadow 0.3s ease;
-        padding: 10px;
-        border-radius: 8px;
-    }
+.result #notchLink {
+    font-size: 1.2em;
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: 600;
+    transition: color 0.3s ease, box-shadow 0.3s ease;
+    padding: 10px;
+    border-radius: 8px;
+    word-wrap: break-word; /* Permite que el enlace se ajuste dentro del contenedor */
+    white-space: normal; /* Evita que el enlace se salga de una sola línea */
+    max-width: 100%; /* Asegura que no se desborde */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Muestra '...' si el enlace es demasiado largo */
+}
+
 
     .result #notchLink:hover {
         color: #0056b3;
@@ -195,14 +201,29 @@
 
         /* Para asegurar que el contenido no haga scroll horizontal */
         body {
-            overflow: hidden;
+   	    overflow-x: hidden; /* Evita el desplazamiento horizontal */
         }
     }
 
+
+p {
+    margin: 1;
+    padding: 12px;
+    background: #444444;
+    border: 1px solid #444444;
+    border-radius: 8px;
+    word-wrap: break-word; /* Asegura que el texto largo se ajuste al contenedor */
+    overflow-wrap: break-word; /* Igual que word-wrap, para asegurar que no haya desbordes */
+    font-size: 14px;
+    text-align: left;
+    color: #f0f0f0;
+    white-space: normal; /* Permite que el texto se rompa en varias líneas si es necesario */
+    max-width: 100%; /* Impide que se desborde del contenedor */
+    box-sizing: border-box; /* Asegura que el padding y el borde no afecten el tamaño total */
+}
+
+
   </style>
-    
-
-
 
 </head>
 <body>
@@ -234,9 +255,6 @@
     </div>
   </div>
 
-
-
-
   <script>
     function processUrl(url) {
       try {
@@ -262,6 +280,9 @@
           let proj = new URL(url).searchParams.get('id');
           let param = new URL(url).searchParams.get('param1');
           generatedUrl = `https://redirect.mindsharesurveys.com/v1/M7FMAqNSgNBiTKRoDbiNJ4YiXPN2cBin?proj=${param}&id=${proj}&status=1`;
+        } else if (domain === 'surveys.sago.com') {
+          rid = new URL(url).searchParams.get('RID');
+          generatedUrl = `https://surveys.sample-cube.com/ending?RS=1&RID=${rid}&secret=1574`;
         } else {
           return null;
         }
@@ -306,38 +327,9 @@
       }
     });
 
-    
-
-function processUrl(url) {
-    try {
-        let parsedUrl = new URL(url);
-        let domain = parsedUrl.hostname;
-        let rid = parsedUrl.searchParams.get('RID');
-
-        if (!rid) {
-            return null; // Si falta el parámetro RID, no generamos la URL.
-        }
-
-        // Solo convierte si el dominio es surveys.sago.com
-        if (domain === 'surveys.sago.com') {
-            return `https://surveys.sample-cube.com/ending?RS=1&RID=${rid}&secret=1574`;
-        }
-
-        return null; // Dominio no reconocido
-    } catch (e) {
-        return null; // Error en la URL
-    }
-}
-
-
-
-
-setInterval(() => {
-  document.getElementById('urlInput').value = '';
-}, 20000);
-
-
-</script>
-
+    setInterval(() => {
+      document.getElementById('urlInput').value = '';
+    }, 20000);
+  </script>
 </body>
 </html>
