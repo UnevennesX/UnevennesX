@@ -184,8 +184,6 @@
 
         .container {
             padding: 15px;
-            margin-top: 180px; /* Ajusta el espacio superior si es necesario */
-
         }
 
         input[type="text"], button {
@@ -203,7 +201,12 @@
 
         /* Para asegurar que el contenido no haga scroll horizontal */
         body {
-    align-items: flex-start; /* Mueve el contenido más arriba */
+
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: flex-start; /* Coloca el contenido arriba */
+    height: 100vh; /* Asegura que el contenedor ocupe toda la altura */
+    margin: 0; /* Elimina márgenes predeterminados */
     overflow-x: hidden; /* Evita el desplazamiento horizontal */
     overflow-y: hidden; /* Evita el desplazamiento vertical si el contenido cabe completamente */        }
     }
