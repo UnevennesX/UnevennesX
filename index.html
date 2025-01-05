@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generador de URLs</title>
+  <title>Herramienta URL</title>
+  <link rel="icon" type="image/png" href="https://cdn.dribbble.com/users/7549673/screenshots/17206704/media/1210a9d0ec8af427967e735935861eeb.png?resize=400x300&vertical=center" />
+
   <style>
     body {
         font-family: 'Poppins', Arial, sans-serif;
@@ -153,24 +155,55 @@
         display: none;
         text-align: center;
     }
+
+    .allowed-domains {
+        margin-top: 20px;
+        background: #444444;
+        padding: 10px;
+        border-radius: 8px;
+        color: #e0e0e0;
+        font-size: 16px;
+        text-align: left;
+        list-style-type: none;
+    }
   </style>
+    
+
+
+
 </head>
 <body>
   <div class="container">
-    <h1>Generador de URLs</h1>
+    <h1>Armador de URLS</h1>
 
     <form id="urlForm">
-      <label for="urlInput">Ingresa la URL: </label>
-      <input type="text" id="urlInput" name="url" required placeholder="Ej. https://hanover-research.qualtrics.com/" autocomplete="off">
+      <label for="urlInput">Ingresa la URL de la Survey: </label>
+      <input type="text" id="urlInput" name="url" required placeholder="Ej. https://hanover-research.qualtrics.com/...">
       <button type="submit">Generar URL</button>
     </form>
 
 
-    <h2 id="generatedTitle" class="hidden">URL Generada:</h2>
+    <h2 id="generatedTitle" class="hidden">URL Armado:</h2>
     <p id="generatedUrl" class="hidden"></p>    
-    <p id="notification" class="notification hidden">¡URL Copiada!</p>
+    <p id="notification" class="notification hidden">¡URL Copiada Automaticamente!</p>
     <p id="error" class="error hidden">¡Solo se permiten URLs válidas!</p>
+
+    
+  <div class="allowed-domains">
+    <h3>Armado automatico para:</h3>
+    <ul>
+      <li>Samplicious > hanover-research.qualtrics.com 👌</li>
+      <li>Samplicious > vault.questionlab.com 👌</li>
+      <li>Samplicious > lumen-research.com 👌</li>
+      <li>Sample-Cube > ipsosinteractive.com 👌</li>
+      <li>Sample-Cube > surveys.sago.com 👌</li>
+    </ul>
   </div>
+</div>
+  </div>
+
+
+
 
   <script>
     function processUrl(url) {
@@ -240,6 +273,36 @@
         document.getElementById('error').classList.remove('hidden');
       }
     });
-  </script>
+
+   
+
+function processUrl(url) {
+    try {
+        let parsedUrl = new URL(url);
+        let domain = parsedUrl.hostname;
+        let rid = parsedUrl.searchParams.get('RID');
+
+        if (!rid) {
+            return null; // Si falta el parámetro RID, no generamos la URL.
+        }
+
+        // Solo convierte si el dominio es surveys.sago.com
+        if (domain === 'surveys.sago.com') {
+            return `https://surveys.sample-cube.com/ending?RS=1&RID=${rid}&secret=1574`;
+        }
+
+        return null; // Dominio no reconocido
+    } catch (e) {
+        return null; // Error en la URL
+    }
+}
+
+
+
+
+
+
+</script>
+
 </body>
 </html>
