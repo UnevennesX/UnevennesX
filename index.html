@@ -256,6 +256,7 @@ p {
         <li>Samplicious > vault.questionlab 👌</li>
         <li>Samplicious > lumen-research 👌</li>
         <li>Samplicious > surveys.audience-align 👌</li>
+        <li>Samplicious > insights.surveynavigate NEW 👌</li>
         <li>Invite-Mindshare > ipsosinteractive 👌</li>
         <li>Sample-Cube > surveys.sago 👌</li>
 
@@ -300,6 +301,40 @@ p {
         console.error('No se pudo extraer el UID de la URL proporcionada.');
         return null;
       }
+
+
+
+
+
+
+
+
+
+
+
+
+    } else if (domain.includes('insights.surveynavigate.app')) {
+          token = '07acc3b2-400d-4219-8c33-67eb3257720f'; // Token específico de Audience Align
+          rid = new URL(url).searchParams.get('uid'); // Extraer el UID de la URL
+          if (rid) {
+            generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}`;
+          } else {
+            console.error('No se pudo extraer el UID de la URL proporcionada.');
+            return null;
+          }
+
+
+
+
+
+
+
+
+
+
+
+
+
     } else {
       return null;
     }
@@ -308,6 +343,8 @@ p {
     return null;
   }
 }
+
+
 
 
 
