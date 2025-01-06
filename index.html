@@ -318,8 +318,8 @@ p {
         notification.classList.remove('hidden');
         notification.style.display = 'block'; // Mostrar mensaje inmediatamente
         setTimeout(() => {
-          notification.style.display = 'none'; // Ocultar mensaje después de 3 segundos
-        }, 3000); 
+          notification.style.display = 'none'; // Ocultar mensaje después de 20 segundos
+        }, 20000); 
       }).catch(() => {
         alert('Error al copiar al portapapeles');
       });
