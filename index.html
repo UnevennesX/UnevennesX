@@ -235,11 +235,12 @@ p {
   <div class="container">
     <h1>Armador de URLS</h1>
 
-    <form id="urlForm">
+    <form id="urlForm" autocomplete="off">
       <label for="urlInput">Ingresa la URL de la Survey: </label>
-      <input type="text" id="urlInput" name="url" required placeholder="Ej. https://hanover-research.qualtrics.com/...">
+      <input type="text" id="urlInput" name="url" required placeholder="Ej. https://hanover-research.qualtrics.com/..." autocomplete="off">
       <button type="submit">Generar URL</button>
     </form>
+    
 
 
     <h2 id="generatedTitle" class="hidden">URL Armado:</h2>
@@ -254,8 +255,10 @@ p {
         <li>Samplicious > hanover-research.qualtrics 👌</li>
         <li>Samplicious > vault.questionlab 👌</li>
         <li>Samplicious > lumen-research 👌</li>
+        <li>Samplicious > surveys.audience-align 👌</li>
         <li>Invite-Mindshare > ipsosinteractive 👌</li>
         <li>Sample-Cube > surveys.sago 👌</li>
+
       </ul>
     </div>
   </div>
@@ -288,15 +291,26 @@ p {
         } else if (domain === 'surveys.sago.com') {
           rid = new URL(url).searchParams.get('RID');
           generatedUrl = `https://surveys.sample-cube.com/ending?RS=1&RID=${rid}&secret=1574`;
-        } else {
-          return null;
-        }
-
-        return generatedUrl;
-      } catch (e) {
+        } else if (domain.includes('surveys.audience-align.com')) {
+      token = 'cb8f4af5-0173-44b1-802a-8c7d5cabd9e3'; // Token específico de Audience Align
+      rid = new URL(url).searchParams.get('uid'); // Extraer el UID de la URL
+      if (rid) {
+        generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}`;
+      } else {
+        console.error('No se pudo extraer el UID de la URL proporcionada.');
         return null;
       }
+    } else {
+      return null;
     }
+    return generatedUrl;
+  } catch (e) {
+    return null;
+  }
+}
+
+
+
 
     function copyToClipboard(url) {
       navigator.clipboard.writeText(url).then(() => {
