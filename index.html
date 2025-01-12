@@ -228,6 +228,57 @@ p {
 }
 
 
+<style>
+
+  .allowed-domains {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      max-width: 400px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
+  
+
+    }
+
+    .allowed-domains h3 {
+      margin-top: 0;
+      font-size: 1.2em;
+      color: #ffffff;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      margin-block-end: auto;
+      TEXT-ALIGN: center;
+
+    }
+
+    .allowed-domains h3:hover {
+      color: #4caf50;
+      
+    }
+
+    .allowed-domains ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.5s ease, opacity 0.5s ease;
+      opacity: 0;
+    }
+
+    .allowed-domains.open ul {
+      max-height: 500px; /* Suficiente para mostrar todos los elementos */
+      opacity: 1;
+    }
+
+    .allowed-domains li {
+      margin: 8px 0;
+      font-size: 1em;
+      color: #ffffff;
+    }
   </style>
 
 </head>
@@ -250,19 +301,23 @@ p {
 
     
     <div class="allowed-domains">
-      <h3>Armado automatico para:</h3>
-      <ul>
+      <h3 onclick="toggleList()">✌️INFORMACION DEL ARMADOR - ACTUAL✌️<span id="toggleText"></span></h3>
+      <ul><br>
+        USA { <img src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg" alt="USA Flag" width="24">
+        <li class="extra">Samplicious > surveys.ovationworldpanel.com 👌</li>}<br>
+<br>
+        Canada { <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Canada.svg" alt="Canada Flag" width="24">
         <li>Samplicious > hanover-research.qualtrics Check☠️</li>
         <li>Samplicious > vault.questionlab 👌</li>
         <li>Samplicious > lumen-research 👌</li>
-        <li>Samplicious > surveys.audience-align 👌</li>
-        <li>Samplicious > insights.surveynavigate NEW 👌</li>
-        <li>Invite-Mindshare > ipsosinteractive 👌</li>
-        <li>Sample-Cube > surveys.sago 👌</li>
+        <li class="extra">Samplicious > surveys.audience-align 👌</li>
+        <li class="extra">Samplicious > insights.surveynavigate 👌</li>
+        <li class="extra">Invite-Mindshare > ipsosinteractive 👌</li>
+        <li class="extra">Sample-Cube > surveys.sago 👌</li>}
+
 
       </ul>
     </div>
-  </div>
 
   <script>
     function processUrl(url) {
@@ -393,5 +448,96 @@ p {
 
 
   </script>
+
+
+
+
+
+<script>
+// LINK NO COMUN //
+// LINK NO COMUN //
+// LINK NO COMUN //
+// LINK NO COMUN //
+// LINK NO COMUN //
+  function processUrl(url) {
+    try {
+      let domain = new URL(url).hostname;
+      let token = '04651664-4715-4620-8f59-16a272ff3e4a'; // Token de Notch
+      let pid1 = new URL(url).searchParams.get('pid1');
+      let refid1 = new URL(url).searchParams.get('refid1');
+      let rid = new URL(url).searchParams.get('rid');
+      let generatedUrl = '';
+
+      if (domain.includes('ovationworldpanel.com')) {
+        // Se genera la nueva URL con los parámetros obtenidos
+        generatedUrl = `https://notch.insights.supply/cb?token=${token}&pid1=${pid1}&refid1=${refid1}&rid=${rid}`;
+      } else {
+        throw new Error('URL no válida');
+      }
+
+      return generatedUrl;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  document.getElementById('urlForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const urlInput = document.getElementById('urlInput');
+    const result = processUrl(urlInput.value);
+
+    if (result) {
+      document.getElementById('generatedTitle').classList.remove('hidden');
+      document.getElementById('generatedUrl').classList.remove('hidden');
+      document.getElementById('generatedUrl').innerText = result;
+      document.getElementById('error').classList.add('hidden');
+    } else {
+      document.getElementById('generatedTitle').classList.add('hidden');
+      document.getElementById('generatedUrl').classList.add('hidden');
+      document.getElementById('error').classList.remove('hidden');
+    }
+  });
+
+  document.getElementById('generatedUrl').addEventListener('click', function() {
+      var el = document.createElement('textarea');
+      el.value = this.innerText;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      document.getElementById('notification').classList.remove('hidden');
+  });
+// LINK NO COMUN //
+// LINK NO COMUN //
+// LINK NO COMUN //
+// LINK NO COMUN //
+// LINK NO COMUN //
+</script>
+
+
+
+<script>
+  // VISUAL //
+    // VISUAL //
+      // VISUAL //
+        // VISUAL //
+          // VISUAL //
+            // VISUAL //
+            function toggleList() {
+      const container = document.querySelector('.allowed-domains');
+      const toggleText = document.getElementById('toggleText');
+      container.classList.toggle('open');
+      toggleText.textContent = container.classList.contains('open') ? '' : '';
+    }
+    // VISUAL //
+      // VISUAL //
+        // VISUAL //
+          // VISUAL //
+            // VISUAL //
+              // VISUAL //
+
+</script>
+
 </body>
 </html>
