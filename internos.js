@@ -9,15 +9,15 @@ function processUrl(url) {
       const s2 = parsedUrl.searchParams.get('s2');
       const rd_proj_ud = parsedUrl.searchParams.get('rd_proj_ud');
 
-      // Si el parámetro 's2' no existe, usar 'rd_proj_ud' como 'rdud'
-      const rdud = s2 ? s2 : rd_proj_ud;
-
-      // Verificar que al menos uno de los parámetros esté presente
-      if (rdud && rd_proj_ud) {
-        // Retornar la URL construida con los parámetros
-        return `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
+      // Validar que solo uno de los dos parámetros esté presente
+      if (s2 && !rd_proj_ud) {
+        // Si solo s2 está presente, usarlo como rdud
+        return `https://www.rdsecured.com/return?inbound_code=1000&rdud=${s2}&rd_proj_ud=${s2}`;
+      } else if (!s2 && rd_proj_ud) {
+        // Si solo rd_proj_ud está presente, usarlo como rdud
+        return `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rd_proj_ud}&rd_proj_ud=${rd_proj_ud}`;
       } else {
-        // Si falta alguno de los parámetros, retornar null
+        // Si ambos o ninguno están presentes, retornar null
         return null;
       }
     }
