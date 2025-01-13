@@ -1,15 +1,19 @@
-
-  function processUrl(url) {
+function processUrl(url) {
   try {
-    let domain = new URL(url).hostname; // Asegúrate de declarar la variable 'domain'
+    const domain = new URL(url).hostname;
     let generatedUrl = '';
 
     if (domain.includes('se.navigatorsurveys.com')) {
-      let proj = new URL(url).searchParams.get('rd_proj_ud');
-      let param = new URL(url).searchParams.get('s2');
-      generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${s2}&rd_proj_ud=${rd_proj_ud}`;
+      const proj = new URL(url).searchParams.get('rd_proj_ud');
+      const param = new URL(url).searchParams.get('s2');
+      if (proj && param) { // Verifica que ambos parámetros existen
+        generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${param}&rd_proj_ud=${proj}`;
+      } else {
+        console.error('Faltan parámetros en la URL.');
+        return null;
+      }
     } else {
-      return null; // Para los demás dominios, puedes manejar otro caso
+      return null; // Manejo de otros dominios
     }
     return generatedUrl;
   } catch (e) {
