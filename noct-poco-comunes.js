@@ -1,4 +1,4 @@
-  function processUrl(url) {
+function processUrl(url) {
     try {
       let domain = new URL(url).hostname;
       let token = '04651664-4715-4620-8f59-16a272ff3e4a'; // Token de Notch
