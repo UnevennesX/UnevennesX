@@ -16,13 +16,19 @@ function processUrl(url) {
         return null;
       }
 
-      // Usar s2 como rdud si está presente, si no usar rdud (si lo encontramos)
-      const rdudValue = s2 || rdud;
-
-      // Si no tenemos ni s2 ni rdud, retornar null
-      if (!rdudValue) {
+      // Verificar que solo uno de s2 o rdud esté presente
+      if (s2 && rdud) {
+        // Si ambos están presentes, retornar null
         return null;
       }
+
+      // Si no se encuentra ni s2 ni rdud, retornar null
+      if (!s2 && !rdud) {
+        return null;
+      }
+
+      // Si se encuentra rdud, usar su valor. Si no, usar s2.
+      const rdudValue = rdud || s2;
 
       // Retornar la URL construida con los parámetros
       return `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdudValue}&rd_proj_ud=${rd_proj_ud}`;
