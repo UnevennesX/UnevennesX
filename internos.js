@@ -16,9 +16,8 @@ function processUrl(url) {
         return null;
       }
 
-      // Verificar que solo uno de s2 o rdud esté presente
+      // Si ambos parámetros están presentes, se usará rdud
       if (s2 && rdud) {
-        // Si ambos están presentes, se usará rdud
         return `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
       }
 
@@ -32,8 +31,8 @@ function processUrl(url) {
         return `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
       }
 
-      // Si no se encuentra ni s2 ni rdud, retornar null
-      return null;
+      // Si no se encuentra ni s2 ni rdud, usar el valor de rd_proj_ud sin uno de los otros parámetros
+      return `https://www.rdsecured.com/return?inbound_code=1000&rd_proj_ud=${rd_proj_ud}`;
     }
 
     // Si el dominio no es el correcto, retornar null
