@@ -8,8 +8,8 @@ function processUrl(url) {
     let rid = parsedUrl.searchParams.get('rid'); // Obtener el valor de rid
     let generatedUrl = '';
 
-    // Verificar si el dominio es correcto y si todos los parámetros están presentes
-    if (domain.includes('ovationworldpanel.com') && pid1 && refid1 && rid) {
+    // Verificar si el dominio contiene 'ovationworldpanel.com' de forma flexible
+    if (domain.endsWith('ovationworldpanel.com') && pid1 && refid1 && rid) {
       // Se genera la nueva URL con los parámetros obtenidos
       generatedUrl = `https://notch.insights.supply/cb?token=${token}&pid1=${pid1}&refid1=${refid1}&rid=${rid}`;
     } else {
