@@ -21,3 +21,7 @@ function processUrl(url) {
     return null;
   }
 }
+
+// Ejemplo de uso
+const url = 'https://se.navigatorsurveys.com/survey?rd_proj_ud=12345&s2=abcde';
+console.log(processUrl(url));
