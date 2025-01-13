@@ -5,21 +5,27 @@ function processUrl(url) {
 
     // Verificar si el dominio es el que nos interesa
     if (parsedUrl.hostname.includes('se.navigatorsurveys.com')) {
-      // Obtener los parámetros 's2' y 'rd_proj_ud'
+      // Obtener los parámetros 's2', 'rd_proj_ud' y 'rdud'
       const s2 = parsedUrl.searchParams.get('s2');
       const rd_proj_ud = parsedUrl.searchParams.get('rd_proj_ud');
+      const rdud = parsedUrl.searchParams.get('rdud'); // Buscar el parámetro rdud
 
-      // Validar que solo uno de los dos parámetros esté presente
-      if (s2 && !rd_proj_ud) {
-        // Si solo s2 está presente, usarlo como rdud
-        return `https://www.rdsecured.com/return?inbound_code=1000&rdud=${s2}&rd_proj_ud=${s2}`;
-      } else if (!s2 && rd_proj_ud) {
-        // Si solo rd_proj_ud está presente, usarlo como rdud
-        return `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rd_proj_ud}&rd_proj_ud=${rd_proj_ud}`;
-      } else {
-        // Si ambos o ninguno están presentes, retornar null
+      // Verificar que rd_proj_ud siempre esté presente
+      if (!rd_proj_ud) {
+        // Si no se encuentra rd_proj_ud, retornar null porque es obligatorio
         return null;
       }
+
+      // Usar s2 como rdud si está presente, si no usar rdud (si lo encontramos)
+      const rdudValue = s2 || rdud;
+
+      // Si no tenemos ni s2 ni rdud, retornar null
+      if (!rdudValue) {
+        return null;
+      }
+
+      // Retornar la URL construida con los parámetros
+      return `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdudValue}&rd_proj_ud=${rd_proj_ud}`;
     }
 
     // Si el dominio no es el correcto, retornar null
