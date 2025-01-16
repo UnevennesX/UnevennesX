@@ -30,14 +30,13 @@ function dispatchUrl(url) {
 function processUrlSampleCube(url) {
     let domain = new URL(url).hostname;
     let generatedUrl = '';
-
+    const token = '1574'; // Token para Sample-Cube
     // Verificar si el dominio es 'surveys.sago.com'
     if (domain === 'surveys.sago.com') {
         let rid = new URL(url).searchParams.get('RID');
-        if(rid) {
-          generatedUrl = `https://surveys.sample-cube.com/ending?RS=1&RID=${rid}&secret=1574`;
-        }
-
+         if (rid && token) {
+            generatedUrl = `https://surveys.sample-cube.com/ending?RS=1&RID=${rid}&secret=${token}`;
+          }
     }
     
     return generatedUrl;
@@ -53,20 +52,20 @@ function processUrlNoctComun(url) {
       if (domain.includes('qualtrics.com')) {
         token = '5a9c985a-f633-46a5-925c-6ca593f1a8b0';
         rid = new URL(url).searchParams.get('rnid');
-        if (rid) {
+        if (rid && token) {
           generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}`;
         }
         
       } else if (domain.includes('questionlab.com')) {
         token = '9575fc16-0317-4608-93e9-b477730e37ac';
         rid = new URL(url).searchParams.get('RID');
-        if(rid){
+        if(rid && token){
           generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}`;
         }
       } else if (domain.includes('surveys.audience-align.com')) {
         token = 'cb8f4af5-0173-44b1-802a-8c7d5cabd9e3';
         rid = new URL(url).searchParams.get('uid');
-          if (rid) {
+          if (rid && token) {
             generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}`;
           } else {
             console.error('No se pudo extraer el UID de la URL proporcionada.');
@@ -75,7 +74,7 @@ function processUrlNoctComun(url) {
       } else if (domain.includes('insights.surveynavigate.app')) {
         token = '07acc3b2-400d-4219-8c33-67eb3257720f';
         rid = new URL(url).searchParams.get('uid');
-        if(rid) {
+        if(rid && token) {
           generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}`;
         }else {
           console.error('No se pudo extraer el UID de la URL proporcionada.');
@@ -94,11 +93,10 @@ function processUrlNoctComun(url) {
   function processUrlRidToken(url) {
     let domain = new URL(url).hostname;
     let generatedUrl = '';
-  
+    const token = '034287b2-1ca0-48d1-9e45-f5ca740ef529';
     if (domain.includes('lumen-research.com')) {
-      let token = '034287b2-1ca0-48d1-9e45-f5ca740ef529';
       let rid = new URL(url).searchParams.get('RID');
-      if(rid){
+      if(rid && token){
         generatedUrl = `https://notch.insights.supply/cb?RID=${rid}&token=${token}`;
       }
     }
@@ -111,9 +109,9 @@ function processUrlNoctComun(url) {
       let domain = new URL(url).hostname;
       let arid = new URL(url).pathname.split('/')[2];
       let rid = new URL(url).searchParams.get('RID');
-      let generatedUrl = '';
-      if (domain.includes('router.cint.com') && arid && rid) {
-        let token = '0749a007-a1d3-48c1-8ff3-12960c555867';
+       const token = '0749a007-a1d3-48c1-8ff3-12960c555867';
+
+      if (domain.includes('router.cint.com') && arid && rid && token) {
         generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}&cint_arid=${arid}`;
       } else {
         throw new Error('URL no válida');
@@ -130,11 +128,13 @@ function processUrlNoctComun(url) {
     try {
       let domain = new URL(url).hostname;
       let generatedUrl = '';
-  
+      const token = 'M7FMAqNSgNBiTKRoDbiNJ4YiXPN2cBin';
       if (domain.includes('ipsosinteractive.com')) {
         let proj = new URL(url).searchParams.get('id');
         let param = new URL(url).searchParams.get('param1');
-        generatedUrl = `https://redirect.mindsharesurveys.com/v1/M7FMAqNSgNBiTKRoDbiNJ4YiXPN2cBin?proj=${param}&id=${proj}&status=1`;
+        if (proj && param && token){
+          generatedUrl = `https://redirect.mindsharesurveys.com/v1/${token}?proj=${param}&id=${proj}&status=1`;
+        }
       } else {
         return null;
       }
@@ -154,7 +154,7 @@ function processUrlNoctComun(url) {
       let rid = new URL(url).searchParams.get('rid');
       let generatedUrl = '';
 
-      if (domain.includes('ovationworldpanel.com') && pid1 && refid1 && rid) {
+      if (domain.includes('ovationworldpanel.com') && pid1 && refid1 && rid && token) {
         generatedUrl = `https://notch.insights.supply/cb?token=${token}&pid1=${pid1}&refid1=${refid1}&rid=${rid}`;
       } else {
         throw new Error('URL no válida');
@@ -197,9 +197,9 @@ function processUrlNoctComun(url) {
         let domain = new URL(url).hostname;
         let arid = new URL(url).pathname.split('/')[2];
         let rid = new URL(url).searchParams.get('RID');
+         const token = '0749a007-a1d3-48c1-8ff3-12960c555867';
 
-        if (domain.includes('router.cint.com') && arid && rid) {
-          let token = '0749a007-a1d3-48c1-8ff3-12960c555867';
+        if (domain.includes('router.cint.com') && arid && rid && token) {
           generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}&cint_arid=${arid}`;
         }
         else if (domain.includes('router.cint.com')) {
