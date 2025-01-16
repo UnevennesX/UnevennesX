@@ -7,7 +7,16 @@ async function processUrlsFromTxt() {
         const text = await response.text();
         const blocks = text.trim().split("----------------");
         const templates = [];
-
+         const excludedDomains = [
+           'surveys.sago.com', 'sago.com', 'surveys.sago',
+           'qualtrics.com', 'questionlab.com', 'surveys.audience-align.com', 'insights.surveynavigate.app', 'qualtrics',
+            'questionlab','audience-align', 'surveynavigate',
+            'lumen-research.com', 'lumen-research', 'lumen',
+           'router.cint.com', 'router.cint','cint',
+             'ipsosinteractive.com', 'ipsosinteractive', 'ipsos',
+            'ovationworldpanel.com', 'ovationworldpanel', 'ovationworldpanel',
+           'tssrvy.com', 'rdsecured', 'mysoapbox','surveyengine','sampleeye','se.navigatorsurveys','router.cint.com'
+        ];
         for (const block of blocks) {
              const lines = block.trim().split("\n");
             let name = null;
@@ -24,8 +33,8 @@ async function processUrlsFromTxt() {
                 if (key === "Nombre") {
                     name = value;
                 } else if (key === "URL") {
-                     url = value;
-                       try {
+                   url = value;
+                      try {
                          const urlParams = new URLSearchParams(new URL(value).search);
                            for(const [paramKey, paramValue] of urlParams){
                              params[paramKey] = paramValue
@@ -39,20 +48,25 @@ async function processUrlsFromTxt() {
                     token = value
                 } else if (key.startsWith('Param_')){
                      const paramName = key.split('_')[1];
-                      params[paramName] = value;
-                 }
+                     params[paramName] = value;
+                }
            }
             if (name && url && type === 'Samplicious') {
-                templates.push({
-                  name,
-                  url,
-                  provider,
-                  template,
-                  type,
-                  token,
+                const urlWithoutHttp = name.replace('http://www.', '').replace('https://www.', '').replace('https://', '').replace('http://', '')
+               const urlWithoutCom = urlWithoutHttp.replace('.com', '').replace('.com/', '');
+              const urlName = urlWithoutCom.split('/')[0];
+                if (!excludedDomains.some(domain => urlWithoutHttp.includes(domain) || urlWithoutCom.includes(domain) || urlName === domain)) {
+                   templates.push({
+                      name:urlName,
+                     url,
+                     provider,
+                      template,
+                     type,
+                     token,
                     params
-                });
-            }
+                   });
+                 }
+              }
         }
         return templates;
     } catch (error) {
@@ -61,76 +75,76 @@ async function processUrlsFromTxt() {
     }
 }
 async function processUrl(url){
-    const templates = await processUrlsFromTxt();
-     let result = null;
-    if(templates.length > 0){
-        const urlWithoutHttp = url.replace('http://www.', '').replace('https://www.', '').replace('https://', '').replace('http://', '')
-        const urlWithoutCom = urlWithoutHttp.replace('.com', '').replace('.com/', '');
-        const urlName = urlWithoutCom.split('/')[0];
+      const templates = await processUrlsFromTxt();
+       let result = null;
+          if(templates.length > 0){
+            const domain = new URL(url).hostname;
+            const urlWithoutHttp = domain.replace('http://www.', '').replace('https://www.', '').replace('https://', '').replace('http://', '')
+            const urlWithoutCom = urlWithoutHttp.replace('.com', '').replace('.com/', '');
+            const urlName = urlWithoutCom.split('/')[0];
 
-          const matchingTemplates = templates.filter(
+           const matchingTemplates = templates.filter(
                     (template) => template.name === urlWithoutHttp || template.name === urlWithoutCom || template.name === urlName
                );
-
              if(matchingTemplates && matchingTemplates.length > 1){
                result = { multipleResults: true, templates: matchingTemplates, url};
-             } else if (matchingTemplates && matchingTemplates.length === 1) {
-               let matchingTemplate = matchingTemplates[0];
-                 let finalUrl = matchingTemplate.url;
-                    let rid = null;
+              } else if(matchingTemplates && matchingTemplates.length === 1){
+                    let matchingTemplate = matchingTemplates[0];
+                    let finalUrl = matchingTemplate.url;
+                   let rid = null;
                 try{
-                  const urlParams = new URLSearchParams(new URL(url).search);
-                  rid = urlParams.get('RID');
-                   } catch(e){}
+                       const urlParams = new URLSearchParams(new URL(url).search);
+                       rid = urlParams.get('RID');
+                  } catch(e){}
 
-                    if (matchingTemplate.url.includes('RID=') && rid && !matchingTemplate.url.includes('xxxx')) {
-                           finalUrl = matchingTemplate.url.replace(/RID=[^&]*/, `RID=${rid}`);
-                       }  else if (matchingTemplate.url.includes('RID=') && rid && matchingTemplate.url.includes('xxxx')) {
-                          finalUrl = matchingTemplate.url.replace(/RID=xxxx[^&]*/, `RID=${rid}`);
-                        } else if(matchingTemplate.url.includes('RID=') && rid === null){
+                   if (matchingTemplate.url.includes('RID=') && rid && !matchingTemplate.url.includes('xxxx')) {
+                            finalUrl = matchingTemplate.url.replace(/RID=[^&]*/, `RID=${rid}`);
+                        }  else if (matchingTemplate.url.includes('RID=') && rid && matchingTemplate.url.includes('xxxx')) {
+                             finalUrl = matchingTemplate.url.replace(/RID=xxxx[^&]*/, `RID=${rid}`);
+                      }else if(matchingTemplate.url.includes('RID=') && rid === null){
                            finalUrl = matchingTemplate.url.concat('67')
                      }
-
-                for (const paramKey in matchingTemplate.params) {
-                 if(matchingTemplate.url.includes(`${paramKey}=`) && matchingTemplate.params[paramKey] && matchingTemplate.url.includes('xxxx')){
-                          finalUrl = finalUrl.replace(`${paramKey}=xxxx[^&]*`, `${paramKey}=${matchingTemplate.params[paramKey]}`);
-                       } else if (matchingTemplate.url.includes(`${paramKey}=`) && matchingTemplate.params[paramKey] && !matchingTemplate.url.includes(matchingTemplate.params[paramKey])) {
-                          finalUrl = finalUrl.replace(`${paramKey}=[^&]*`, `${paramKey}=${matchingTemplate.params[paramKey]}`);
-                      }
+                     for (const paramKey in matchingTemplate.params) {
+                           if(matchingTemplate.url.includes(`${paramKey}=`) && matchingTemplate.params[paramKey] && matchingTemplate.url.includes('xxxx')){
+                                  finalUrl = finalUrl.replace(`${paramKey}=xxxx[^&]*`, `${paramKey}=${matchingTemplate.params[paramKey]}`);
+                           } else if (matchingTemplate.url.includes(`${paramKey}=`) && matchingTemplate.params[paramKey] && !matchingTemplate.url.includes(matchingTemplate.params[paramKey])) {
+                                 finalUrl = finalUrl.replace(`${paramKey}=[^&]*`, `${paramKey}=${matchingTemplate.params[paramKey]}`);
+                           }
                  }
-                 
-                    let processed = null;
+                     let processed = null;
                      processed = processUrlNoctComun(finalUrl,matchingTemplate.token);
                        if(processed && processed.url){
-                            result = processed;
-                       } else if (matchingTemplate.template) {
-                          result = {name: domain, url: `Sugerencia: ${matchingTemplate.template}`, provider: 'No se pudo procesar'};
-                        }  else {
-                            result =  {name: domain, url: 'URL no valida', provider: 'No se pudo procesar'};
-                       }
-              } else {
-                   result = {name: domain, url: 'URL no valida', provider: 'No se pudo procesar'};
-                }
-          } else {
-           result = {name: domain, url: 'URL no valida', provider: 'No se pudo procesar'};
-          }
-         return result;
+                         result = processed;
+                      } else if (matchingTemplate.template) {
+                         result = {name: domain, url: `Sugerencia: ${matchingTemplate.template}`, provider: 'No se pudo procesar'};
+                      } else {
+                          result =  {name: domain, url: 'URL no valida', provider: 'No se pudo procesar'};
+                     }
+
+                } else {
+                        result = {name: domain, url: 'URL no valida', provider: 'No se pudo procesar'};
+                  }
+            }  else {
+                result = {name: domain, url: 'URL no valida', provider: 'No se pudo procesar'};
+           }
+          return result;
 }
  function processUrlNoctComun(url, token) {
     try {
       let rid = '';
+      
        if (url.includes('qualtrics.com')) {
         rid = new URL(url).searchParams.get('rnid');
       } else if (url.includes('questionlab.com')) {
         rid = new URL(url).searchParams.get('RID');
       } else if (url.includes('surveys.audience-align.com')) {
-        rid = new URL(url).searchParams.get('uid');
+         rid = new URL(url).searchParams.get('uid');
       } else if (url.includes('insights.surveynavigate.app')) {
-          rid = new URL(url).searchParams.get('uid');
+        rid = new URL(url).searchParams.get('uid');
       }
          if(rid && token){
             return {url: `https://notch.insights.supply/cb?token=${token}&RID=${rid}`, provider: 'Samplicious' }
-        } else {
+         } else {
             return null;
          }
     } catch (e) {
