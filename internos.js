@@ -1,5 +1,5 @@
 // Función para procesar las URLs de Survey
-function processSurveyUrl(url) {
+function processUrl(url) {
   try {
     // Crear un objeto URL para analizar la URL dada
     const parsedUrl = new URL(url);
