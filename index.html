@@ -418,10 +418,81 @@ p {
 
 
 
+<script>
 
+// Función para leer el archivo .txt desde GitHub
+function fetchUrlData() {
+  fetch('https://raw.githubusercontent.com/UnevennesX/UnevennesX/main/datos-info.txt')
+    .then(response => response.text())  // Obtiene el texto del archivo
+    .then(data => {
+      const surveyData = parseSurveyData(data);
+      console.log('Datos cargados:', surveyData);
+    })
+    .catch(error => {
+      console.error('Error al obtener el archivo:', error);
+    });
+}
 
+// Función para procesar el contenido del archivo .txt
+function parseSurveyData(data) {
+  const surveyEntries = data.split('----------------');  // Dividir por los bloques
+  const surveys = [];
 
-<script src="interno.js"></script>
+  surveyEntries.forEach(entry => {
+    const lines = entry.trim().split('\n');
+    const survey = {};
+
+    lines.forEach(line => {
+      if (line.startsWith('Nombre:')) {
+        survey.name = line.replace('Nombre:', '').trim();
+      } else if (line.startsWith('URL:')) {
+        survey.url = line.replace('URL:', '').trim();
+      } else if (line.startsWith('Tipo de Survey:')) {
+        survey.type = line.replace('Tipo de Survey:', '').trim();
+      } else if (line.startsWith('Fecha:')) {
+        survey.date = line.replace('Fecha:', '').trim();
+      } else if (line.startsWith('Comentario:')) {
+        survey.comment = line.replace('Comentario:', '').trim();
+      }
+    });
+
+    if (survey.name && survey.url) {
+      surveys.push(survey);
+    }
+  });
+
+  return surveys;
+}
+
+// Función para procesar la URL según los datos del archivo .txt
+function processUrl(url) {
+  try {
+    const surveyData = window.surveyData || [];  // Suponemos que surveyData es global después de cargar el archivo
+
+    const survey = surveyData.find(s => url.includes(s.url));  // Buscar la encuesta por la URL
+    if (survey) {
+      const generatedUrl = survey.url;  // Retorna la URL de la encuesta encontrada
+      console.log(`URL generada: ${generatedUrl}`);
+      return generatedUrl;
+    } else {
+      console.error('URL no encontrada en los datos.');
+      return null;
+    }
+  } catch (e) {
+    console.error('Error procesando la URL: ', e);
+    return null;
+  }
+}
+
+// Llamar a la función para cargar los datos del archivo
+fetchUrlData();
+
+// Ejemplo de uso de la función processUrl
+const exampleUrl = "https://notch.insights.supply/cb?token=f8bbc072-ea67-44fb-8833-ea0512ee4cda&RID=";
+console.log(processUrl(exampleUrl));  // Ejemplo de cómo se usaría la URL
+
+  
+</script>
 
 
 
