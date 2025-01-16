@@ -46,7 +46,7 @@ function processUrl(url) {
 }
 
 // Función para procesar las URLs de Decipher
-function processDecipherUrl(url) {
+function processUrl(url) {
   try {
     // Extraer el dominio y el parámetro tsid de la URL
     let domain = new URL(url).hostname;
