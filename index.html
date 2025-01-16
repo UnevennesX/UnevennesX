@@ -420,8 +420,6 @@ p {
 
 <script>
 // URL del archivo en GitHub
-const DATA_FILE_URL = 'https://raw.githubusercontent.com/UnevennesX/UnevennesX/main/datos-info.txt';
-
 // Función para cargar los datos del archivo
 async function fetchSurveyData() {
   const response = await fetch(DATA_FILE_URL);
@@ -480,11 +478,11 @@ async function generateSurveyUrl(inputUrl) {
 
     // Procesar la URL ingresada
     const parsedUrl = new URL(inputUrl);
-    const domain = parsedUrl.hostname;
+    const domain = parsedUrl.hostname.replace('www.', ''); // Eliminar el "www." si está presente
 
     // Buscar la encuesta correspondiente al dominio o nombre
     const targetSurvey = surveys.find(survey =>
-      survey['nombre'] === domain || survey['url']?.includes(domain)
+      survey['nombre']?.toLowerCase().includes(domain.toLowerCase()) || survey['url']?.includes(domain)
     );
 
     if (!targetSurvey) {
