@@ -7,282 +7,300 @@
   <title>Herramienta URL</title>
   <link rel="icon" type="image/png"
     href="https://cdn.dribbble.com/users/7549673/screenshots/17206704/media/1210a9d0ec8af427967e735935861eeb.png?resize=400x300&vertical=center" />
-   <style>
+
+  <style>
     body {
-        font-family: 'Poppins', Arial, sans-serif;
-        background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
-        color: #eaeaea;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden; /* Evita el desplazamiento horizontal */
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
+      color: #eaeaea;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      /* Evita el desplazamiento horizontal */
     }
 
     .container {
-        background: #333333;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        width: 90%;
-        max-width: 480px;
-        text-align: center;
-        overflow: auto; /* Permite el scroll si el contenido excede la altura */
+      background: #333333;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 480px;
+      text-align: center;
+      overflow: auto;
+      /* Permite el scroll si el contenido excede la altura */
     }
 
     h1 {
-        font-size: 1.8rem;
-        margin-bottom: 20px;
-        color: #b6e3a1;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #b6e3a1;
     }
 
     input[type="text"] {
-        width: 90%;
-        padding: 12px;
-        margin: 10px 0;
-        border: 1px solid #444444;
-        border-radius: 8px;
-        background: #444444;
-        color: #f0f0f0;
-        font-size: 16px;
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #444444;
+      border-radius: 8px;
+      background: #444444;
+      color: #f0f0f0;
+      font-size: 16px;
     }
 
     input[type="text"]:focus {
-        outline: none;
-        border: 1px solid #b6e3a1;
-        background: #555555;
+      outline: none;
+      border: 1px solid #b6e3a1;
+      background: #555555;
     }
 
     button {
-        background: #4caf50;
-        color: #ffffff;
-        padding: 12px 24px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: bold;
+      background: #4caf50;
+      color: #ffffff;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
     }
 
     button:hover {
-        background: #45a049;
+      background: #45a049;
     }
 
     .result {
-        margin-top: 20px;
-        padding: 12px;
-        background: #444444;
-        border: 1px solid #444444;
-        border-radius: 8px;
-        word-wrap: break-word;
-        font-size: 14px;
-        text-align: left;
-        color: #f0f0f0;
-        opacity: 0;
-        animation: fadeIn 0.6s forwards;
+      margin-top: 20px;
+      padding: 12px;
+      background: #444444;
+      border: 1px solid #444444;
+      border-radius: 8px;
+      word-wrap: break-word;
+      font-size: 14px;
+      text-align: left;
+      color: #f0f0f0;
+      opacity: 0;
+      animation: fadeIn 0.6s forwards;
     }
 
     @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     .notification {
-        margin-top: 10px;
-        padding: 10px;
-        background: #4caf50;
-        color: #ffffff;
-        font-size: 14px;
-        font-weight: bold;
-        border-radius: 8px;
-        display: none;
-        text-align: center;
+      margin-top: 10px;
+      padding: 10px;
+      background: #4caf50;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 8px;
+      display: none;
+      text-align: center;
     }
 
     .result .survey-name {
-        font-size: 1.3em;
-        color: #e0e0e0;
-        margin-bottom: 15px;
+      font-size: 1.3em;
+      color: #e0e0e0;
+      margin-bottom: 15px;
     }
 
-.result #notchLink {
-    font-size: 1.2em;
-    color: #007bff;
-    cursor: pointer;
-    text-decoration: underline;
-    font-weight: 600;
-    transition: color 0.3s ease, box-shadow 0.3s ease;
-    padding: 10px;
-    border-radius: 8px;
-    word-wrap: break-word; /* Permite que el enlace se ajuste dentro del contenedor */
-    white-space: normal; /* Evita que el enlace se salga de una sola línea */
-    max-width: 100%; /* Asegura que no se desborde */
-    overflow: hidden;
-    text-overflow: ellipsis; /* Muestra '...' si el enlace es demasiado largo */
-}
-
+    .result #notchLink {
+      font-size: 1.2em;
+      color: #007bff;
+      cursor: pointer;
+      text-decoration: underline;
+      font-weight: 600;
+      transition: color 0.3s ease, box-shadow 0.3s ease;
+      padding: 10px;
+      border-radius: 8px;
+      word-wrap: break-word;
+      /* Permite que el enlace se ajuste dentro del contenedor */
+      white-space: normal;
+      /* Evita que el enlace se salga de una sola línea */
+      max-width: 100%;
+      /* Asegura que no se desborde */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      /* Muestra '...' si el enlace es demasiado largo */
+    }
 
     .result #notchLink:hover {
-        color: #0056b3;
-        box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+      color: #0056b3;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
     }
 
     #notchLink.copied {
-        color: #28a745;
-        animation: copiedAnimation 1s ease;
+      color: #28a745;
+      animation: copiedAnimation 1s ease;
     }
 
     @keyframes copiedAnimation {
-        0% {
-            transform: scale(1.1);
-        }
-        50% {
-            transform: scale(1);
-        }
-        100% {
-            transform: scale(1.1);
-        }
+      0% {
+        transform: scale(1.1);
+      }
+
+      50% {
+        transform: scale(1);
+      }
+
+      100% {
+        transform: scale(1.1);
+      }
     }
 
     .hidden {
-        display: none;
+      display: none;
     }
 
     .error {
-        margin-top: 10px;
-        padding: 10px;
-        background: #f44336;
-        color: #ffffff;
-        font-size: 14px;
-        font-weight: bold;
-        border-radius: 8px;
-        display: none;
-        text-align: center;
+      margin-top: 10px;
+      padding: 10px;
+      background: #f44336;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 8px;
+      display: none;
+      text-align: center;
     }
 
     .allowed-domains {
-        margin-top: 20px;
-        background: #444444;
-        padding: 8px;
-        border-radius: 13px;
-        color: #e0e0e0;
-        font-size: 16px;
-        text-align: left;
-        list-style-type: none;
+      margin-top: 20px;
+      background: #444444;
+      padding: 8px;
+      border-radius: 13px;
+      color: #e0e0e0;
+      font-size: 16px;
+      text-align: left;
+      list-style-type: none;
     }
 
     /* Mejoras específicas para dispositivos móviles */
     @media (max-width: 480px) {
-        h1 {
-            font-size: 1.6rem;
-        }
+      h1 {
+        font-size: 1.6rem;
+      }
 
-        .container {
-            padding: 15px;
-        }
+      .container {
+        padding: 15px;
+      }
 
-        input[type="text"], button {
-            font-size: 14px;
-            padding: 10px;
-        }
+      input[type="text"],
+      button {
+        font-size: 14px;
+        padding: 10px;
+      }
 
-        .result {
-            font-size: 12px;
-        }
+      .result {
+        font-size: 12px;
+      }
 
-        .allowed-domains {
-            font-size: 14px;
-        }
+      .allowed-domains {
+        font-size: 14px;
+      }
 
-        /* Para asegurar que el contenido no haga scroll horizontal */
-        body {
+      /* Para asegurar que el contenido no haga scroll horizontal */
+      body {
 
-    display: flex;
-    justify-content: center; /* Centra horizontalmente */
-    height: 100vh; /* Asegura que el contenedor ocupe toda la altura */
-    margin: 0; /* Elimina márgenes predeterminados */
-    overflow-x: hidden; /* Evita el desplazamiento horizontal */
-    overflow-y: hidden; /* Evita el desplazamiento vertical si el contenido cabe completamente */        }
+        display: flex;
+        justify-content: center;
+        /* Centra horizontalmente */
+        height: 100vh;
+        /* Asegura que el contenedor ocupe toda la altura */
+        margin: 0;
+        /* Elimina márgenes predeterminados */
+        overflow-x: hidden;
+        /* Evita el desplazamiento horizontal */
+        overflow-y: hidden;
+        /* Evita el desplazamiento vertical si el contenido cabe completamente */
+      }
     }
 
 
-p {
-    margin: 1;
-    padding: 12px;
-    background: #444444;
-    border: 1px solid #444444;
-    border-radius: 8px;
-    word-wrap: break-word; /* Asegura que el texto largo se ajuste al contenedor */
-    overflow-wrap: break-word; /* Igual que word-wrap, para asegurar que no haya desbordes */
-    font-size: 14px;
-    text-align: left;
-    color: #f0f0f0;
-    white-space: normal; /* Permite que el texto se rompa en varias líneas si es necesario */
-    max-width: 100%; /* Impide que se desborde del contenedor */
-    box-sizing: border-box; /* Asegura que el padding y el borde no afecten el tamaño total */
-}
-
-
-<style>
-
-  .allowed-domains {
-      background: #fff;
-      border: 1px solid #ddd;
+    p {
+      margin: 1;
+      padding: 12px;
+      background: #444444;
+      border: 1px solid #444444;
       border-radius: 8px;
-      padding: 15px;
-      max-width: 400px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      position: relative;
-  
-
+      word-wrap: break-word;
+      /* Asegura que el texto largo se ajuste al contenedor */
+      overflow-wrap: break-word;
+      /* Igual que word-wrap, para asegurar que no haya desbordes */
+      font-size: 14px;
+      text-align: left;
+      color: #f0f0f0;
+      white-space: normal;
+      /* Permite que el texto se rompa en varias líneas si es necesario */
+      max-width: 100%;
+      /* Impide que se desborde del contenedor */
+      box-sizing: border-box;
+      /* Asegura que el padding y el borde no afecten el tamaño total */
     }
 
-    .allowed-domains h3 {
-      margin-top: 0;
-      font-size: 1.2em;
-      color: #ffffff;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      margin-block-end: auto;
-      TEXT-ALIGN: center;
+    <style>
+      .allowed-domains {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        max-width: 400px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
 
-    }
 
-    .allowed-domains h3:hover {
-      color: #4caf50;
-      
-    }
+      }
 
-    .allowed-domains ul {
-      list-style: none;
-      padding-left: 0;
-      margin: 0;
-      overflow: hidden;
-      max-height: 0;
-      transition: max-height 0.5s ease, opacity 0.5s ease;
-      opacity: 0;
-    }
+      .allowed-domains h3 {
+        margin-top: 0;
+        font-size: 1.2em;
+        color: #ffffff;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        margin-block-end: auto;
+        TEXT-ALIGN: center;
 
-    .allowed-domains.open ul {
-      max-height: 500px; /* Suficiente para mostrar todos los elementos */
-      opacity: 1;
-    }
+      }
 
-    .allowed-domains li {
-      margin: 8px 0;
-      font-size: 1em;
-      color: #ffffff;
-    }
+      .allowed-domains h3:hover {
+        color: #4caf50;
+
+      }
+
+      .allowed-domains ul {
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.5s ease, opacity 0.5s ease;
+        opacity: 0;
+      }
+
+      .allowed-domains.open ul {
+        max-height: 500px;
+        /* Suficiente para mostrar todos los elementos */
+        opacity: 1;
+      }
+
+      .allowed-domains li {
+        margin: 8px 0;
+        font-size: 1em;
+        color: #ffffff;
+      }
   </style>
-
-  
 </head>
 
 <body>
@@ -300,6 +318,7 @@ p {
     <p id="generatedUrl" class="hidden"></p>
     <p id="error" class="error hidden">¡Solo se permiten URLs válidas!</p>
     <p id="notification" class="notification hidden">¡URL Copiada Automaticamente!</p>
+
 
     <div class="allowed-domains">
       <h3 onclick="toggleList()">✌️INFORMACION DEL ARMADOR - ACTUAL✌️<span id="toggleText"></span></h3>
@@ -322,15 +341,8 @@ p {
 
       </ul>
     </div>
-
-    <div id="unevennesxResults"></div>
-
   </div>
-
-
-
-
-<script src="sample-cube.js"></script>
+  <script src="sample-cube.js"></script>
   <script src="noct-comun.js"></script>
   <script src="rid-token.js"></script>
   <script src="noct-cint.js"></script>
@@ -338,34 +350,15 @@ p {
   <script src="noct-poco-comunes.js"></script>
     <script src="interno.js"></script>
   <script src="main.js"></script>
-  <script src="unevennesx.js"></script>
-
   <script>
-    
-     function toggleList() {
+        function toggleList() {
       const container = document.querySelector('.allowed-domains');
       const toggleText = document.getElementById('toggleText');
       container.classList.toggle('open');
       toggleText.textContent = container.classList.contains('open') ? '' : '';
     }
-    function copyToClipboard(url) {
-      navigator.clipboard.writeText(url).then(() => {
-        let notification = document.getElementById('notification');
-        notification.classList.remove('hidden');
-        notification.style.display = 'block'; // Mostrar mensaje inmediatamente
-        setTimeout(() => {
-          notification.style.display = 'none'; // Ocultar mensaje después de 20 segundos
-        }, 20000);
-      }).catch(() => {
-        alert('Error al copiar al portapapeles');
-      });
-    }
     </script>
 
-
-
-
-  
 </body>
 
 </html>
