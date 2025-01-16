@@ -28,26 +28,3 @@ export function generateCintUrl(url) {
     return null; // Retorna null si ocurre algún error
   }
 }
-
-/**
- * Maneja la interacción del formulario y muestra la URL generada.
- */
-export function handleUrlFormSubmission() {
-  document.getElementById('urlForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    const urlInput = document.getElementById('urlInput');
-    const result = generateCintUrl(urlInput.value);
-
-    if (result) {
-      document.getElementById('generatedTitle').classList.remove('hidden');
-      document.getElementById('generatedUrl').classList.remove('hidden');
-      document.getElementById('generatedUrl').innerText = result;
-      document.getElementById('error').classList.add('hidden');
-    } else {
-      document.getElementById('generatedTitle').classList.add('hidden');
-      document.getElementById('generatedUrl').classList.add('hidden');
-      document.getElementById('error').classList.remove('hidden');
-    }
-  });
-}
