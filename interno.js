@@ -33,7 +33,7 @@ function processUrl(url) {
       }
     } 
     // Procesar URL con dominio 'router.cint.com'
-    else {
+    else if (url.includes('router.cint.com')) {
       let domain = new URL(url).hostname;
       let arid = new URL(url).pathname.split('/')[2];
       let rid = new URL(url).searchParams.get('RID');
@@ -43,7 +43,15 @@ function processUrl(url) {
         generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}&cint_arid=${arid}`;
       }
     }
-
+    
+    // Nueva condición o lógica adicional que desees agregar
+    // -------------------- 
+    else if (url.includes('nueva-condicion')) {
+      // Agregar nueva lógica de procesamiento de URL aquí
+      generatedUrl = `https://nueva-url.com?parametro=valor`;
+    }
+    // -------------------- 
+    
     // Si no se generó ninguna URL válida
     if (!generatedUrl) {
       return null;
