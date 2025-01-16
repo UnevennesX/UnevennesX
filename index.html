@@ -422,13 +422,13 @@ p {
 
 
 
-
 <script>
   window.onload = function() {
     // Array con las rutas de los archivos JS que deseas cargar
     var scripts = [
-      'interno.js',
+
       'noct-cint.js'
+      'interno.js',
       // Agrega más scripts aquí si es necesario
     ];
 
@@ -445,7 +445,7 @@ p {
         script.onerror = function() {
           // Si ocurre un error al cargar el script, mostrar el error y cargar el siguiente
           console.error(`Error al cargar el script: ${scripts[index]}`);
-          loadScripts(scripts, index + 1); // Continuar con el siguiente script
+          loadScripts(scripts, index + 1); // Continuar con el siguiente script sin detenerse
         };
         document.body.appendChild(script);
       }
