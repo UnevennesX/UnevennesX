@@ -23,41 +23,55 @@ function processUrl(url) {
   }
 }
 
-// Manejo del formulario y visualización de la URL generada
-document.getElementById('urlForm').addEventListener('submit', function (event) {
-  event.preventDefault();
 
-  const urlInput = document.getElementById('urlInput');
-  const result = processUrl(urlInput.value);
+    function copyToClipboard(url) {
+      navigator.clipboard.writeText(url).then(() => {
+        let notification = document.getElementById('notification');
+        notification.classList.remove('hidden');
+        notification.style.display = 'block'; // Mostrar mensaje inmediatamente
+        setTimeout(() => {
+          notification.style.display = 'none'; // Ocultar mensaje después de 20 segundos
+        }, 20000); 
+      }).catch(() => {
+        alert('Error al copiar al portapapeles');
+      });
+    }
 
-  // Mostrar la URL generada o error según corresponda
-  if (result) {
-    document.getElementById('generatedTitle').classList.remove('hidden');
-    document.getElementById('generatedUrl').classList.remove('hidden');
-    document.getElementById('generatedUrl').innerText = result;
-    document.getElementById('error').classList.add('hidden');
-  } else {
-    document.getElementById('generatedTitle').classList.add('hidden');
-    document.getElementById('generatedUrl').classList.add('hidden');
-    document.getElementById('error').classList.remove('hidden');
-  }
-});
+    document.getElementById('urlForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      let url = document.getElementById('urlInput').value;
+      let generatedUrl = processUrl(url);
 
-// Copiar la URL generada al portapapeles
-document.getElementById('generatedUrl').addEventListener('click', function() {
-  const textarea = document.createElement('textarea');
-  textarea.value = this.innerText;
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand('copy');
-  document.body.removeChild(textarea);
-  
-  // Mostrar la notificación
-  const notification = document.getElementById('notification');
-  notification.classList.remove('hidden');
-  
-  // Ocultar la notificación después de 5 segundos
-  setTimeout(() => {
-    notification.classList.add('hidden');
-  }, 5000); // Ocultar después de 5 segundos
-});
+      if (generatedUrl) {
+        document.getElementById('generatedUrl').textContent = generatedUrl;
+        document.getElementById('generatedUrl').classList.remove('hidden');
+        setTimeout(() => {
+          document.getElementById('generatedUrl').classList.add('hidden');
+        }, 20000); // Limpiar datos después de 20 segundos
+
+        copyToClipboard(generatedUrl);
+        document.getElementById('error').classList.add('hidden');
+      } else {
+        document.getElementById('generatedUrl').textContent = 'URL no reconocida o no válida';
+        document.getElementById('generatedUrl').classList.remove('hidden');
+        document.getElementById('error').classList.remove('hidden');
+      }
+    });
+
+    // Limpiar el campo de entrada cada 20 segundos
+    setInterval(() => {
+      document.getElementById('urlInput').value = '';
+    }, 20000);
+
+    // Recargar la página cada 3 minutos (si es necesario)
+    setInterval(() => {
+      location.reload();
+    }, 180000);
+
+    // Toggle para la lista de dominios permitidos
+    function toggleList() {
+      const container = document.querySelector('.allowed-domains');
+      const toggleText = document.getElementById('toggleText');
+      container.classList.toggle('open');
+      toggleText.textContent = container.classList.contains('open') ? '' : '';
+    }
