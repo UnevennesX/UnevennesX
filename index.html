@@ -321,58 +321,6 @@ p {
     </div>
   </div>
 
-  <script>
-    function copyToClipboard(url) {
-      navigator.clipboard.writeText(url).then(() => {
-        let notification = document.getElementById('notification');
-        notification.classList.remove('hidden');
-        notification.style.display = 'block';
-        setTimeout(() => {
-          notification.style.display = 'none';
-        }, 20000); 
-      }).catch(() => {
-        alert('Error al copiar al portapapeles');
-      });
-    }
-
-    document.getElementById('urlForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      let url = document.getElementById('urlInput').value;
-      let generatedUrl = processUrl(url);
-
-      if (generatedUrl) {
-        document.getElementById('generatedUrl').textContent = generatedUrl;
-        document.getElementById('generatedUrl').classList.remove('hidden');
-        setTimeout(() => {
-          document.getElementById('generatedUrl').classList.add('hidden');
-        }, 20000);
-        copyToClipboard(generatedUrl);
-        document.getElementById('error').classList.add('hidden');
-      } else {
-        document.getElementById('generatedUrl').textContent = 'URL no reconocida o no válida';
-        document.getElementById('generatedUrl').classList.remove('hidden');
-        document.getElementById('error').classList.remove('hidden');
-      }
-    });
-
-    setInterval(() => {
-      document.getElementById('urlInput').value = '';
-    }, 20000);
-
-    function processUrl(url) {
-      // Implementar la lógica de procesamiento de URL aquí
-      if (url.includes('qualtrics')) {
-        return `${url}?ref=generated`;
-      }
-      return null;
-    }
-
-    function toggleList() {
-      const domains = document.querySelector('.allowed-domains');
-      domains.classList.toggle('open');
-    }
-
-  </script>
 
 
 
@@ -380,14 +328,23 @@ p {
 
 
 
-
-
-
-  
 
 
   
 <script>
+// Función para copiar al portapapeles
+function copyToClipboard(url) {
+  navigator.clipboard.writeText(url).then(() => {
+    let notification = document.getElementById('notification');
+    notification.classList.remove('hidden');
+    notification.style.display = 'block'; // Mostrar mensaje inmediatamente
+    setTimeout(() => {
+      notification.style.display = 'none'; // Ocultar mensaje después de 20 segundos
+    }, 20000); 
+  }).catch(() => {
+    alert('Error al copiar al portapapeles');
+  });
+}
 
 // Función para procesar la URL ingresada
 function processUrl(url) {
@@ -460,6 +417,16 @@ document.getElementById('urlForm').addEventListener('submit', function(event) {
     document.getElementById('error').classList.remove('hidden');
   }
 });
+
+// Limpiar el campo de entrada cada 20 segundos
+setInterval(() => {
+  document.getElementById('urlInput').value = '';
+}, 20000);
+
+// Recargar la página cada 3 minutos (si es necesario)
+setInterval(() => {
+  location.reload();
+}, 180000);
 </script>
 
   
