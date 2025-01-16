@@ -1,25 +1,27 @@
 // --------------------
-// Comienza la primera función (procesar URL con 'tsid' y Survey)
+// Comienza la función única processUrl
 // --------------------
-function processUrlTsid(url) {
+function processUrl(url) {
   try {
+    let generatedUrl = null; // Variable para almacenar la URL generada
+
+    // Procesar URL con 'tsid'
     if (url.includes('tsid=')) {
-      // Si la URL contiene 'tsid', procesarla con la lógica de tsid
       const regex = /tsid=([a-f0-9]{32})/;
       const match = url.match(regex);
       if (match) {
         const tsid = match[1]; // El tsid extraído de la URL
-        return `https://tssrvy.com/r/?st=1&tsid=${tsid}`; // Generar el nuevo enlace
+        generatedUrl = `https://tssrvy.com/r/?st=1&tsid=${tsid}`; // Generar el nuevo enlace
       }
-    } else if (url.includes('')) {
-      // Si la URL pertenece a Survey, procesarla con los parámetros s2, rd_proj_ud, rdud
+    } 
+    // Procesar URL con parámetros de Survey
+    else if (url.includes('')) {
       let s2 = new URL(url).searchParams.get('s2');
       let rd_proj_ud = new URL(url).searchParams.get('rd_proj_ud');
       let rdud = new URL(url).searchParams.get('rdud');
       
       if (!rd_proj_ud && !s2 && !rdud) return null;
       
-      let generatedUrl = '';
       if (s2 && rdud) {
         generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
       } else if (s2) {
@@ -29,45 +31,31 @@ function processUrlTsid(url) {
       } else if (rd_proj_ud) {
         generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rd_proj_ud=${rd_proj_ud}`;
       }
-
-      return generatedUrl;
+    } 
+    // Procesar URL con dominio 'router.cint.com'
+    else {
+      let domain = new URL(url).hostname;
+      let arid = new URL(url).pathname.split('/')[2];
+      let rid = new URL(url).searchParams.get('RID');
+  
+      if (domain.includes('router.cint.com') && arid && rid) {
+        let token = '0749a007-a1d3-48c1-8ff3-12960c555867';
+        generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}&cint_arid=${arid}`;
+      }
     }
 
-    return null; // Si no se cumple ninguna de las condiciones, retornar null
+    // Si no se generó ninguna URL válida
+    if (!generatedUrl) {
+      return null;
+    }
+
+    return generatedUrl;  // Retornar la URL generada
   } catch (error) {
-    // Manejo de error: se logea y se retorna null, pero no bloquea la ejecución de otros scripts
+    // Manejo de error: se logea el error, pero no interrumpe la ejecución del resto de los scripts
     console.error('Error al procesar la URL:', error);
     return null;
   }
 }
 // --------------------
-// Termina la primera función
-// --------------------
-
-// --------------------
-// Comienza la segunda función (procesar URL con dominio 'router.cint.com')
-// --------------------
-function processUrlCint(url) {
-  try {
-    let domain = new URL(url).hostname;
-    let arid = new URL(url).pathname.split('/')[2];
-    let rid = new URL(url).searchParams.get('RID');
-
-    let generatedUrl = '';
-    
-    if (domain.includes('router.cint.com') && arid && rid) {
-      let token = '0749a007-a1d3-48c1-8ff3-12960c555867';
-      generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}&cint_arid=${arid}`;
-    } else {
-      throw new Error('URL no válida');
-    }
-
-    return generatedUrl;
-  } catch (e) {
-    console.error(e);
-    return null;
-  }
-}
-// --------------------
-// Termina la segunda función
+// Termina la función única processUrl
 // --------------------
