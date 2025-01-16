@@ -1,10 +1,10 @@
-import { processUrlSampleCube } from './sample-cube.js';
-import { processUrlNoctComun } from './noct-comun.js';
-import { processUrlRidToken } from './rid-token.js';
-import { processUrlNoctCint } from './noct-cint.js';
-import { processUrlInvite } from './invite.js';
-import { processUrlNoctPocoComunes } from './noct-poco-comunes.js';
-import { processUrlInterno } from './interno.js';
+import { processUrl as processUrlSampleCube } from './sample-cube.js';
+import { processUrl as processUrlNoctComun } from './noct-comun.js';
+import { processUrl as processUrlRidToken } from './rid-token.js';
+import { processUrl as processUrlNoctCint } from './noct-cint.js';
+import { processUrl as processUrlInvite } from './invite.js';
+import { processUrl as processUrlNoctPocoComunes } from './noct-poco-comunes.js';
+import { processUrl as processUrlInterno } from './interno.js';
 
 document.getElementById('urlForm').addEventListener('submit', async function (event) {
     event.preventDefault();
@@ -12,7 +12,7 @@ document.getElementById('urlForm').addEventListener('submit', async function (ev
     const urlInput = document.getElementById('urlInput');
     let result = null;
     
-     result = await processUrlSampleCube(urlInput.value)
+      result = await processUrlSampleCube(urlInput.value)
       if(!result)  result = await processUrlNoctComun(urlInput.value);
       if(!result)  result = await processUrlRidToken(urlInput.value);
       if(!result)  result = await processUrlNoctCint(urlInput.value);
