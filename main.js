@@ -1,4 +1,4 @@
-import { processUrl as processUrlInterno } from 'interno.js';
+import { processUrl as processUrlInterno } from './interno.js';
 import { processUrl as processUrlSampleCube } from 'sample-cube.js';
 import { processUrl as processUrlNoctPocoComunes } from 'noct-poco-comunes.js';
 import { processUrl as processUrlRidToken } from 'rid-token.js';
