@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Herramienta URL</title>
   <link rel="icon" type="image/png" href="https://cdn.dribbble.com/users/7549673/screenshots/17206704/media/1210a9d0ec8af427967e735935861eeb.png?resize=400x300&vertical=center" />
+</head>
 
+
+  
    <style>
     body {
         font-family: 'Poppins', Arial, sans-serif;
@@ -281,7 +284,8 @@ p {
     }
   </style>
 
-</head>
+
+  
 <body>
   <div class="container">
     <h1>Armador de URLS v-1.0🥱</h1>
@@ -292,21 +296,18 @@ p {
       <button type="submit">Generar URL</button>
     </form>
     
-
-
     <h2 id="generatedTitle" class="hidden">URL Armado:</h2>
     <p id="generatedUrl" class="hidden"></p>    
-    <p id="notification" class="notification hidden">¡URL Copiada Automaticamente!</p>
+    <p id="notification" class="notification hidden">¡URL Copiada Automáticamente!</p>
     <p id="error" class="error hidden">¡Solo se permiten URLs válidas!</p>
 
-    
     <div class="allowed-domains">
-      <h3 onclick="toggleList()">✌️INFORMACION DEL ARMADOR - ACTUAL✌️<span id="toggleText"></span></h3>
-      <ul><br>
+      <h3 onclick="toggleList()">✌️INFORMACIÓN DEL ARMADOR - ACTUAL✌️<span id="toggleText"></span></h3>
+      <ul>
+        <br>
         USA { <img src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg" alt="USA Flag" width="24">
         <li class="extra">Samplicious > surveys.ovationworldpanel.com 👌</li>}<br>
-        <li class="extra">Interno > RDSECURED 👌</li>}<br>
-<br>
+        <li class="extra">Interno > RDSECURED 👌</li>}<br><br>
         Canada { <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Canada.svg" alt="Canada Flag" width="24">
         <li>Samplicious > hanover-research.qualtrics Check☠️</li>
         <li>Samplicious > vault.questionlab 👌</li>
@@ -315,21 +316,18 @@ p {
         <li class="extra">Samplicious > insights.surveynavigate 👌</li>
         <li class="extra">Invite-Mindshare > ipsosinteractive 👌</li>
         <li class="extra">Sample-Cube > surveys.sago 👌</li>}
-
-
       </ul>
     </div>
-
-
+  </div>
 
   <script>
     function copyToClipboard(url) {
       navigator.clipboard.writeText(url).then(() => {
         let notification = document.getElementById('notification');
         notification.classList.remove('hidden');
-        notification.style.display = 'block'; // Mostrar mensaje inmediatamente
+        notification.style.display = 'block';
         setTimeout(() => {
-          notification.style.display = 'none'; // Ocultar mensaje después de 20 segundos
+          notification.style.display = 'none';
         }, 20000); 
       }).catch(() => {
         alert('Error al copiar al portapapeles');
@@ -346,8 +344,7 @@ p {
         document.getElementById('generatedUrl').classList.remove('hidden');
         setTimeout(() => {
           document.getElementById('generatedUrl').classList.add('hidden');
-        }, 20000); // Limpiar datos después de 20 segundos
-
+        }, 20000);
         copyToClipboard(generatedUrl);
         document.getElementById('error').classList.add('hidden');
       } else {
@@ -357,36 +354,22 @@ p {
       }
     });
 
-    // Limpiar el campo de entrada cada 20 segundos
     setInterval(() => {
       document.getElementById('urlInput').value = '';
     }, 20000);
 
-    // Recargar la página cada 3 minutos (si es necesario)
-    setInterval(() => {
-      location.reload();
-    }, 180000);
+    function processUrl(url) {
+      // Implementar la lógica de procesamiento de URL aquí
+      if (url.includes('qualtrics')) {
+        return `${url}?ref=generated`;
+      }
+      return null;
+    }
 
-    // Toggle para la lista de dominios permitidos
     function toggleList() {
-      const container = document.querySelector('.allowed-domains');
-      const toggleText = document.getElementById('toggleText');
-      container.classList.toggle('open');
-      toggleText.textContent = container.classList.contains('open') ? '' : '';
+      const domains = document.querySelector('.allowed-domains');
+      domains.classList.toggle('open');
     }
   </script>
-
-
-<script src="rid-token.js"></script>
-<script src="invite.js"></script>
-<script src="sample-cube.js"></script>
-<script src="noct-comun.js"></script>
-<script src="noct-poco-comunes.js"></script>
-<script src="internos.js"></script>
-
 </body>
-
-
-  
-
 </html>
