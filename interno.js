@@ -40,23 +40,27 @@ function processUrl(url) {
       let arid = new URL(url).pathname.split('/')[2];
       let rid = new URL(url).searchParams.get('RID');
 
+      // Verificar si la URL tiene el dominio esperado y los parámetros necesarios
       if (domain.includes('router.cint.com') && arid && rid) {
         let token = '0749a007-a1d3-48c1-8ff3-12960c555867';
         generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}&cint_arid=${arid}`;
+      } else {
+        // Si el dominio es 'router.cint.com' pero no tiene los parámetros necesarios, marcar como inválida
+        return 'URL no válida';
       }
     }
 
     // Si no se generó ninguna URL válida
     if (!generatedUrl) {
-      return null; // Si no se cumple ninguna de las condiciones, retornamos null
+      return 'URL no válida'; // Si no se cumple ninguna de las condiciones, retornamos 'URL no válida'
     }
 
     return generatedUrl; // Retornamos la URL generada
 
   } catch (error) {
-    // Manejo de error: se logea y se retorna null, pero no bloquea la ejecución de otros scripts
+    // Manejo de error: se logea y se retorna 'URL no válida', pero no bloquea la ejecución de otros scripts
     console.error('Error al procesar la URL:', error);
-    return null;
+    return 'URL no válida';
   }
 }
 // --------------------
