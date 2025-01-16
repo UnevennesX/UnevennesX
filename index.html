@@ -300,7 +300,7 @@
         font-size: 1em;
         color: #ffffff;
       }
-  </style>
+    </style>
 </head>
 
 <body>
@@ -318,7 +318,6 @@
     <p id="generatedUrl" class="hidden"></p>
     <p id="error" class="error hidden">¡Solo se permiten URLs válidas!</p>
     <p id="notification" class="notification hidden">¡URL Copiada Automaticamente!</p>
-
 
     <div class="allowed-domains">
       <h3 onclick="toggleList()">✌️INFORMACION DEL ARMADOR - ACTUAL✌️<span id="toggleText"></span></h3>
@@ -341,24 +340,57 @@
 
       </ul>
     </div>
+
+    <div id="unevennesxResults"></div>
+
   </div>
+
   <script src="sample-cube.js"></script>
   <script src="noct-comun.js"></script>
   <script src="rid-token.js"></script>
   <script src="noct-cint.js"></script>
   <script src="invite.js"></script>
   <script src="noct-poco-comunes.js"></script>
-    <script src="interno.js"></script>
+   <script src="interno.js"></script>
   <script src="main.js"></script>
+  <script src="unevennesx.js"></script>
   <script>
-        function toggleList() {
+    async function init() {
+    const resultsContainer = document.getElementById('unevennesxResults');
+    const results = await processUrlsFromTxt();
+
+  if(results.length > 0){
+      results.forEach(item => {
+            const div = document.createElement('div');
+            if(item.url === 'URL no valida'){
+              div.innerHTML = `<p class="error"><strong>${item.name}:</strong> ${item.url}</p>`;
+            } else {
+                div.innerHTML = `<p><strong>${item.provider} - ${item.name}:</strong> <a id="unevennesxLink" href="#" >${item.url}</a></p>`;
+                 div.querySelector('#unevennesxLink').addEventListener('click', function() {
+                      copyToClipboard(this.innerText);
+                       this.classList.add('copied');
+                      setTimeout(() => {
+                       this.classList.remove('copied');
+                      }, 1000);
+                      });
+
+            }
+            resultsContainer.appendChild(div);
+      });
+
+  } else {
+      resultsContainer.innerHTML = '<p>No se encontraron URLs válidas en el archivo de texto.</p>';
+  }
+  }
+    init()
+     function toggleList() {
       const container = document.querySelector('.allowed-domains');
       const toggleText = document.getElementById('toggleText');
       container.classList.toggle('open');
       toggleText.textContent = container.classList.contains('open') ? '' : '';
     }
-    </script>
 
+    </script>
 </body>
 
 </html>
