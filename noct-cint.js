@@ -1,4 +1,4 @@
-//Perfecto//
+// Función para procesar la URL
 function processUrl(url) {
   try {
     // Obtener el dominio y los parámetros
@@ -22,9 +22,6 @@ function processUrl(url) {
     return null;
   }
 }
-
-
-
 
 // Manejo del formulario y visualización de la URL generada
 document.getElementById('urlForm').addEventListener('submit', function (event) {
@@ -64,5 +61,3 @@ document.getElementById('generatedUrl').addEventListener('click', function() {
     notification.classList.add('hidden');
   }, 5000); // Ocultar después de 5 segundos
 });
-
-//Perfecto//
