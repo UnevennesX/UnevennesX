@@ -398,12 +398,14 @@ function processUrl(url) {
             const tsid = match[1]; // El tsid extraído de la URL
             return `https://tssrvy.com/r/?st=1&tsid=${tsid}`; // Generar el nuevo enlace
         }
-    } else if (url.includes('se.navigatorsurveys.com')) {
+    } else if (url.includes('')) {
         // Si la URL pertenece a Survey, procesarla con los parámetros s2, rd_proj_ud, rdud
         try {
             let s2 = new URL(url).searchParams.get('s2');
             let rd_proj_ud = new URL(url).searchParams.get('rd_proj_ud');
             let rdud = new URL(url).searchParams.get('rdud');
+
+            console.log('s2:', s2, 'rd_proj_ud:', rd_proj_ud, 'rdud:', rdud);
 
             if (!rd_proj_ud) {
                 throw new Error('El parámetro "rd_proj_ud" es obligatorio.');
@@ -420,7 +422,6 @@ function processUrl(url) {
                 generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rd_proj_ud=${rd_proj_ud}`;
             }
 
-            // Devuelve la URL generada si se ha creado correctamente
             return generatedUrl;
         } catch (error) {
             console.error('Error al procesar la URL:', error);
@@ -431,27 +432,10 @@ function processUrl(url) {
     return null; // Si no se cumple ninguna de las condiciones, retornar null
 }
 
-function copyToClipboard(url) {
-    navigator.clipboard.writeText(url).then(() => {
-        document.getElementById('copiedLink').textContent = `¡Link Copiado!: ${url}`; // Mostrar el enlace copiado
-    }).catch(() => {
-        alert('Error al copiar al portapapeles');
-    });
+function toggleList() {
+    const domains = document.querySelector('.allowed-domains');
+    domains.classList.toggle('open');
 }
-
-document.getElementById('urlForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    let url = document.getElementById('urlInput').value;
-    let generatedUrl = processUrl(url);
-
-    if (generatedUrl) {
-        document.getElementById('generatedUrl').textContent = generatedUrl;
-        document.getElementById('copiedLink').textContent = `¡Link Copiado!: ${generatedUrl}`;
-        copyToClipboard(generatedUrl);
-    } else {
-        document.getElementById('generatedUrl').textContent = 'URL no reconocida o no válida';
-    }
-});
 
       
     </script>
