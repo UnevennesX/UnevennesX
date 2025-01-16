@@ -49,7 +49,7 @@ function processUrl(url) {
         generatedUrl = `https://tssrvy.com/r/?st=1&tsid=${tsid}`;
         return generatedUrl;
       } else {
-        throw new Error('URL no válida');
+        throw new Error('URL no válida, parámetro "tsid" no encontrado.');
       }
     }
 
