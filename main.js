@@ -1,10 +1,10 @@
-import { processUrlSampleCube } from './sample-cube.js';
-import { processUrlNoctComun } from './noct-comun.js';
-import { processUrlRidToken } from './rid-token.js';
-import { processUrlNoctCint } from './noct-cint.js';
-import { processUrlInvite } from './invite.js';
-import { processUrlNoctPocoComunes } from './noct-poco-comunes.js';
-import { processUrlInterno } from './interno.js';
+import { processUrlSampleCube } from 'sample-cube.js';
+import { processUrlNoctComun } from 'noct-comun.js';
+import { processUrlRidToken } from 'rid-token.js';
+import { processUrlNoctCint } from 'noct-cint.js';
+import { processUrlInvite } from 'invite.js';
+import { processUrlNoctPocoComunes } from 'noct-poco-comunes.js';
+import { processUrlInterno } from 'interno.js';
 
 document.getElementById('urlForm').addEventListener('submit', async function (event) {
     event.preventDefault();
