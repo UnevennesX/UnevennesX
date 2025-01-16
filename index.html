@@ -420,76 +420,79 @@ p {
 
 <script>
 
-// Función para leer el archivo .txt desde GitHub
-function fetchUrlData() {
-  fetch('https://raw.githubusercontent.com/UnevennesX/UnevennesX/main/datos-info.txt')
-    .then(response => response.text())  // Obtiene el texto del archivo
-    .then(data => {
-      const surveyData = parseSurveyData(data);
-      console.log('Datos cargados:', surveyData);
-    })
-    .catch(error => {
-      console.error('Error al obtener el archivo:', error);
-    });
-}
-
-// Función para procesar el contenido del archivo .txt
-function parseSurveyData(data) {
-  const surveyEntries = data.split('----------------');  // Dividir por los bloques
-  const surveys = [];
-
-  surveyEntries.forEach(entry => {
-    const lines = entry.trim().split('\n');
-    const survey = {};
-
-    lines.forEach(line => {
-      if (line.startsWith('Nombre:')) {
-        survey.name = line.replace('Nombre:', '').trim();
-      } else if (line.startsWith('URL:')) {
-        survey.url = line.replace('URL:', '').trim();
-      } else if (line.startsWith('Tipo de Survey:')) {
-        survey.type = line.replace('Tipo de Survey:', '').trim();
-      } else if (line.startsWith('Fecha:')) {
-        survey.date = line.replace('Fecha:', '').trim();
-      } else if (line.startsWith('Comentario:')) {
-        survey.comment = line.replace('Comentario:', '').trim();
-      }
-    });
-
-    if (survey.name && survey.url) {
-      surveys.push(survey);
-    }
-  });
-
-  return surveys;
-}
-
-// Función para procesar la URL según los datos del archivo .txt
-function processUrl(url) {
+// Función para cargar los datos desde el archivo TXT en GitHub
+async function loadSurveyDataFromGitHub() {
+  const url = 'https://raw.githubusercontent.com/UnevennesX/UnevennesX/main/datos-info.txt';
+  
   try {
-    const surveyData = window.surveyData || [];  // Suponemos que surveyData es global después de cargar el archivo
-
-    const survey = surveyData.find(s => url.includes(s.url));  // Buscar la encuesta por la URL
-    if (survey) {
-      const generatedUrl = survey.url;  // Retorna la URL de la encuesta encontrada
-      console.log(`URL generada: ${generatedUrl}`);
-      return generatedUrl;
-    } else {
-      console.error('URL no encontrada en los datos.');
-      return null;
+    // Hacer una solicitud GET al archivo de GitHub
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error('No se pudo obtener el archivo');
     }
-  } catch (e) {
-    console.error('Error procesando la URL: ', e);
+    
+    const data = await response.text();
+    
+    // Procesar el archivo TXT
+    const surveys = data.split('----------------').map(entry => {
+      const lines = entry.trim().split('\n');
+      const survey = {};
+      lines.forEach(line => {
+        const [key, value] = line.split(': ').map(item => item.trim());
+        if (key && value) {
+          survey[key.toLowerCase()] = value;
+        }
+      });
+      return survey;
+    });
+
+    return surveys;
+  } catch (error) {
+    console.error('Error al cargar el archivo:', error);
     return null;
   }
 }
 
-// Llamar a la función para cargar los datos del archivo
-fetchUrlData();
+// Función para generar la URL con el token y RID
+function generateUrl(url, token, rid) {
+  return `${url}?token=${token}&RID=${rid}`;
+}
 
-// Ejemplo de uso de la función processUrl
-const exampleUrl = "https://notch.insights.supply/cb?token=f8bbc072-ea67-44fb-8833-ea0512ee4cda&RID=";
-console.log(processUrl(exampleUrl));  // Ejemplo de cómo se usaría la URL
+// Función para modificar el campo RID en el archivo
+async function modifyRidInSurveyData() {
+  const surveysData = await loadSurveyDataFromGitHub();
+  
+  if (!surveysData) return;
+
+  // Filtrar solo las encuestas de tipo 'Samplicious'
+  const sampliciousSurveys = surveysData.filter(survey => survey['tipo de survey'] === 'Samplicious');
+  
+  sampliciousSurveys.forEach(survey => {
+    let { url, rid = "" } = survey;
+
+    // Si el campo 'rid' está vacío, generamos uno nuevo
+    if (!rid) {
+      // Generamos un nuevo RID (esto es solo un ejemplo, puedes obtenerlo de otra fuente si lo prefieres)
+      rid = generateNewRid();
+      survey.rid = rid;  // Actualizamos el 'rid' en el objeto de la encuesta
+    }
+
+    // Extraer el token de la URL
+    const token = url.split('?token=')[1].split('&')[0]; // Extraer el token de la URL
+    const completeUrl = generateUrl(url, token, rid);
+
+    console.log(`URL Generada: ${completeUrl}`);
+  });
+}
+
+// Función para generar un nuevo RID (puedes usar un sistema real para generar los RIDs)
+function generateNewRid() {
+  return 'nuevo-rid-generado'; // Aquí generamos un RID ejemplo
+}
+
+// Llamada a la función para obtener y procesar las encuestas de tipo 'Samplicious'
+modifyRidInSurveyData();
 
   
 </script>
