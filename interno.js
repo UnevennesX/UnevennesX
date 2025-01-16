@@ -41,7 +41,8 @@ function processUrl(url) {
 
         return null; // Si no se cumple ninguna de las condiciones, retornar null
     } catch (error) {
+        // Manejo de error: se logea y se retorna null, pero no bloquea la ejecución de otros scripts
         console.error('Error al procesar la URL:', error);
-        return null; // Si ocurre un error, retornamos null sin bloquear el resto del script
+        return null;
     }
 }
