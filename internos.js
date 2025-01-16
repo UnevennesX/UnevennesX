@@ -1,5 +1,5 @@
 // Función para procesar las URLs de Survey
-function processUrl(url) {
+function processUrlSurvey(url) {
   try {
     // Crear un objeto URL para analizar la URL dada
     const parsedUrl = new URL(url);
@@ -46,7 +46,7 @@ function processUrl(url) {
 }
 
 // Función para procesar las URLs de Decipher
-function processUrl(url) {
+function processUrlDecipher(url) {
   try {
     // Extraer el dominio y el parámetro tsid de la URL
     let domain = new URL(url).hostname;
@@ -68,19 +68,12 @@ function processUrl(url) {
   }
 }
 
-
-
-
-
-
-
-
 // Manejo del formulario y visualización de la URL generada
 document.getElementById('urlForm').addEventListener('submit', function (event) {
   event.preventDefault();
 
   const urlInput = document.getElementById('urlInput');
-  const result = processDecipherUrl(urlInput.value);  // Usamos la nueva función
+  const result = processUrlDecipher(urlInput.value);  // Usamos la función para Decipher
 
   // Mostrar la URL generada o error según corresponda
   if (result) {
