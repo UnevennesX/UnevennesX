@@ -1,7 +1,7 @@
   window.onload = function() {
     // Array con las rutas de los archivos JS que deseas cargar
     var scripts = [
-      'interno.js',
+
       'noct-cint.js'
       // Agrega más scripts aquí si es necesario
     ];
