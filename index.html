@@ -248,7 +248,7 @@
       box-sizing: border-box;
       /* Asegura que el padding y el borde no afecten el tamaño total */
     }
-
+  </style>
     <style>
       .allowed-domains {
         background: #fff;
@@ -345,45 +345,47 @@
 
   </div>
 
-
-    <script src="sample-cube.js"></script>
+  <script src="sample-cube.js"></script>
   <script src="noct-comun.js"></script>
   <script src="rid-token.js"></script>
   <script src="noct-cint.js"></script>
   <script src="invite.js"></script>
   <script src="noct-poco-comunes.js"></script>
-  <script src="interno.js"></script>
+   <script src="interno.js"></script>
   <script src="main.js"></script>
   <script src="unevennesx.js"></script>
-
   
   <script>
     async function init() {
     const resultsContainer = document.getElementById('unevennesxResults');
-    const results = await processUrlsFromTxt();
-
-  if(results.length > 0){
-      results.forEach(item => {
-            const div = document.createElement('div');
-            if(item.url === 'URL no valida'){
-              div.innerHTML = `<p class="error"><strong>${item.name}:</strong> ${item.url}</p>`;
-            } else {
-                div.innerHTML = `<p><strong>${item.provider} - ${item.name}:</strong> <a id="unevennesxLink" href="#" >${item.url}</a></p>`;
-                 div.querySelector('#unevennesxLink').addEventListener('click', function() {
+    
+      try {
+          const results = await processUrlsFromTxt();
+          if (results && results.length > 0) {
+            results.forEach(item => {
+                const div = document.createElement('div');
+                if(item.url === 'URL no valida'){
+                  div.innerHTML = `<p class="error"><strong>${item.name}:</strong> ${item.url}</p>`;
+                } else {
+                    div.innerHTML = `<p><strong>${item.provider} - ${item.name}:</strong> <a id="unevennesxLink" href="#" >${item.url}</a></p>`;
+                      div.querySelector('#unevennesxLink').addEventListener('click', function() {
                       copyToClipboard(this.innerText);
                        this.classList.add('copied');
                       setTimeout(() => {
                        this.classList.remove('copied');
                       }, 1000);
                       });
-
-            }
-            resultsContainer.appendChild(div);
-      });
-
-  } else {
-      resultsContainer.innerHTML = '<p>No se encontraron URLs válidas en el archivo de texto.</p>';
-  }
+                }
+                resultsContainer.appendChild(div);
+            });
+            
+          } else {
+              resultsContainer.innerHTML = '<p>No se encontraron URLs válidas en el archivo de texto.</p>';
+          }
+      } catch (error) {
+          console.error("Error al inicializar:", error);
+          resultsContainer.innerHTML = '<p class="error">Hubo un error al cargar las URLs.</p>';
+      }
   }
     init()
      function toggleList() {
@@ -392,7 +394,18 @@
       container.classList.toggle('open');
       toggleText.textContent = container.classList.contains('open') ? '' : '';
     }
-
+    function copyToClipboard(url) {
+      navigator.clipboard.writeText(url).then(() => {
+        let notification = document.getElementById('notification');
+        notification.classList.remove('hidden');
+        notification.style.display = 'block'; // Mostrar mensaje inmediatamente
+        setTimeout(() => {
+          notification.style.display = 'none'; // Ocultar mensaje después de 20 segundos
+        }, 20000);
+      }).catch(() => {
+        alert('Error al copiar al portapapeles');
+      });
+    }
     </script>
 </body>
 
