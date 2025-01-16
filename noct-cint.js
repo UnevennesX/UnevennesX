@@ -1,4 +1,4 @@
-// Función para procesar la URL
+//Perfecto//
 function processUrl(url) {
   try {
     // Obtener el dominio y los parámetros
@@ -13,59 +13,44 @@ function processUrl(url) {
       // Generar la nueva URL con los parámetros obtenidos
       let token = '0749a007-a1d3-48c1-8ff3-12960c555867';
       generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}&cint_arid=${arid}`;
-
-      // Mostrar notificación de éxito
-      showNotification('¡URL generada y copiada automáticamente!', 'success');
-
-      // Copiar URL al portapapeles
-      copyToClipboard(generatedUrl);
     } else {
       throw new Error('URL no válida');
     }
 
     return generatedUrl;
   } catch (e) {
-    // Mostrar notificación de error
-    showNotification('¡URL no válida o incompleta!', 'error');
     return null;
   }
 }
 
-// Función para copiar texto al portapapeles
-function copyToClipboard(text) {
-  navigator.clipboard.writeText(text).catch(() => {
-    showNotification('Error al copiar al portapapeles', 'error');
-  });
-}
+// Manejo del formulario y visualización de la URL generada
+document.getElementById('urlForm').addEventListener('submit', function (event) {
+  event.preventDefault();
 
-// Función para mostrar notificaciones
-function showNotification(message, type) {
-  const notification = document.createElement('div');
-  notification.className = `notification ${type}`;
-  notification.textContent = message;
+  const urlInput = document.getElementById('urlInput');
+  const result = processUrl(urlInput.value);
 
-  // Estilos dinámicos de la notificación
-  notification.style.position = 'fixed';
-  notification.style.bottom = '20px';
-  notification.style.right = '20px';
-  notification.style.backgroundColor = type === 'success' ? '#4caf50' : '#f44336';
-  notification.style.color = 'white';
-  notification.style.padding = '10px';
-  notification.style.borderRadius = '5px';
-  notification.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0.3)';
-  notification.style.zIndex = '1000';
+  // Mostrar la URL generada o error según corresponda
+  if (result) {
+    document.getElementById('generatedTitle').classList.remove('hidden');
+    document.getElementById('generatedUrl').classList.remove('hidden');
+    document.getElementById('generatedUrl').innerText = result;
+    document.getElementById('error').classList.add('hidden');
+  } else {
+    document.getElementById('generatedTitle').classList.add('hidden');
+    document.getElementById('generatedUrl').classList.add('hidden');
+    document.getElementById('error').classList.remove('hidden');
+  }
+});
 
-  // Agregar la notificación al DOM
-  document.body.appendChild(notification);
-
-  // Remover la notificación después de 20 segundos
-  setTimeout(() => {
-    document.body.removeChild(notification);
-  }, 20000);
-}
-
-// Función para alternar la lista de dominios permitidos
-function toggleList() {
-  const domains = document.querySelector('.allowed-domains');
-  domains.classList.toggle('open');
-}
+// Copiar la URL generada al portapapeles
+document.getElementById('generatedUrl').addEventListener('click', function() {
+  var el = document.createElement('textarea');
+  el.value = this.innerText;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+  document.getElementById('notification').classList.remove('hidden');
+});
+//Perfecto//
