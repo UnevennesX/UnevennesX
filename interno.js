@@ -45,33 +45,29 @@ function processUrlTsid(url) {
 // --------------------
 
 // --------------------
-// Comienza la función para procesar la URL con dominio 'router.cint.com'
+// Comienza la segunda función (procesar URL con dominio 'router.cint.com')
 // --------------------
 function processUrlCint(url) {
   try {
-    // Obtener el dominio y los parámetros de la URL
-    let domain = new URL(url).hostname; // Obtener el dominio
-    let arid = new URL(url).pathname.split('/')[2]; // Obtener el 'arid' (parte de la ruta)
-    let rid = new URL(url).searchParams.get('RID'); // Obtener el 'RID' de los parámetros
+    let domain = new URL(url).hostname;
+    let arid = new URL(url).pathname.split('/')[2];
+    let rid = new URL(url).searchParams.get('RID');
 
     let generatedUrl = '';
-
-    // Verificar si el dominio es 'router.cint.com' y si 'arid' y 'RID' están presentes
+    
     if (domain.includes('router.cint.com') && arid && rid) {
-      let token = '0749a007-a1d3-48c1-8ff3-12960c555867'; // Token fijo para la URL generada
+      let token = '0749a007-a1d3-48c1-8ff3-12960c555867';
       generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}&cint_arid=${arid}`;
     } else {
-      // Si el dominio o los parámetros no están presentes, generar un error
-      throw new Error('URL no válida o parámetros faltantes');
+      throw new Error('URL no válida');
     }
 
-    return generatedUrl; // Retornar la URL generada
+    return generatedUrl;
   } catch (e) {
-    // Manejo de error
-    console.error('Error al procesar la URL:', e.message);
-    return null; // Retornar null si hay un error
+    console.error(e);
+    return null;
   }
 }
 // --------------------
-// Termina la función para procesar la URL con dominio 'router.cint.com'
+// Termina la segunda función
 // --------------------
