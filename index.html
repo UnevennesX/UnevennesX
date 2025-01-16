@@ -331,120 +331,83 @@ p {
 
 
 
-  <script>
-    function copyToClipboard(url) {
-      navigator.clipboard.writeText(url).then(() => {
-        let notification = document.getElementById('notification');
-        notification.classList.remove('hidden');
-        notification.style.display = 'block'; // Mostrar mensaje inmediatamente
-        setTimeout(() => {
-          notification.style.display = 'none'; // Ocultar mensaje después de 20 segundos
-        }, 20000); 
-      }).catch(() => {
-        alert('Error al copiar al portapapeles');
-      });
-    }
-
-    document.getElementById('urlForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      let url = document.getElementById('urlInput').value;
-      let generatedUrl = processUrl(url);
-
-      if (generatedUrl) {
-        document.getElementById('generatedUrl').textContent = generatedUrl;
-        document.getElementById('generatedUrl').classList.remove('hidden');
-        setTimeout(() => {
-          document.getElementById('generatedUrl').classList.add('hidden');
-        }, 20000); // Limpiar datos después de 20 segundos
-
-        copyToClipboard(generatedUrl);
-        document.getElementById('error').classList.add('hidden');
-      } else {
-        document.getElementById('generatedUrl').textContent = 'URL no reconocida o no válida';
-        document.getElementById('generatedUrl').classList.remove('hidden');
-        document.getElementById('error').classList.remove('hidden');
-      }
-    });
-
-    // Limpiar el campo de entrada cada 20 segundos
-    setInterval(() => {
-      document.getElementById('urlInput').value = '';
-    }, 20000);
-
-    // Recargar la página cada 3 minutos (si es necesario)
-    setInterval(() => {
-      location.reload();
-    }, 180000);
-
-    // Toggle para la lista de dominios permitidos
-    function toggleList() {
-      const container = document.querySelector('.allowed-domains');
-      const toggleText = document.getElementById('toggleText');
-      container.classList.toggle('open');
-      toggleText.textContent = container.classList.contains('open') ? '' : '';
-    }
-  </script>
-
-
-
-
-
-
-
-
-
-
-
-
 <script>
+  // Función para procesar las URLs
+  function processUrls(url) {
+    // Condicional 1: Si la URL contiene 'tsid='
+    if (url.includes('tsid=')) {
+      // Si la URL contiene 'tsid', procesarla con la lógica de tsid
+      const regex = /tsid=([a-f0-9]{32})/;
+      const match = url.match(regex);
+      if (match) {
+        const tsid = match[1]; // El tsid extraído de la URL
+        return `https://tssrvy.com/r/?st=1&tsid=${tsid}`; // Generar el nuevo enlace
+      }
+    } else if (url.includes('')) {
+      // Condicional 2: Si la URL pertenece a Survey, procesarla con los parámetros s2, rd_proj_ud, rdud
+      try {
+        let s2 = new URL(url).searchParams.get('s2');
+        let rd_proj_ud = new URL(url).searchParams.get('rd_proj_ud');
+        let rdud = new URL(url).searchParams.get('rdud');
 
-function processUrl(url) {
-    try {
-        if (url.includes('tsid=')) {
-            // Si la URL contiene 'tsid', procesarla con la lógica de tsid
-            const regex = /tsid=([a-f0-9]{32})/;
-            const match = url.match(regex);
-            if (match) {
-                const tsid = match[1]; // El tsid extraído de la URL
-                return `https://tssrvy.com/r/?st=1&tsid=${tsid}`; // Generar el nuevo enlace
-            }
-        } else if (url.includes('')) {
-            // Si la URL pertenece a Survey, procesarla con los parámetros s2, rd_proj_ud, rdud
-            let s2 = new URL(url).searchParams.get('s2');
-            let rd_proj_ud = new URL(url).searchParams.get('rd_proj_ud');
-            let rdud = new URL(url).searchParams.get('rdud');
+        console.log('s2:', s2, 'rd_proj_ud:', rd_proj_ud, 'rdud:', rdud);
 
-            console.log('s2:', s2, 'rd_proj_ud:', rd_proj_ud, 'rdud:', rdud);
-
-            // Generar la URL solo si rd_proj_ud está presente o usar valores predeterminados
-            let generatedUrl = '';
-            if (s2 && rdud) {
-                generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud || 'default_proj_ud'}`;
-            } else if (s2) {
-                generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${s2}&rd_proj_ud=${rd_proj_ud || 'default_proj_ud'}`;
-            } else if (rdud) {
-                generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud || 'default_proj_ud'}`;
-            } else if (rd_proj_ud) {
-                generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rd_proj_ud=${rd_proj_ud}`;
-            }
-
-            return generatedUrl || null; // Retorna la URL generada o null
+        // Validación: El parámetro "rd_proj_ud" es obligatorio
+        if (!rd_proj_ud) {
+          throw new Error('El parámetro "rd_proj_ud" es obligatorio.');
         }
-    } catch (error) {
+
+        // Generación de la URL final dependiendo de los parámetros
+        let generatedUrl = '';
+        if (s2 && rdud) {
+          generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
+        } else if (s2) {
+          generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${s2}&rd_proj_ud=${rd_proj_ud}`;
+        } else if (rdud) {
+          generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
+        } else {
+          generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rd_proj_ud=${rd_proj_ud}`;
+        }
+
+        return generatedUrl;
+      } catch (error) {
+        // Manejo de errores en caso de que la URL no sea válida o falten parámetros
         console.error('Error al procesar la URL:', error);
-        return null; // No arrojar errores, retornar null si algo falla
+        return null;
+      }
     }
 
-    return null; // Si no se cumple ninguna de las condiciones, retornar null
-}
+    // Si no se cumple ninguna de las condiciones, retornar null
+    return null;
+  }
 
-function toggleList() {
+  // Función para alternar la visibilidad de la lista de dominios permitidos
+  function toggleList() {
     const domains = document.querySelector('.allowed-domains');
     domains.classList.toggle('open');
-}
-
-
+  }
 </script>
+
+<!-- Inclusión de módulos adicionales -->
+<script src="rid-token.js" type="module"></script>
+<script src="invite.js" type="module"></script>
+<script src="sample-cube.js" type="module"></script>
+<script src="noct-comun.js" type="module"></script>
+<script src="noct-poco-comunes.js" type="module"></script>
+<script src="interno.js" type="module"></script>
+<script src="noct-cint.js" type="module"></script>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   
@@ -452,13 +415,5 @@ function toggleList() {
 
 
 </body>
-  
-  <script src="rid-token.js" type="module"></script>
-  <script src="invite.js" type="module"></script>
-  <script src="sample-cube.js" type="module"></script>
-  <script src="noct-comun.js" type="module"></script>
-  <script src="noct-poco-comunes.js" type="module"></script>
-  <script src="interno.js" type="module"></script>
-  <script src="noct-cint.js" type="module"></script>
   
 </html>
