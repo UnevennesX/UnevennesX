@@ -1,3 +1,4 @@
+//Perfecto//
 function processUrl(url) {
   try {
     // Obtener el dominio y los parámetros
@@ -52,3 +53,4 @@ document.getElementById('generatedUrl').addEventListener('click', function() {
   document.body.removeChild(el);
   document.getElementById('notification').classList.remove('hidden');
 });
+//Perfecto//
