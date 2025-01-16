@@ -421,6 +421,9 @@ p {
 
 
 <script>
+// Definir la URL donde se encuentra el archivo .txt
+const DATA_FILE_URL = 'https://raw.githubusercontent.com/UnevennesX/UnevennesX/main/datos-info.txt';
+
 // Función para cargar los datos del archivo
 async function fetchSurveyData() {
   const response = await fetch(DATA_FILE_URL);
@@ -565,6 +568,7 @@ document.getElementById('urlForm').addEventListener('submit', async (event) => {
     errorElement.classList.remove('hidden');
   }
 });
+
 
 
 </script>
