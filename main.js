@@ -1,4 +1,38 @@
- import { dispatchUrl } from './main.js';
+import { processUrlSampleCube } from './sample-cube.js';
+import { processUrlNoctComun } from './noct-comun.js';
+import { processUrlRidToken } from './rid-token.js';
+import { processUrlNoctCint } from './noct-cint.js';
+import { processUrlInvite } from './invite.js';
+import { processUrlNoctPocoComunes } from './noct-poco-comunes.js';
+import { processUrlInterno } from './interno.js';
+
+function dispatchUrl(url) {
+    if (url.includes('surveys.sago.com')) {
+        const result = processUrlSampleCube(url);
+        return result ? { url: result, provider: 'Sample-Cube' } : null;
+    } else if (url.includes('qualtrics.com') || url.includes('questionlab.com') || url.includes('surveys.audience-align.com') || url.includes('insights.surveynavigate.app')) {
+       const result = processUrlNoctComun(url);
+        return result ? { url: result, provider: 'Samplicious' } : null;
+    } else if (url.includes('lumen-research.com')) {
+        const result = processUrlRidToken(url);
+        return result ? { url: result, provider: 'Lumen Research' } : null;
+    } else if (url.includes('router.cint.com')) {
+      const result = processUrlNoctCint(url);
+        return result ? { url: result, provider: 'Cint' } : null;
+    } else if (url.includes('ovationworldpanel.com')) {
+      const result = processUrlNoctPocoComunes(url);
+        return result ? { url: result, provider: 'Ovation World Panel' } : null;
+    } else if (url.includes('ipsosinteractive.com')) {
+      const result = processUrlInvite(url);
+        return result ? { url: result, provider: 'Ipsos Interactive' } : null;
+    } else if (url.includes('tsid=') || url.includes('rd_proj_ud=') || url.includes('s2=') || url.includes('rdud=')) {
+        const result = processUrlInterno(url);
+        return result === 'URL no válida' ? null : {url: result, provider:'Interno'};
+    }
+
+    return null;
+}
+
 document.getElementById('urlForm').addEventListener('submit', async function (event) {
     event.preventDefault();
 
@@ -50,30 +84,4 @@ function copyToClipboard(url) {
   }).catch(() => {
     alert('Error al copiar al portapapeles');
   });
-}
- function dispatchUrl(url) {
-    if (url.includes('surveys.sago.com')) {
-        const result = processUrlSampleCube(url);
-        return result ? { url: result, provider: 'Sample-Cube' } : null;
-    } else if (url.includes('qualtrics.com') || url.includes('questionlab.com') || url.includes('surveys.audience-align.com') || url.includes('insights.surveynavigate.app')) {
-       const result = processUrlNoctComun(url);
-        return result ? { url: result, provider: 'Samplicious' } : null;
-    } else if (url.includes('lumen-research.com')) {
-        const result = processUrlRidToken(url);
-        return result ? { url: result, provider: 'Lumen Research' } : null;
-    } else if (url.includes('router.cint.com')) {
-      const result = processUrlNoctCint(url);
-        return result ? { url: result, provider: 'Cint' } : null;
-    } else if (url.includes('ovationworldpanel.com')) {
-      const result = processUrlNoctPocoComunes(url);
-        return result ? { url: result, provider: 'Ovation World Panel' } : null;
-    } else if (url.includes('ipsosinteractive.com')) {
-      const result = processUrlInvite(url);
-        return result ? { url: result, provider: 'Ipsos Interactive' } : null;
-    } else if (url.includes('tsid=') || url.includes('rd_proj_ud=') || url.includes('s2=') || url.includes('rdud=')) {
-        const result = processUrlInterno(url);
-        return result === 'URL no válida' ? null : {url: result, provider:'Interno'};
-    }
-
-    return null;
 }
