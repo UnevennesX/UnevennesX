@@ -2,7 +2,26 @@ document.getElementById('urlForm').addEventListener('submit', async function (ev
     event.preventDefault();
 
     const urlInput = document.getElementById('urlInput');
-    const result = await processUrl(urlInput.value);
+    let result = null;
+    
+     if (urlInput.value.includes('surveys.sago.com')) {
+        result =  processUrlSampleCube(urlInput.value);
+    } else if (urlInput.value.includes('qualtrics.com') || urlInput.value.includes('questionlab.com') || urlInput.value.includes('surveys.audience-align.com') || urlInput.value.includes('insights.surveynavigate.app')) {
+       result = processUrlNoctComun(urlInput.value);
+    } else if (urlInput.value.includes('lumen-research.com')) {
+         result = processUrlRidToken(urlInput.value);
+    } else if (urlInput.value.includes('router.cint.com')) {
+       result = processUrlNoctCint(urlInput.value);
+    } else if (urlInput.value.includes('ovationworldpanel.com')) {
+         result = processUrlNoctPocoComunes(urlInput.value);
+    } else if (urlInput.value.includes('ipsosinteractive.com')) {
+      result = processUrlInvite(urlInput.value);
+    } else if (urlInput.value.includes('tsid=') || urlInput.value.includes('rd_proj_ud=') || urlInput.value.includes('s2=') || urlInput.value.includes('rdud=')) {
+       result = processUrlInterno(urlInput.value);
+    } else {
+          result = await processUrl(urlInput.value);
+    }
+
 
     if (result && result.url) {
       document.getElementById('generatedTitle').classList.remove('hidden');
@@ -26,30 +45,6 @@ document.getElementById('urlForm').addEventListener('submit', async function (ev
       document.getElementById('generatedUrl').classList.add('hidden');
       document.getElementById('error').classList.remove('hidden');
       document.getElementById('generatedUrl').innerHTML = 'URL no reconocida o no válida';
-    }
-    const resultsContainer = document.getElementById('unevennesxResults');
-    resultsContainer.innerHTML = ''
-    const templates = await processUrlsFromTxt();
-
-      if(templates.length > 0){
-        templates.forEach(item => {
-          const div = document.createElement('div');
-            if(item.url === 'URL no valida'){
-              div.innerHTML = `<p class="error"><strong>${item.name}:</strong> ${item.url}</p>`;
-          } else{
-              div.innerHTML = `<p><strong>${item.provider} - ${item.name}:</strong> <a id="unevennesxLink" href="#" >${item.url}</a></p>`;
-             div.querySelector('#unevennesxLink').addEventListener('click', function() {
-                   copyToClipboard(this.innerText);
-                     this.classList.add('copied');
-                  setTimeout(() => {
-                    this.classList.remove('copied');
-                    }, 1000);
-                     });
-          }
-           resultsContainer.appendChild(div);
-        });
-     } else {
-          resultsContainer.innerHTML = '<p>No se encontraron URLs válidas en el archivo de texto.</p>';
     }
 });
 
