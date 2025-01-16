@@ -228,7 +228,9 @@ document.getElementById('urlForm').addEventListener('submit', function (event) {
       document.getElementById('generatedUrl').innerHTML = `<span class="survey-name">${result.provider}</span><br><p id="notchLink">${result.url}</p>`;
       
       document.getElementById('error').classList.add('hidden');
-      copyToClipboard(result.url);
+
+       copyToClipboard(result.url);
+
 
        document.getElementById('notchLink').addEventListener('click', function() {
          copyToClipboard(this.innerText);
