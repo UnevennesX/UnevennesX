@@ -1,4 +1,4 @@
-function processSurveyUrl(url) {
+function processUrl(url) {
   try {
     // Extraer el dominio y los parámetros de la URL ingresada
     let domain = new URL(url).hostname;
@@ -7,14 +7,14 @@ function processSurveyUrl(url) {
     let rdud = new URL(url).searchParams.get('rdud');
     let generatedUrl = '';
 
-    // Verificar si el dominio es de Survey
+    // Verificar si el dominio es de 'se.navigatorsurveys.com'
     if (domain.includes('se.navigatorsurveys.com')) {
       // Verificar que el parámetro rd_proj_ud esté presente
       if (!rd_proj_ud) {
         throw new Error('El parámetro "rd_proj_ud" es obligatorio.');
       }
 
-      // Generar la nueva URL
+      // Generar la nueva URL con los parámetros
       if (s2 && rdud) {
         generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
       } else if (s2) {
@@ -30,6 +30,7 @@ function processSurveyUrl(url) {
 
     return generatedUrl;
   } catch (e) {
+    console.error(e);
     return null;
   }
 }
