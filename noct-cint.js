@@ -23,6 +23,9 @@ function processUrl(url) {
   }
 }
 
+
+
+
 // Manejo del formulario y visualización de la URL generada
 document.getElementById('urlForm').addEventListener('submit', function (event) {
   event.preventDefault();
@@ -51,6 +54,15 @@ document.getElementById('generatedUrl').addEventListener('click', function() {
   el.select();
   document.execCommand('copy');
   document.body.removeChild(el);
-  document.getElementById('notification').classList.remove('hidden');
+  
+  // Mostrar la notificación
+  const notification = document.getElementById('notification');
+  notification.classList.remove('hidden');
+  
+  // Ocultar la notificación después de 5 segundos
+  setTimeout(() => {
+    notification.classList.add('hidden');
+  }, 5000); // Ocultar después de 5 segundos
 });
+
 //Perfecto//
