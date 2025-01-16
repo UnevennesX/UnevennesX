@@ -1,10 +1,10 @@
-import { processUrl as processUrlInterno } from 'interno.js';
-import { processUrl as processUrlSampleCube } from 'sample-cube.js';
-import { processUrl as processUrlNoctPocoComunes } from 'noct-poco-comunes.js';
-import { processUrl as processUrlRidToken } from 'rid-token.js';
-import { processUrl as processUrlInvite } from 'invite.js';
-import { processUrl as processUrlNoctCint } from 'noct-cint.js';
-import { processUrl as processUrlNoctComun } from 'noct-comun.js';
+import { processUrl as processUrl  } from 'interno.js';
+import { processUrl as processUrl  } from 'sample-cube.js';
+import { processUrl as processUrl  } from 'noct-poco-comunes.js';
+import { processUrl as processUrl  } from 'rid-token.js';
+import { processUrl as processUrl  } from 'invite.js';
+import { processUrl as processUrl  } from 'noct-cint.js';
+import { processUrl as processUrl  } from 'noct-comun.js';
 
 document.getElementById('urlForm').addEventListener('submit', function (event) {
     event.preventDefault();
@@ -14,44 +14,44 @@ document.getElementById('urlForm').addEventListener('submit', function (event) {
     let generatedUrl = null;
 
     // Intentar con cada función de procesamiento de URL en orden
-    generatedUrl = processUrlInterno(url);
+    generatedUrl = processUrl (url);
     if (generatedUrl && generatedUrl !== 'URL no válida') {
         displayResult(generatedUrl);
         return;
     }
 
-    generatedUrl = processUrlSampleCube(url);
+    generatedUrl = processUrl (url);
     if (generatedUrl) {
         displayResult(generatedUrl);
         return;
     }
 
-    generatedUrl = processUrlNoctPocoComunes(url);
+    generatedUrl = processUrl (url);
     if (generatedUrl) {
       displayResult(generatedUrl);
       return;
     }
 
-     generatedUrl = processUrlRidToken(url);
+     generatedUrl = processUrl (url);
     if (generatedUrl) {
         displayResult(generatedUrl);
         return;
     }
 
 
-    generatedUrl = processUrlInvite(url);
+    generatedUrl = processUrl (url);
     if (generatedUrl) {
         displayResult(generatedUrl);
         return;
     }
 
-    generatedUrl = processUrlNoctCint(url);
+    generatedUrl = processUrl (url);
     if (generatedUrl) {
         displayResult(generatedUrl);
         return;
     }
 
-    generatedUrl = processUrlNoctComun(url);
+    generatedUrl = processUrl (url);
      if (generatedUrl) {
          displayResult(generatedUrl);
         return;
