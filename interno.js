@@ -1,4 +1,3 @@
-
 // Cambiar 'processUrls' a 'processUrl'
 function processUrl(url) {
     if (url.includes('tsid=')) {
@@ -18,8 +17,10 @@ function processUrl(url) {
 
             console.log('s2:', s2, 'rd_proj_ud:', rd_proj_ud, 'rdud:', rdud);
 
+            // Omitir el bloque si no está presente 'rd_proj_ud'
             if (!rd_proj_ud) {
-                throw new Error('El parámetro "rd_proj_ud" es obligatorio.');
+                console.warn('El parámetro "rd_proj_ud" no está presente, generando sin él.');
+                return null; // Salir de la función si no se tiene el parámetro obligatorio
             }
 
             let generatedUrl = '';
@@ -29,13 +30,12 @@ function processUrl(url) {
                 generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${s2}&rd_proj_ud=${rd_proj_ud}`;
             } else if (rdud) {
                 generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
-
             }
 
             return generatedUrl;
         } catch (error) {
             console.error('Error al procesar la URL:', error);
-            return null;
+            return null; // Continuar sin generar si ocurre un error
         }
     }
 
