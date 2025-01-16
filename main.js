@@ -3,24 +3,14 @@ document.getElementById('urlForm').addEventListener('submit', async function (ev
 
     const urlInput = document.getElementById('urlInput');
     let result = null;
-    
-     if (urlInput.value.includes('surveys.sago.com')) {
-        result =  processUrlSampleCube(urlInput.value);
-    } else if (urlInput.value.includes('qualtrics.com') || urlInput.value.includes('questionlab.com') || urlInput.value.includes('surveys.audience-align.com') || urlInput.value.includes('insights.surveynavigate.app')) {
-       result = processUrlNoctComun(urlInput.value);
-    } else if (urlInput.value.includes('lumen-research.com')) {
-         result = processUrlRidToken(urlInput.value);
-    } else if (urlInput.value.includes('router.cint.com')) {
-       result = processUrlNoctCint(urlInput.value);
-    } else if (urlInput.value.includes('ovationworldpanel.com')) {
-         result = processUrlNoctPocoComunes(urlInput.value);
-    } else if (urlInput.value.includes('ipsosinteractive.com')) {
-      result = processUrlInvite(urlInput.value);
-    } else if (urlInput.value.includes('tsid=') || urlInput.value.includes('rd_proj_ud=') || urlInput.value.includes('s2=') || urlInput.value.includes('rdud=')) {
-       result = processUrlInterno(urlInput.value);
-    } else {
-          result = await processUrl(urlInput.value);
-    }
+
+    result = await processUrlSampleCube(urlInput.value)
+      if(!result)  result = await processUrlNoctComun(urlInput.value);
+      if(!result)  result = await processUrlRidToken(urlInput.value);
+      if(!result)  result = await processUrlNoctCint(urlInput.value);
+      if(!result)  result = await processUrlInvite(urlInput.value);
+      if(!result)  result = await processUrlNoctPocoComunes(urlInput.value);
+      if(!result)  result = await processUrlInterno(urlInput.value);
 
 
     if (result && result.url) {
@@ -31,7 +21,6 @@ document.getElementById('urlForm').addEventListener('submit', async function (ev
       document.getElementById('error').classList.add('hidden');
 
        copyToClipboard(result.url);
-
 
        document.getElementById('notchLink').addEventListener('click', function() {
          copyToClipboard(this.innerText);
