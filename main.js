@@ -1,8 +1,24 @@
+import { processUrl as processUrlSampleCube } from 'sample-cube.js';
+import { processUrl as processUrlNoctComun } from 'noct-comun.js';
+import { processUrl as processUrlRidToken } from 'rid-token.js';
+import { processUrl as processUrlNoctCint } from 'noct-cint.js';
+import { processUrl as processUrlInvite } from 'invite.js';
+import { processUrl as processUrlNoctPocoComunes } from 'noct-poco-comunes.js';
+import { processUrl as processUrlInterno } from 'interno.js';
+
 document.getElementById('urlForm').addEventListener('submit', async function (event) {
     event.preventDefault();
 
     const urlInput = document.getElementById('urlInput');
-    const result = await processUrl(urlInput.value);
+    let result = null;
+    
+      result = await processUrlSampleCube(urlInput.value)
+      if(!result)  result = await processUrlNoctComun(urlInput.value);
+      if(!result)  result = await processUrlRidToken(urlInput.value);
+      if(!result)  result = await processUrlNoctCint(urlInput.value);
+      if(!result)  result = await processUrlInvite(urlInput.value);
+      if(!result)  result = await processUrlNoctPocoComunes(urlInput.value);
+      if(!result)  result = await processUrlInterno(urlInput.value);
 
     if (result && result.url) {
       document.getElementById('generatedTitle').classList.remove('hidden');
@@ -12,7 +28,6 @@ document.getElementById('urlForm').addEventListener('submit', async function (ev
       document.getElementById('error').classList.add('hidden');
 
        copyToClipboard(result.url);
-
 
        document.getElementById('notchLink').addEventListener('click', function() {
          copyToClipboard(this.innerText);
@@ -26,30 +41,6 @@ document.getElementById('urlForm').addEventListener('submit', async function (ev
       document.getElementById('generatedUrl').classList.add('hidden');
       document.getElementById('error').classList.remove('hidden');
       document.getElementById('generatedUrl').innerHTML = 'URL no reconocida o no válida';
-    }
-    const resultsContainer = document.getElementById('unevennesxResults');
-    resultsContainer.innerHTML = ''
-    const templates = await processUrlsFromTxt();
-
-      if(templates.length > 0){
-        templates.forEach(item => {
-          const div = document.createElement('div');
-            if(item.url === 'URL no valida'){
-              div.innerHTML = `<p class="error"><strong>${item.name}:</strong> ${item.url}</p>`;
-          } else{
-              div.innerHTML = `<p><strong>${item.provider} - ${item.name}:</strong> <a id="unevennesxLink" href="#" >${item.url}</a></p>`;
-             div.querySelector('#unevennesxLink').addEventListener('click', function() {
-                   copyToClipboard(this.innerText);
-                     this.classList.add('copied');
-                  setTimeout(() => {
-                    this.classList.remove('copied');
-                    }, 1000);
-                     });
-          }
-           resultsContainer.appendChild(div);
-        });
-     } else {
-          resultsContainer.innerHTML = '<p>No se encontraron URLs válidas en el archivo de texto.</p>';
     }
 });
 
