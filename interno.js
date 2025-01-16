@@ -1,67 +1,37 @@
-import { processUrlSampleCube } from 'sample-cube.js';
-import { processUrlNoctComun } from 'noct-comun.js';
-import { processUrlRidToken } from 'rid-token.js';
-import { processUrlNoctCint } from 'noct-cint.js';
-import { processUrlInvite } from 'invite.js';
-import { processUrlNoctPocoComunes } from 'noct-poco-comunes.js';
-import { processUrlInterno } from 'interno.js';
+// interno.js
+export function processUrlInterno(url) {
+    try {
+        let generatedUrl = null;
+        let provider = 'Interno';
 
-document.getElementById('urlForm').addEventListener('submit', async function (event) {
-    event.preventDefault();
+       if (url.includes('tsid=')) {
+         const regex = /tsid=([a-f0-9]{32})/;
+         const match = url.match(regex);
+         if (match) {
+           const tsid = match[1];
+             return { url: `https://tssrvy.com/r/?st=1&tsid=${tsid}`, provider: provider };
+         }
+       }
+       else if (url.includes('')) {
+          let s2 = new URL(url).searchParams.get('s2');
+         let rd_proj_ud = new URL(url).searchParams.get('rd_proj_ud');
+         let rdud = new URL(url).searchParams.get('rdud');
 
-    const urlInput = document.getElementById('urlInput');
-    let result = null;
+          if (!rd_proj_ud && !s2 && !rdud) return null;
 
-      result = await processUrlSampleCube(urlInput.value)
-      if(!result)  result = await processUrlNoctComun(urlInput.value);
-      if(!result)  result = await processUrlRidToken(urlInput.value);
-      if(!result)  result = await processUrlNoctCint(urlInput.value);
-      if(!result)  result = await processUrlInvite(urlInput.value);
-      if(!result)  result = await processUrlNoctPocoComunes(urlInput.value);
-      if(!result)  result = await processUrlInterno(urlInput.value);
- 
-    if (result && result.url) {
-      document.getElementById('generatedTitle').classList.remove('hidden');
-      document.getElementById('generatedUrl').classList.remove('hidden');
-      document.getElementById('generatedUrl').innerHTML = `<span class="survey-name">${result.provider}</span><br><p id="notchLink">${result.url}</p>`;
-      
-      document.getElementById('error').classList.add('hidden');
-
-       copyToClipboard(result.url);
-
-       document.getElementById('notchLink').addEventListener('click', function() {
-         copyToClipboard(this.innerText);
-         this.classList.add('copied');
-         setTimeout(() => {
-          this.classList.remove('copied');
-        }, 1000)
-       });
-    } else {
-      document.getElementById('generatedTitle').classList.add('hidden');
-      document.getElementById('generatedUrl').classList.add('hidden');
-      document.getElementById('error').classList.remove('hidden');
-      document.getElementById('generatedUrl').innerHTML = 'URL no reconocida o no válida';
+         if (s2 && rdud) {
+            return { url: `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`, provider: provider };
+          } else if (s2) {
+             return { url: `https://www.rdsecured.com/return?inbound_code=1000&rdud=${s2}&rd_proj_ud=${rd_proj_ud}`, provider: provider };
+          } else if (rdud) {
+            return { url: `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`, provider: provider };
+          } else if (rd_proj_ud) {
+             return { url: `https://www.rdsecured.com/return?inbound_code=1000&rd_proj_ud=${rd_proj_ud}`, provider: provider };
+           }
+        }
+       return null;
+    } catch (error) {
+      console.error('Error al procesar la URL:', error);
+      return null;
     }
-});
-
-document.getElementById('generatedUrl').addEventListener('click', function() {
-    var el = document.createElement('textarea');
-    el.value = this.innerText;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
-    document.getElementById('notification').classList.remove('hidden');
-});
-function copyToClipboard(url) {
-  navigator.clipboard.writeText(url).then(() => {
-    let notification = document.getElementById('notification');
-    notification.classList.remove('hidden');
-    notification.style.display = 'block'; // Mostrar mensaje inmediatamente
-    setTimeout(() => {
-      notification.style.display = 'none'; // Ocultar mensaje después de 20 segundos
-    }, 20000);
-  }).catch(() => {
-    alert('Error al copiar al portapapeles');
-  });
-}
+  }
