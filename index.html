@@ -6,8 +6,6 @@
   <title>Herramienta URL</title>
   <link rel="icon" type="image/png" href="https://cdn.dribbble.com/users/7549673/screenshots/17206704/media/1210a9d0ec8af427967e735935861eeb.png?resize=400x300&vertical=center" />
 
-
-
   <style>
     body {
         font-family: 'Poppins', Arial, sans-serif;
@@ -19,7 +17,7 @@
         height: 100vh;
         margin: 0;
         padding: 0;
-        overflow-x: hidden; /* Evita el desplazamiento horizontal */
+        overflow-x: hidden;
     }
 
     .container {
@@ -30,7 +28,7 @@
         width: 90%;
         max-width: 480px;
         text-align: center;
-        overflow: auto; /* Permite el scroll si el contenido excede la altura */
+        overflow: auto;
     }
 
     h1 {
@@ -112,22 +110,21 @@
         margin-bottom: 15px;
     }
 
-.result #notchLink {
-    font-size: 1.2em;
-    color: #007bff;
-    cursor: pointer;
-    text-decoration: underline;
-    font-weight: 600;
-    transition: color 0.3s ease, box-shadow 0.3s ease;
-    padding: 10px;
-    border-radius: 8px;
-    word-wrap: break-word; /* Permite que el enlace se ajuste dentro del contenedor */
-    white-space: normal; /* Evita que el enlace se salga de una sola línea */
-    max-width: 100%; /* Asegura que no se desborde */
-    overflow: hidden;
-    text-overflow: ellipsis; /* Muestra '...' si el enlace es demasiado largo */
-}
-
+    .result #notchLink {
+        font-size: 1.2em;
+        color: #007bff;
+        cursor: pointer;
+        text-decoration: underline;
+        font-weight: 600;
+        transition: color 0.3s ease, box-shadow 0.3s ease;
+        padding: 10px;
+        border-radius: 8px;
+        word-wrap: break-word;
+        white-space: normal;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
     .result #notchLink:hover {
         color: #0056b3;
@@ -178,7 +175,6 @@
         list-style-type: none;
     }
 
-    /* Mejoras específicas para dispositivos móviles */
     @media (max-width: 480px) {
         h1 {
             font-size: 1.6rem;
@@ -201,370 +197,153 @@
             font-size: 14px;
         }
 
-        /* Para asegurar que el contenido no haga scroll horizontal */
         body {
-
-    display: flex;
-    justify-content: center; /* Centra horizontalmente */
-    height: 100vh; /* Asegura que el contenedor ocupe toda la altura */
-    margin: 0; /* Elimina márgenes predeterminados */
-    overflow-x: hidden; /* Evita el desplazamiento horizontal */
-    overflow-y: hidden; /* Evita el desplazamiento vertical si el contenido cabe completamente */        }
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
     }
 
+    p {
+        margin: 1;
+        padding: 12px;
+        background: #444444;
+        border: 1px solid #444444;
+        border-radius: 8px;
+        word-wrap: break-word;
+        font-size: 14px;
+        text-align: left;
+        color: #f0f0f0;
+        white-space: normal;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
 
-p {
-    margin: 1;
-    padding: 12px;
-    background: #444444;
-    border: 1px solid #444444;
-    border-radius: 8px;
-    word-wrap: break-word; /* Asegura que el texto largo se ajuste al contenedor */
-    overflow-wrap: break-word; /* Igual que word-wrap, para asegurar que no haya desbordes */
-    font-size: 14px;
-    text-align: left;
-    color: #f0f0f0;
-    white-space: normal; /* Permite que el texto se rompa en varias líneas si es necesario */
-    max-width: 100%; /* Impide que se desborde del contenedor */
-    box-sizing: border-box; /* Asegura que el padding y el borde no afecten el tamaño total */
-}
-
-
-<style>
-
-  .allowed-domains {
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 15px;
-      max-width: 400px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      position: relative;
-  
-
+    .allowed-domains {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        max-width: 400px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
     }
 
     .allowed-domains h3 {
-      margin-top: 0;
-      font-size: 1.2em;
-      color: #ffffff;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      margin-block-end: auto;
-      TEXT-ALIGN: center;
-
+        margin-top: 0;
+        font-size: 1.2em;
+        color: #ffffff;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        margin-block-end: auto;
+        text-align: center;
     }
 
     .allowed-domains h3:hover {
-      color: #4caf50;
-      
+        color: #4caf50;
     }
 
     .allowed-domains ul {
-      list-style: none;
-      padding-left: 0;
-      margin: 0;
-      overflow: hidden;
-      max-height: 0;
-      transition: max-height 0.5s ease, opacity 0.5s ease;
-      opacity: 0;
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.5s ease, opacity 0.5s ease;
+        opacity: 0;
     }
 
     .allowed-domains.open ul {
-      max-height: 500px; /* Suficiente para mostrar todos los elementos */
-      opacity: 1;
+        max-height: 500px;
+        opacity: 1;
     }
 
     .allowed-domains li {
-      margin: 8px 0;
-      font-size: 1em;
-      color: #ffffff;
+        margin: 8px 0;
+        font-size: 1em;
+        color: #ffffff;
     }
   </style>
-  
-
-  </head>
-
-  
+</head>
 <body>
 
-
-  
   <div class="container">
     <h1>Armador de URLS v-1.2🆕</h1>
 
-<form id="urlForm" autocomplete="off">
-  <label for="urlInput">Ingresa la URL de la Survey: </label>
-  <input type="text" id="urlInput" name="url" required placeholder="Ej. https://hanover-research.qualtrics.com/..." autocomplete="off">
-  <button type="submit">Generar URL</button>
-</form>
+    <form id="urlForm" autocomplete="off">
+      <label for="urlInput">Ingresa la URL de la Survey:</label>
+      <input type="text" id="urlInput" name="url" required placeholder="Ej. https://hanover-research.qualtrics.com/..." autocomplete="off">
+      <button type="submit">Generar URL</button>
+    </form>
 
-<h2 id="generatedTitle" class="hidden">URL Armado:</h2>
-<p id="surveyName" class="hidden"></p>
-<div id="surveySuggestions" class="hidden"></div>
-<p id="generatedUrl" class="hidden"></p>
+    <h2 id="generatedTitle" class="hidden">URL Armado:</h2>
+    <p id="surveyName" class="hidden"></p>
+    <div id="surveySuggestions" class="hidden"></div>
+    <p id="generatedUrl" class="hidden"></p>
     
-<p id="notification" class="notification hidden">¡URL Copiada Automáticamente!</p>
-<p id="error" class="error hidden">¡Solo se permiten URLs válidas!</p>
-
-
+    <p id="notification" class="notification hidden">¡URL Copiada Automáticamente!</p>
+    <p id="error" class="error hidden">¡Solo se permiten URLs válidas!</p>
 
     <div class="allowed-domains">
       <h3 onclick="toggleList()">✌️INFORMACIÓN DEL ARMADOR - ACTUAL✌️<span id="toggleText"></span></h3>
       <ul>
-        <br>
-        USA { <img src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg" alt="USA Flag" width="24">
-        <li class="extra">Samplicious > surveys.ovationworldpanel.com 🐐</li>
-        <li class="extra">Samplicious > router.cint.com 🐐</li>
-        <li class="extra">Interno > RDSECURED 👌</li><br><br>
-        Canada { <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Canada.svg" alt="Canada Flag" width="24">
-        <li>Samplicious > hanover-research.qualtrics Check☠️</li>
-        <li>Samplicious > vault.questionlab 👌</li>
-        <li>Samplicious > lumen-research 👌</li>
-        <li class="extra">Samplicious > surveys.audience-align 👌</li>
-        <li class="extra">Samplicious > insights.surveynavigate 👌</li>
-        <li class="extra">Invite-Mindshare > ipsosinteractive 👌</li>
-        <li class="extra">Sample-Cube > surveys.sago 👌</li>}
+        <li>USA <img src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg" alt="USA Flag" width="24"></li>
+        <li>Canada <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Canada.svg" alt="Canada Flag" width="24"></li>
       </ul>
     </div>
   </div>
 
+  <script>
+    const form = document.getElementById('urlForm');
+    const input = document.getElementById('urlInput');
+    const generatedTitle = document.getElementById('generatedTitle');
+    const generatedUrl = document.getElementById('generatedUrl');
+    const notification = document.getElementById('notification');
+    const error = document.getElementById('error');
+    const allowedDomains = document.querySelector('.allowed-domains');
 
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const url = input.value;
+      if (validateUrl(url)) {
+        const generatedLink = generateUrl(url);
+        showGeneratedUrl(generatedLink);
+        notification.classList.remove('hidden');
+        setTimeout(() => notification.classList.add('hidden'), 2000);
+      } else {
+        error.classList.remove('hidden');
+        setTimeout(() => error.classList.add('hidden'), 2000);
+      }
+    });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
-// Definir la URL donde se encuentra el archivo .txt
-const DATA_FILE_URL = 'https://raw.githubusercontent.com/UnevennesX/UnevennesX/main/datos-info.txt';
-
-// Función para cargar los datos del archivo
-async function fetchSurveyData() {
-  const response = await fetch(DATA_FILE_URL);
-  if (!response.ok) {
-    throw new Error('Error al obtener el archivo');
-  }
-  return response.text();
-}
-
-// Función para procesar la URL ingresada y extraer el RID
-function extractRid(url, isSamplicious) {
-  try {
-    const parsedUrl = new URL(url);
-
-    // Si existe un parámetro explícito llamado RID, úsalo
-    const rid = parsedUrl.searchParams.get('RID');
-    if (rid) {
-      return rid;
-    }
-
-    // Si es de tipo Samplicious, busca un valor que comience con "67"
-    if (isSamplicious) {
-      const allParts = [parsedUrl.pathname, ...parsedUrl.searchParams.values()];
-      const match = allParts.find(part => part.startsWith('67'));
-      if (match) {
-        return match;
+    function validateUrl(url) {
+      const validDomains = ['hanover-research.qualtrics.com', 'example.com'];
+      try {
+        const { hostname } = new URL(url);
+        return validDomains.includes(hostname);
+      } catch (e) {
+        return false;
       }
     }
 
-    // Si no se encuentra un RID, devuelve null
-    return null;
-  } catch (error) {
-    console.error('Error al extraer el RID:', error);
-    return null;
-  }
-}
-
-// Función principal para generar la nueva URL
-async function generateSurveyUrl(inputUrl) {
-  try {
-    // Cargar datos del archivo
-    const fileData = await fetchSurveyData();
-
-    // Dividir el archivo en encuestas
-    const surveys = fileData.split('----------------').map(entry => {
-      const lines = entry.trim().split('\n');
-      const survey = {};
-      lines.forEach(line => {
-        const [key, value] = line.split(': ').map(item => item.trim());
-        if (key && value) {
-          survey[key.toLowerCase()] = value;
-        }
-      });
-      return survey;
-    });
-
-    // Procesar la URL ingresada
-    const parsedUrl = new URL(inputUrl);
-    const domain = parsedUrl.hostname.replace('www.', ''); // Eliminar el "www." si está presente
-
-    // Buscar la encuesta correspondiente al dominio o nombre (búsqueda parcial)
-    const targetSurvey = surveys.filter(survey =>
-      (survey['nombre']?.toLowerCase().includes(domain.toLowerCase())) || 
-      (survey['url']?.includes(domain))
-    );
-
-    if (targetSurvey.length === 0) {
-      throw new Error('No se encontró ninguna encuesta para este dominio.');
+    function generateUrl(url) {
+      return url; // Genera el URL como desees
     }
 
-    // Mostrar las encuestas encontradas
-    displaySurveySuggestions(targetSurvey);
-
-    return targetSurvey;
-  } catch (error) {
-    console.error('Error generando la URL:', error);
-    throw new Error('¡Solo se permiten URLs válidas!');
-  }
-}
-
-// Función para mostrar sugerencias de encuestas encontradas
-function displaySurveySuggestions(surveys) {
-  const suggestionsContainer = document.getElementById('surveySuggestions');
-  suggestionsContainer.innerHTML = ''; // Limpiar cualquier sugerencia anterior
-
-  surveys.forEach(survey => {
-    const suggestionElement = document.createElement('div');
-    suggestionElement.textContent = survey['nombre'];
-    suggestionElement.classList.add('survey-suggestion');
-    suggestionElement.addEventListener('click', () => {
-      selectSurvey(survey);
-    });
-    suggestionsContainer.appendChild(suggestionElement);
-  });
-
-  suggestionsContainer.classList.remove('hidden');
-}
-
-// Función para seleccionar una encuesta y generar la URL
-function selectSurvey(survey) {
-  const urlInput = document.getElementById('urlInput').value;
-  const generatedTitle = document.getElementById('generatedTitle');
-  const generatedUrlElement = document.getElementById('generatedUrl');
-  const surveyNameElement = document.getElementById('surveyName');
-  const notification = document.getElementById('notification');
-  const errorElement = document.getElementById('error');
-
-  try {
-    // Extraer la URL generada
-    const rid = extractRid(urlInput, survey['tipo de survey'].toLowerCase() === 'samplicious');
-    if (!rid) {
-      throw new Error('No se pudo extraer un RID válido.');
+    function showGeneratedUrl(url) {
+      generatedTitle.classList.remove('hidden');
+      generatedUrl.classList.remove('hidden');
+      generatedUrl.textContent = url;
     }
 
-    // Extraer el token desde la URL del archivo TXT
-    const urlTemplate = survey.url;
-    const tokenMatch = urlTemplate.match(/token=([a-f0-9-]+)/);
-    const token = tokenMatch ? tokenMatch[1] : null;
-
-    if (!token) {
-      throw new Error('No se encontró un token válido en los datos del archivo.');
+    function toggleList() {
+      allowedDomains.classList.toggle('open');
     }
-
-    // Verificar si el token está antes o después del RID
-    let generatedUrl = '';
-    if (urlTemplate.indexOf('RID=') < urlTemplate.indexOf('token=')) {
-      generatedUrl = `https://notch.insights.supply/cb?RID=${rid}&token=${token}`;
-    } else {
-      generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}`;
-    }
-
-    // Mostrar la URL generada
-    generatedTitle.classList.remove('hidden');
-    generatedUrlElement.classList.remove('hidden');
-    generatedUrlElement.textContent = generatedUrl;
-
-    // Mostrar el nombre de la encuesta
-    surveyNameElement.classList.remove('hidden');
-    surveyNameElement.textContent = `Token generado de la encuesta: ${survey['nombre']}`;
-
-    // Mostrar la notificación de copiado
-    notification.classList.remove('hidden');
-    setTimeout(() => notification.classList.add('hidden'), 2000);
-
-    // Limpiar errores
-    errorElement.classList.add('hidden');
-  } catch (error) {
-    generatedTitle.classList.add('hidden');
-    generatedUrlElement.classList.add('hidden');
-    surveyNameElement.classList.add('hidden');
-    errorElement.textContent = error.message;
-    errorElement.classList.remove('hidden');
-  }
-}
-
-// Función para manejar el formulario y mostrar el resultado
-document.getElementById('urlForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
-
-  const urlInput = document.getElementById('urlInput').value;
-  const generatedTitle = document.getElementById('generatedTitle');
-  const generatedUrlElement = document.getElementById('generatedUrl');
-  const surveyNameElement = document.getElementById('surveyName'); // Elemento para mostrar el nombre de la encuesta
-  const notification = document.getElementById('notification');
-  const errorElement = document.getElementById('error');
-  const surveySuggestionsContainer = document.getElementById('surveySuggestions'); // Contenedor de sugerencias
-
-  try {
-    // Generar la URL
-    const surveys = await generateSurveyUrl(urlInput);
-
-    // Limpiar sugerencias previas
-    surveySuggestionsContainer.classList.add('hidden');
-
-    // Mostrar las encuestas sugeridas si hay resultados
-    if (surveys.length > 1) {
-      displaySurveySuggestions(surveys);
-    } else if (surveys.length === 1) {
-      selectSurvey(surveys[0]); // Seleccionar automáticamente la encuesta si solo hay una coincidencia
-    }
-
-  } catch (error) {
-    generatedTitle.classList.add('hidden');
-    generatedUrlElement.classList.add('hidden');
-    surveyNameElement.classList.add('hidden');
-    errorElement.textContent = error.message;
-    errorElement.classList.remove('hidden');
-  }
-});
-</script>
-
-
-
-
-
-
-
-
-
-
-  
-
-
+  </script>
 
 </body>
-
-  
 </html>
