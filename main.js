@@ -229,6 +229,8 @@ document.getElementById('urlForm').addEventListener('submit', function (event) {
       
       document.getElementById('error').classList.add('hidden');
 
+      copyToClipboard(result.url);
+
        document.getElementById('notchLink').addEventListener('click', function() {
          copyToClipboard(this.innerText);
          this.classList.add('copied');
@@ -253,3 +255,15 @@ document.getElementById('generatedUrl').addEventListener('click', function() {
     document.body.removeChild(el);
     document.getElementById('notification').classList.remove('hidden');
 });
+function copyToClipboard(url) {
+  navigator.clipboard.writeText(url).then(() => {
+    let notification = document.getElementById('notification');
+    notification.classList.remove('hidden');
+    notification.style.display = 'block'; // Mostrar mensaje inmediatamente
+    setTimeout(() => {
+      notification.style.display = 'none'; // Ocultar mensaje después de 20 segundos
+    }, 20000);
+  }).catch(() => {
+    alert('Error al copiar al portapapeles');
+  });
+}
