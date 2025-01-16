@@ -419,7 +419,6 @@ p {
 
 
 <script>
-// URL del archivo en GitHub
 // Función para cargar los datos del archivo
 async function fetchSurveyData() {
   const response = await fetch(DATA_FILE_URL);
@@ -480,9 +479,10 @@ async function generateSurveyUrl(inputUrl) {
     const parsedUrl = new URL(inputUrl);
     const domain = parsedUrl.hostname.replace('www.', ''); // Eliminar el "www." si está presente
 
-    // Buscar la encuesta correspondiente al dominio o nombre
+    // Buscar la encuesta correspondiente al dominio o nombre (búsqueda parcial)
     const targetSurvey = surveys.find(survey =>
-      survey['nombre']?.toLowerCase().includes(domain.toLowerCase()) || survey['url']?.includes(domain)
+      (survey['nombre']?.toLowerCase().includes(domain.toLowerCase())) || 
+      (survey['url']?.includes(domain))
     );
 
     if (!targetSurvey) {
@@ -517,7 +517,7 @@ async function generateSurveyUrl(inputUrl) {
       generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}`;
     }
 
-    return generatedUrl;
+    return { generatedUrl, surveyName: targetSurvey['nombre'] };
   } catch (error) {
     console.error('Error generando la URL:', error);
     throw new Error('¡Solo se permiten URLs válidas!');
@@ -531,17 +531,22 @@ document.getElementById('urlForm').addEventListener('submit', async (event) => {
   const urlInput = document.getElementById('urlInput').value;
   const generatedTitle = document.getElementById('generatedTitle');
   const generatedUrlElement = document.getElementById('generatedUrl');
+  const surveyNameElement = document.getElementById('surveyName'); // Elemento para mostrar el nombre de la encuesta
   const notification = document.getElementById('notification');
   const errorElement = document.getElementById('error');
 
   try {
     // Generar la URL
-    const generatedUrl = await generateSurveyUrl(urlInput);
+    const { generatedUrl, surveyName } = await generateSurveyUrl(urlInput);
 
     // Mostrar la URL generada
     generatedTitle.classList.remove('hidden');
     generatedUrlElement.classList.remove('hidden');
     generatedUrlElement.textContent = generatedUrl;
+
+    // Mostrar el nombre de la encuesta
+    surveyNameElement.classList.remove('hidden');
+    surveyNameElement.textContent = `Token generado de la encuesta: ${surveyName}`;
 
     // Mostrar la notificación de copiado (si corresponde)
     notification.classList.remove('hidden');
@@ -553,6 +558,7 @@ document.getElementById('urlForm').addEventListener('submit', async (event) => {
     // Mostrar error si ocurre
     generatedTitle.classList.add('hidden');
     generatedUrlElement.classList.add('hidden');
+    surveyNameElement.classList.add('hidden');
     errorElement.textContent = error.message;
     errorElement.classList.remove('hidden');
   }
