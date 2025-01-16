@@ -3,7 +3,7 @@ document.getElementById('urlForm').addEventListener('submit', async function (ev
 
     const urlInput = document.getElementById('urlInput');
     let result = null;
-
+    
       result = await processUrlSampleCube(urlInput.value)
       if(!result)  result = await processUrlNoctComun(urlInput.value);
       if(!result)  result = await processUrlRidToken(urlInput.value);
@@ -11,8 +11,8 @@ document.getElementById('urlForm').addEventListener('submit', async function (ev
       if(!result)  result = await processUrlInvite(urlInput.value);
       if(!result)  result = await processUrlNoctPocoComunes(urlInput.value);
       if(!result)  result = await processUrlInterno(urlInput.value);
- 
-   if (result && result.url) {
+
+    if (result && result.url) {
       document.getElementById('generatedTitle').classList.remove('hidden');
       document.getElementById('generatedUrl').classList.remove('hidden');
       document.getElementById('generatedUrl').innerHTML = `<span class="survey-name">${result.provider}</span><br><p id="notchLink">${result.url}</p>`;
