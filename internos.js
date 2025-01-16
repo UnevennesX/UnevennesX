@@ -1,13 +1,11 @@
 function processSurveyUrl(url) {
   try {
-    // Analizar la URL
+    // Extraer el dominio y los parámetros de la URL ingresada
     let domain = new URL(url).hostname;
-    let generatedUrl = '';
-
-    // Definir los parámetros de la URL
     let s2 = new URL(url).searchParams.get('s2');
     let rd_proj_ud = new URL(url).searchParams.get('rd_proj_ud');
     let rdud = new URL(url).searchParams.get('rdud');
+    let generatedUrl = '';
 
     // Verificar si el dominio es de Survey
     if (domain.includes('se.navigatorsurveys.com')) {
@@ -32,7 +30,6 @@ function processSurveyUrl(url) {
 
     return generatedUrl;
   } catch (e) {
-    console.error('Error en la URL:', e.message);
     return null;
   }
 }
@@ -66,9 +63,3 @@ document.getElementById('generatedUrl').addEventListener('click', function() {
   document.body.removeChild(el);
   document.getElementById('notification').classList.remove('hidden');
 });
-
-
-
-
-
-
