@@ -17,10 +17,10 @@ function processUrl(url) {
 
             console.log('s2:', s2, 'rd_proj_ud:', rd_proj_ud, 'rdud:', rdud);
 
-            // Omitir el bloque si no está presente 'rd_proj_ud'
+            // Verificar si 'rd_proj_ud' está presente
             if (!rd_proj_ud) {
-                console.warn('El parámetro "rd_proj_ud" no está presente, generando sin él.');
-                return null; // Salir de la función si no se tiene el parámetro obligatorio
+                console.warn('El parámetro "rd_proj_ud" no está presente. Se omite la generación de la URL para este caso.');
+                return null; // Solo omitir la generación de URL sin generar un error
             }
 
             let generatedUrl = '';
