@@ -18,18 +18,22 @@ function processUrl(url) {
             console.log('s2:', s2, 'rd_proj_ud:', rd_proj_ud, 'rdud:', rdud);
 
             // Verificar si 'rd_proj_ud' está presente
-            if (!rd_proj_ud) {
-                console.warn('El parámetro "rd_proj_ud" no está presente. Se omite la generación de la URL para este caso.');
-                return null; // Solo omitir la generación de URL sin generar un error
+            if (!rd_proj_ud && !s2 && !rdud) {
+                // Si falta todos los parámetros, no generamos la URL
+                return null;
             }
 
             let generatedUrl = '';
+            // Generar URL solo si hay parámetros disponibles
             if (s2 && rdud) {
                 generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
             } else if (s2) {
                 generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${s2}&rd_proj_ud=${rd_proj_ud}`;
             } else if (rdud) {
                 generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
+            } else if (rd_proj_ud) {
+                // Solo cuando rd_proj_ud está presente
+                generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rd_proj_ud=${rd_proj_ud}`;
             }
 
             return generatedUrl;
