@@ -1,18 +1,15 @@
 function processUrl(url) {
   try {
-    // Verifica si la URL es válida
-    const parsedUrl = new URL(url);
-    const domain = parsedUrl.hostname;
-    const s2 = parsedUrl.searchParams.get('s2');
-    const rd_proj_ud = parsedUrl.searchParams.get('rd_proj_ud');
-    const rdud = parsedUrl.searchParams.get('rdud');
-
+    let domain = new URL(url).hostname;
+    let s2 = new URL(url).searchParams.get('s2');
+    let rd_proj_ud = new URL(url).searchParams.get('rd_proj_ud');
+    let rdud = new URL(url).searchParams.get('rdud');
     let generatedUrl = '';
 
     // Verificar si el dominio es el esperado
     if (domain.includes('navigatorsurveys.com')) {
+      // Generar la nueva URL con los parámetros obtenidos
       if (rd_proj_ud) {
-        // Crear la URL dependiendo de los parámetros disponibles
         generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rd_proj_ud=${rd_proj_ud}`;
         if (rdud) generatedUrl += `&rdud=${rdud}`;
         if (s2) generatedUrl += `&s2=${s2}`;
@@ -25,13 +22,13 @@ function processUrl(url) {
 
     return generatedUrl;
   } catch (e) {
-    console.error('Error:', e.message);  // Log de error en la consola para depuración
+    console.error('Error:', e.message); // Log de error para depuración
     return null;
   }
 }
 
 document.getElementById('urlForm').addEventListener('submit', function (event) {
-  event.preventDefault(); // Evitar que el formulario recargue la página
+  event.preventDefault(); // Evitar recarga de la página
 
   const urlInput = document.getElementById('urlInput').value;
   const result = processUrl(urlInput);
