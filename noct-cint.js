@@ -45,12 +45,12 @@ document.getElementById('urlForm').addEventListener('submit', function (event) {
 
 // Copiar la URL generada al portapapeles
 document.getElementById('generatedUrl').addEventListener('click', function() {
-  var el = document.createElement('textarea');
-  el.value = this.innerText;
-  document.body.appendChild(el);
-  el.select();
+  const textarea = document.createElement('textarea');
+  textarea.value = this.innerText;
+  document.body.appendChild(textarea);
+  textarea.select();
   document.execCommand('copy');
-  document.body.removeChild(el);
+  document.body.removeChild(textarea);
   
   // Mostrar la notificación
   const notification = document.getElementById('notification');
