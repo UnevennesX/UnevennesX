@@ -248,58 +248,57 @@
       box-sizing: border-box;
       /* Asegura que el padding y el borde no afecten el tamaño total */
     }
-
     <style>
-      .allowed-domains {
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 15px;
-        max-width: 400px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        position: relative;
 
+  .allowed-domains {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      max-width: 400px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
+  
 
-      }
+    }
 
-      .allowed-domains h3 {
-        margin-top: 0;
-        font-size: 1.2em;
-        color: #ffffff;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-        margin-block-end: auto;
-        TEXT-ALIGN: center;
+    .allowed-domains h3 {
+      margin-top: 0;
+      font-size: 1.2em;
+      color: #ffffff;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      margin-block-end: auto;
+      TEXT-ALIGN: center;
 
-      }
+    }
 
-      .allowed-domains h3:hover {
-        color: #4caf50;
+    .allowed-domains h3:hover {
+      color: #4caf50;
+      
+    }
 
-      }
+    .allowed-domains ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.5s ease, opacity 0.5s ease;
+      opacity: 0;
+    }
 
-      .allowed-domains ul {
-        list-style: none;
-        padding-left: 0;
-        margin: 0;
-        overflow: hidden;
-        max-height: 0;
-        transition: max-height 0.5s ease, opacity 0.5s ease;
-        opacity: 0;
-      }
+    .allowed-domains.open ul {
+      max-height: 500px; /* Suficiente para mostrar todos los elementos */
+      opacity: 1;
+    }
 
-      .allowed-domains.open ul {
-        max-height: 500px;
-        /* Suficiente para mostrar todos los elementos */
-        opacity: 1;
-      }
-
-      .allowed-domains li {
-        margin: 8px 0;
-        font-size: 1em;
-        color: #ffffff;
-      }
+    .allowed-domains li {
+      margin: 8px 0;
+      font-size: 1em;
+      color: #ffffff;
+    }
   </style>
 </head>
 
@@ -316,9 +315,8 @@
 
     <h2 id="generatedTitle" class="hidden">URL Armado:</h2>
     <p id="generatedUrl" class="hidden"></p>
-    <p id="error" class="error hidden">¡Solo se permiten URLs válidas!</p>
     <p id="notification" class="notification hidden">¡URL Copiada Automaticamente!</p>
-
+    <p id="error" class="error hidden">¡Solo se permiten URLs válidas!</p>
 
     <div class="allowed-domains">
       <h3 onclick="toggleList()">✌️INFORMACION DEL ARMADOR - ACTUAL✌️<span id="toggleText"></span></h3>
@@ -342,7 +340,6 @@
       </ul>
     </div>
   </div>
-
   
   <script src="sample-cube.js"></script>
   <script src="noct-comun.js"></script>
@@ -353,16 +350,26 @@
   <script src="interno.js"></script>
   <script src="main.js"></script>
 
-  
   <script>
-        function toggleList() {
+    function toggleList() {
       const container = document.querySelector('.allowed-domains');
       const toggleText = document.getElementById('toggleText');
       container.classList.toggle('open');
       toggleText.textContent = container.classList.contains('open') ? '' : '';
     }
-    </script>
-
+     function copyToClipboard(url) {
+      navigator.clipboard.writeText(url).then(() => {
+        let notification = document.getElementById('notification');
+        notification.classList.remove('hidden');
+        notification.style.display = 'block'; // Mostrar mensaje inmediatamente
+        setTimeout(() => {
+          notification.style.display = 'none'; // Ocultar mensaje después de 20 segundos
+        }, 20000);
+      }).catch(() => {
+        alert('Error al copiar al portapapeles');
+      });
+    }
+  </script>
 </body>
 
 </html>
