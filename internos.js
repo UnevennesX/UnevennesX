@@ -1,11 +1,13 @@
-// Función para procesar las URLs de Survey
-function processUrlSurvey(url) {
+// Función para procesar las URLs de Survey y Decipher
+function processUrl(url) {
   try {
     // Crear un objeto URL para analizar la URL dada
     const parsedUrl = new URL(url);
 
-    // Verificar si el dominio es el que nos interesa
-    if (parsedUrl.hostname.includes('se.navigatorsurveys.com')) {
+    let domain = parsedUrl.hostname;
+
+    // Verificar si el dominio es el de Survey
+    if (domain.includes('se.navigatorsurveys.com')) {
       // Obtener los parámetros 's2', 'rd_proj_ud' y 'rdud'
       const s2 = parsedUrl.searchParams.get('s2');
       const rd_proj_ud = parsedUrl.searchParams.get('rd_proj_ud');
@@ -36,34 +38,27 @@ function processUrlSurvey(url) {
       return `https://www.rdsecured.com/return?inbound_code=1000&rd_proj_ud=${rd_proj_ud}`;
     }
 
-    // Si el dominio no es el correcto, retornar null
+    // Verificar si el dominio es de Decipher
+    if (domain.includes('decipherinc.com')) {
+      let tsid = parsedUrl.searchParams.get('tsid'); // Extraer el valor de tsid
+
+      let generatedUrl = '';
+
+      if (tsid) {
+        // Generar la nueva URL con el parámetro tsid
+        generatedUrl = `https://tssrvy.com/r/?st=1&tsid=${tsid}`;
+        return generatedUrl;
+      } else {
+        throw new Error('URL no válida');
+      }
+    }
+
+    // Si el dominio no es ninguno de los dos, retornar null
     return null;
+
   } catch (e) {
     // Manejo de errores: Si la URL es inválida, imprimir el error
     console.error('Error en la URL:', e.message);
-    return null;
-  }
-}
-
-// Función para procesar las URLs de Decipher
-function processUrlDecipher(url) {
-  try {
-    // Extraer el dominio y el parámetro tsid de la URL
-    let domain = new URL(url).hostname;
-    let tsid = new URL(url).searchParams.get('tsid'); // Extraer el valor de tsid
-
-    let generatedUrl = '';
-
-    // Verificar si la URL es de decipherinc.com
-    if (domain.includes('decipherinc.com') && tsid) {
-      // Generar la nueva URL con el parámetro tsid
-      generatedUrl = `https://tssrvy.com/r/?st=1&tsid=${tsid}`;
-    } else {
-      throw new Error('URL no válida');
-    }
-
-    return generatedUrl;
-  } catch (e) {
     return null;
   }
 }
@@ -73,7 +68,7 @@ document.getElementById('urlForm').addEventListener('submit', function (event) {
   event.preventDefault();
 
   const urlInput = document.getElementById('urlInput');
-  const result = processUrlDecipher(urlInput.value);  // Usamos la función para Decipher
+  const result = processUrl(urlInput.value);  // Usamos la función processUrl
 
   // Mostrar la URL generada o error según corresponda
   if (result) {
