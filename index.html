@@ -302,8 +302,9 @@ p {
 
 <h2 id="generatedTitle" class="hidden">URL Armado:</h2>
 <p id="generatedUrl" class="hidden"></p>    
-<p id="notification" class="notification hidden">¡URL Copiada Automaticamente!</p>
+<p id="notification" class="notification hidden">¡URL Copiada Automáticamente!</p>
 <p id="error" class="error hidden">¡Solo se permiten URLs válidas!</p>
+
 
 
     <div class="allowed-domains">
@@ -487,8 +488,7 @@ async function generateSurveyUrl(inputUrl) {
     );
 
     if (!targetSurvey) {
-      console.error('No se encontró ninguna encuesta para este dominio.');
-      return;
+      throw new Error('No se encontró ninguna encuesta para este dominio.');
     }
 
     // Determinar si es de tipo Samplicious
@@ -497,24 +497,16 @@ async function generateSurveyUrl(inputUrl) {
     // Extraer el RID
     const rid = extractRid(inputUrl, isSamplicious);
     if (!rid) {
-      console.error('No se pudo extraer un RID válido.');
-      return;
-    }
-
-    // Extraer el token y verificar la estructura de la URL
-    const urlTemplate = targetSurvey.url;
-    if (!urlTemplate) {
-      console.error('No se encontró una plantilla de URL válida en los datos del archivo.');
-      return;
+      throw new Error('No se pudo extraer un RID válido.');
     }
 
     // Extraer el token desde la URL del archivo TXT
+    const urlTemplate = targetSurvey.url;
     const tokenMatch = urlTemplate.match(/token=([a-f0-9-]+)/);
     const token = tokenMatch ? tokenMatch[1] : null;
 
     if (!token) {
-      console.error('No se encontró un token válido en los datos del archivo.');
-      return;
+      throw new Error('No se encontró un token válido en los datos del archivo.');
     }
 
     // Verificar si el token está antes o después del RID
@@ -527,15 +519,47 @@ async function generateSurveyUrl(inputUrl) {
       generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}`;
     }
 
-    console.log(`URL Generada: ${generatedUrl}`);
-    console.log(`Comentario: ${targetSurvey.comentario}`);
+    return generatedUrl;
   } catch (error) {
     console.error('Error generando la URL:', error);
+    throw new Error('¡Solo se permiten URLs válidas!');
   }
 }
 
-// Ejemplo de uso
-generateSurveyUrl('https://surveys.example.com/path/67888b52-5604-4da2-495b-f515eb17d2b7');
+// Función para manejar el formulario y mostrar el resultado
+document.getElementById('urlForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const urlInput = document.getElementById('urlInput').value;
+  const generatedTitle = document.getElementById('generatedTitle');
+  const generatedUrlElement = document.getElementById('generatedUrl');
+  const notification = document.getElementById('notification');
+  const errorElement = document.getElementById('error');
+
+  try {
+    // Generar la URL
+    const generatedUrl = await generateSurveyUrl(urlInput);
+
+    // Mostrar la URL generada
+    generatedTitle.classList.remove('hidden');
+    generatedUrlElement.classList.remove('hidden');
+    generatedUrlElement.textContent = generatedUrl;
+
+    // Mostrar la notificación de copiado (si corresponde)
+    notification.classList.remove('hidden');
+    setTimeout(() => notification.classList.add('hidden'), 2000);
+
+    // Limpiar errores
+    errorElement.classList.add('hidden');
+  } catch (error) {
+    // Mostrar error si ocurre
+    generatedTitle.classList.add('hidden');
+    generatedUrlElement.classList.add('hidden');
+    errorElement.textContent = error.message;
+    errorElement.classList.remove('hidden');
+  }
+});
+
 
 </script>
 
