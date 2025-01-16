@@ -229,7 +229,7 @@ document.getElementById('urlForm').addEventListener('submit', function (event) {
       
       document.getElementById('error').classList.add('hidden');
 
-      copyToClipboard(result.url);
+       copyToClipboard(result.url);
 
        document.getElementById('notchLink').addEventListener('click', function() {
          copyToClipboard(this.innerText);
