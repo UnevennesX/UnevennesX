@@ -302,6 +302,7 @@ p {
 
 <h2 id="generatedTitle" class="hidden">URL Armado:</h2>
 <p id="surveyName" class="hidden"></p>
+<div id="surveySuggestions" class="hidden"></div>
 <p id="generatedUrl" class="hidden"></p>
     
 <p id="notification" class="notification hidden">¡URL Copiada Automáticamente!</p>
@@ -356,7 +357,6 @@ p {
 
 
 <script>
-
 // Definir la URL donde se encuentra el archivo .txt
 const DATA_FILE_URL = 'https://raw.githubusercontent.com/UnevennesX/UnevennesX/main/datos-info.txt';
 
@@ -421,26 +421,61 @@ async function generateSurveyUrl(inputUrl) {
     const domain = parsedUrl.hostname.replace('www.', ''); // Eliminar el "www." si está presente
 
     // Buscar la encuesta correspondiente al dominio o nombre (búsqueda parcial)
-    const targetSurvey = surveys.find(survey =>
+    const targetSurvey = surveys.filter(survey =>
       (survey['nombre']?.toLowerCase().includes(domain.toLowerCase())) || 
       (survey['url']?.includes(domain))
     );
 
-    if (!targetSurvey) {
+    if (targetSurvey.length === 0) {
       throw new Error('No se encontró ninguna encuesta para este dominio.');
     }
 
-    // Determinar si es de tipo Samplicious
-    const isSamplicious = targetSurvey['tipo de survey']?.toLowerCase() === 'samplicious';
+    // Mostrar las encuestas encontradas
+    displaySurveySuggestions(targetSurvey);
 
-    // Extraer el RID
-    const rid = extractRid(inputUrl, isSamplicious);
+    return targetSurvey;
+  } catch (error) {
+    console.error('Error generando la URL:', error);
+    throw new Error('¡Solo se permiten URLs válidas!');
+  }
+}
+
+// Función para mostrar sugerencias de encuestas encontradas
+function displaySurveySuggestions(surveys) {
+  const suggestionsContainer = document.getElementById('surveySuggestions');
+  suggestionsContainer.innerHTML = ''; // Limpiar cualquier sugerencia anterior
+
+  surveys.forEach(survey => {
+    const suggestionElement = document.createElement('div');
+    suggestionElement.textContent = survey['nombre'];
+    suggestionElement.classList.add('survey-suggestion');
+    suggestionElement.addEventListener('click', () => {
+      selectSurvey(survey);
+    });
+    suggestionsContainer.appendChild(suggestionElement);
+  });
+
+  suggestionsContainer.classList.remove('hidden');
+}
+
+// Función para seleccionar una encuesta y generar la URL
+function selectSurvey(survey) {
+  const urlInput = document.getElementById('urlInput').value;
+  const generatedTitle = document.getElementById('generatedTitle');
+  const generatedUrlElement = document.getElementById('generatedUrl');
+  const surveyNameElement = document.getElementById('surveyName');
+  const notification = document.getElementById('notification');
+  const errorElement = document.getElementById('error');
+
+  try {
+    // Extraer la URL generada
+    const rid = extractRid(urlInput, survey['tipo de survey'].toLowerCase() === 'samplicious');
     if (!rid) {
       throw new Error('No se pudo extraer un RID válido.');
     }
 
     // Extraer el token desde la URL del archivo TXT
-    const urlTemplate = targetSurvey.url;
+    const urlTemplate = survey.url;
     const tokenMatch = urlTemplate.match(/token=([a-f0-9-]+)/);
     const token = tokenMatch ? tokenMatch[1] : null;
 
@@ -451,17 +486,32 @@ async function generateSurveyUrl(inputUrl) {
     // Verificar si el token está antes o después del RID
     let generatedUrl = '';
     if (urlTemplate.indexOf('RID=') < urlTemplate.indexOf('token=')) {
-      // RID antes del token
       generatedUrl = `https://notch.insights.supply/cb?RID=${rid}&token=${token}`;
     } else {
-      // Token antes del RID
       generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}`;
     }
 
-    return { generatedUrl, surveyName: targetSurvey['nombre'] };
+    // Mostrar la URL generada
+    generatedTitle.classList.remove('hidden');
+    generatedUrlElement.classList.remove('hidden');
+    generatedUrlElement.textContent = generatedUrl;
+
+    // Mostrar el nombre de la encuesta
+    surveyNameElement.classList.remove('hidden');
+    surveyNameElement.textContent = `Token generado de la encuesta: ${survey['nombre']}`;
+
+    // Mostrar la notificación de copiado
+    notification.classList.remove('hidden');
+    setTimeout(() => notification.classList.add('hidden'), 2000);
+
+    // Limpiar errores
+    errorElement.classList.add('hidden');
   } catch (error) {
-    console.error('Error generando la URL:', error);
-    throw new Error('¡Solo se permiten URLs válidas!');
+    generatedTitle.classList.add('hidden');
+    generatedUrlElement.classList.add('hidden');
+    surveyNameElement.classList.add('hidden');
+    errorElement.textContent = error.message;
+    errorElement.classList.remove('hidden');
   }
 }
 
@@ -475,28 +525,23 @@ document.getElementById('urlForm').addEventListener('submit', async (event) => {
   const surveyNameElement = document.getElementById('surveyName'); // Elemento para mostrar el nombre de la encuesta
   const notification = document.getElementById('notification');
   const errorElement = document.getElementById('error');
+  const surveySuggestionsContainer = document.getElementById('surveySuggestions'); // Contenedor de sugerencias
 
   try {
     // Generar la URL
-    const { generatedUrl, surveyName } = await generateSurveyUrl(urlInput);
+    const surveys = await generateSurveyUrl(urlInput);
 
-    // Mostrar la URL generada
-    generatedTitle.classList.remove('hidden');
-    generatedUrlElement.classList.remove('hidden');
-    generatedUrlElement.textContent = generatedUrl;
+    // Limpiar sugerencias previas
+    surveySuggestionsContainer.classList.add('hidden');
 
-    // Mostrar el nombre de la encuesta
-    surveyNameElement.classList.remove('hidden');
-    surveyNameElement.textContent = `Token generado de la encuesta: ${surveyName}`;
+    // Mostrar las encuestas sugeridas si hay resultados
+    if (surveys.length > 1) {
+      displaySurveySuggestions(surveys);
+    } else if (surveys.length === 1) {
+      selectSurvey(surveys[0]); // Seleccionar automáticamente la encuesta si solo hay una coincidencia
+    }
 
-    // Mostrar la notificación de copiado (si corresponde)
-    notification.classList.remove('hidden');
-    setTimeout(() => notification.classList.add('hidden'), 2000);
-
-    // Limpiar errores
-    errorElement.classList.add('hidden');
   } catch (error) {
-    // Mostrar error si ocurre
     generatedTitle.classList.add('hidden');
     generatedUrlElement.classList.add('hidden');
     surveyNameElement.classList.add('hidden');
@@ -504,7 +549,6 @@ document.getElementById('urlForm').addEventListener('submit', async (event) => {
     errorElement.classList.remove('hidden');
   }
 });
-
 </script>
 
 
