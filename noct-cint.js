@@ -1,30 +1,54 @@
-/**
- * Extrae los parámetros de la URL proporcionada y genera la nueva URL.
- * @param {string} url - La URL de entrada.
- * @returns {string|null} - La nueva URL generada o null en caso de error.
- */
-export function generateCintUrl(url) {
+function processUrl(url) {
   try {
-    // Verificar si la URL es válida
-    let parsedUrl = new URL(url);
-    let domain = parsedUrl.hostname;
-    
-    // Extraer el valor de 'ca2e3c3b-8aec-42b4-8d25-a430509add93' que viene después de 'ExternalRoute/'
-    let arid = parsedUrl.pathname.split('/')[2];  // Toma lo que venga después de 'ExternalRoute/'
-    let rid = parsedUrl.searchParams.get('RID'); // Extraer el parámetro 'RID'
+    // Obtener el dominio y los parámetros
+    let domain = new URL(url).hostname;
+    let arid = new URL(url).pathname.split('/')[2]; // Extraer el 'ca2e3c3b-8aec-42b4-8d25-a430509add93'
+    let rid = new URL(url).searchParams.get('RID'); // Extraer el 'RID'
 
+    let generatedUrl = '';
+
+    // Verificar si el dominio es el esperado
     if (domain.includes('router.cint.com') && arid && rid) {
-      // Crear la nueva URL con los parámetros obtenidos
+      // Generar la nueva URL con los parámetros obtenidos
       let token = '0749a007-a1d3-48c1-8ff3-12960c555867';
-      let generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}&cint_arid=${arid}`;
-      
-      console.log('URL generada:', generatedUrl);
-      return generatedUrl; // Retorna la URL generada
+      generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}&cint_arid=${arid}`;
     } else {
-      throw new Error('Parámetros faltantes o dominio no válido');
+      throw new Error('URL no válida');
     }
+
+    return generatedUrl;
   } catch (e) {
-    console.error('Error al procesar la URL:', e);
-    return null; // Retorna null si ocurre algún error
+    return null;
   }
 }
+
+// Manejo del formulario y visualización de la URL generada
+document.getElementById('urlForm').addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  const urlInput = document.getElementById('urlInput');
+  const result = processUrl(urlInput.value);
+
+  // Mostrar la URL generada o error según corresponda
+  if (result) {
+    document.getElementById('generatedTitle').classList.remove('hidden');
+    document.getElementById('generatedUrl').classList.remove('hidden');
+    document.getElementById('generatedUrl').innerText = result;
+    document.getElementById('error').classList.add('hidden');
+  } else {
+    document.getElementById('generatedTitle').classList.add('hidden');
+    document.getElementById('generatedUrl').classList.add('hidden');
+    document.getElementById('error').classList.remove('hidden');
+  }
+});
+
+// Copiar la URL generada al portapapeles
+document.getElementById('generatedUrl').addEventListener('click', function() {
+  var el = document.createElement('textarea');
+  el.value = this.innerText;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+  document.getElementById('notification').classList.remove('hidden');
+});
