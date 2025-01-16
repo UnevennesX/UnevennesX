@@ -4,6 +4,7 @@ function processUrl(url) {
     let token = '';
     let rid = '';
     let generatedUrl = '';
+
     if (domain.includes('qualtrics.com')) {
       token = '5a9c985a-f633-46a5-925c-6ca593f1a8b0'; // Token de Qualtrics
       rid = new URL(url).searchParams.get('rnid');
@@ -31,8 +32,10 @@ function processUrl(url) {
         return null;
       }
     }
+
     // Devuelve la URL generada si se ha creado correctamente
     return generatedUrl;
+
   } catch (e) {
     console.error('Error procesando la URL: ', e);
     return null;
