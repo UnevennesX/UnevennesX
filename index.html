@@ -433,7 +433,7 @@ p {
     navigator.clipboard.writeText(url).then(() => {
       let notification = document.getElementById('notification');
       notification.classList.remove('hidden');
-      notification.textContent = `¡Link Copiado!: ${url}`; // Mostrar mensaje con el enlace copiado
+      notification.textContent = `¡URL Copiada Automaticamente! ${url}`; // Mostrar mensaje con el enlace copiado
       notification.style.display = 'block'; // Mostrar mensaje inmediatamente
       setTimeout(() => {
         notification.style.display = 'none'; // Ocultar mensaje después de 20 segundos
@@ -442,19 +442,6 @@ p {
       alert('Error al copiar al portapapeles');
     });
   }
-
-  document.getElementById('urlForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    let url = document.getElementById('urlInput').value;
-    let generatedUrl = processUrl(url);
-
-    if (generatedUrl) {
-      document.getElementById('generatedUrl').textContent = generatedUrl;
-      document.getElementById('generatedUrl').classList.remove('hidden');
-      setTimeout(() => {
-        document.getElementById('generatedUrl').classList.add('hidden');
-      }, 20000); // Limpiar datos después de 20 segundos
-
       copyToClipboard(generatedUrl);
       document.getElementById('error').classList.add('hidden');
     } else {
@@ -463,24 +450,6 @@ p {
       document.getElementById('error').classList.remove('hidden');
     }
   });
-
-  // Limpiar el campo de entrada cada 20 segundos
-  setInterval(() => {
-    document.getElementById('urlInput').value = '';
-  }, 20000);
-
-  // Recargar la página cada 3 minutos (si es necesario)
-  setInterval(() => {
-    location.reload();
-  }, 180000);
-
-  // Toggle para la lista de dominios permitidos
-  function toggleList() {
-    const container = document.querySelector('.allowed-domains');
-    const toggleText = document.getElementById('toggleText');
-    container.classList.toggle('open');
-    toggleText.textContent = container.classList.contains('open') ? 'Cerrar' : 'Mostrar dominios permitidos';
-  }
 </script>
 
   
