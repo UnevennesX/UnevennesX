@@ -418,43 +418,43 @@ p {
 
 
 
-   <script>
-    window.onload = function() {
-      // Array con las rutas de los archivos JS que deseas cargar
-      var scripts = [
-        'interno.js',
-        'noct-cint.js'
-        // Agrega más scripts aquí si es necesario
-      ];
 
-      // Función para cargar los scripts en orden
-      function loadScripts(scripts, index) {
-        if (index < scripts.length) {
-          var script = document.createElement('script');
-          script.src = scripts[index];
-          script.defer = true; // Asegura que se ejecute después de la carga del DOM
-          script.onload = function() {
-            // Si el script se carga correctamente, cargar el siguiente
-            loadScripts(scripts, index + 1);
-          };
-          script.onerror = function() {
-            // Si ocurre un error al cargar el script, mostrar el error y cargar el siguiente
-            console.error(`Error al cargar el script: ${scripts[index]}`);
-            loadScripts(scripts, index + 1); // Continuar con el siguiente script
-          };
-          document.body.appendChild(script);
-        }
+
+
+
+
+<script>
+  window.onload = function() {
+    // Array con las rutas de los archivos JS que deseas cargar
+    var scripts = [
+      'interno.js',
+      'noct-cint.js'
+      // Agrega más scripts aquí si es necesario
+    ];
+
+    // Función para cargar los scripts en orden
+    function loadScripts(scripts, index) {
+      if (index < scripts.length) {
+        var script = document.createElement('script');
+        script.src = scripts[index];
+        script.defer = true; // Asegura que se ejecute después de la carga del DOM
+        script.onload = function() {
+          // Si el script se carga correctamente, cargar el siguiente
+          loadScripts(scripts, index + 1);
+        };
+        script.onerror = function() {
+          // Si ocurre un error al cargar el script, mostrar el error y cargar el siguiente
+          console.error(`Error al cargar el script: ${scripts[index]}`);
+          loadScripts(scripts, index + 1); // Continuar con el siguiente script
+        };
+        document.body.appendChild(script);
       }
+    }
 
-      // Comienza a cargar los scripts desde el primer archivo
-      loadScripts(scripts, 0);
-    };
-  </script>
-
-
-
-
-
+    // Comienza a cargar los scripts desde el primer archivo
+    loadScripts(scripts, 0);
+  };
+</script>
 
 
 
