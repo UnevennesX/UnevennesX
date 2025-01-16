@@ -1,9 +1,9 @@
 // --------------------
-// Comienza la única función 'processUrl'
+// Comienza la función 'processUrl'
 // --------------------
 function processUrl(url) {
   try {
-    let generatedUrl = null; // Inicializamos la variable que almacenará la URL generada
+    let generatedUrl = null; // Inicializamos la variable para almacenar la URL generada
 
     // Primer bloque: Procesar URL con 'tsid'
     if (url.includes('tsid=')) {
@@ -21,7 +21,7 @@ function processUrl(url) {
       let rdud = new URL(url).searchParams.get('rdud');
       
       // Verificar si los parámetros necesarios existen
-      if (!rd_proj_ud && !s2 && !rdud) return null;
+      if (!rd_proj_ud && !s2 && !rdud) return 'URL no válida';
 
       // Generar la URL con los parámetros disponibles
       if (s2 && rdud) {
@@ -44,21 +44,22 @@ function processUrl(url) {
       if (domain.includes('router.cint.com') && arid && rid) {
         let token = '0749a007-a1d3-48c1-8ff3-12960c555867';
         generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}&cint_arid=${arid}`;
-      } else {
-        // Si el dominio es 'router.cint.com' pero no tiene los parámetros necesarios, marcar como inválida
+      } 
+      // Si la URL es de 'router.cint.com' pero le faltan parámetros, retornamos 'URL no válida'
+      else if (domain.includes('router.cint.com')) {
         return 'URL no válida';
       }
     }
 
-    // Si no se generó ninguna URL válida
+    // Si no se generó ninguna URL válida, retornamos 'URL no válida'
     if (!generatedUrl) {
-      return 'URL no válida'; // Si no se cumple ninguna de las condiciones, retornamos 'URL no válida'
+      return 'URL no válida';
     }
 
     return generatedUrl; // Retornamos la URL generada
 
   } catch (error) {
-    // Manejo de error: se logea y se retorna 'URL no válida', pero no bloquea la ejecución de otros scripts
+    // Si ocurre un error, se captura y se devuelve 'URL no válida'
     console.error('Error al procesar la URL:', error);
     return 'URL no válida';
   }
