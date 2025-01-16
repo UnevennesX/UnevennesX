@@ -1,63 +1,37 @@
-// Función para procesar las URLs de Survey y Decipher
-function processUrl(url) {
+function processSurveyUrl(url) {
   try {
-    // Crear un objeto URL para analizar la URL dada
-    const parsedUrl = new URL(url);
+    // Analizar la URL
+    let domain = new URL(url).hostname;
+    let generatedUrl = '';
 
-    let domain = parsedUrl.hostname;
+    // Definir los parámetros de la URL
+    let s2 = new URL(url).searchParams.get('s2');
+    let rd_proj_ud = new URL(url).searchParams.get('rd_proj_ud');
+    let rdud = new URL(url).searchParams.get('rdud');
 
-    // Verificar si el dominio es el de Survey
+    // Verificar si el dominio es de Survey
     if (domain.includes('se.navigatorsurveys.com')) {
-      // Obtener los parámetros 's2', 'rd_proj_ud' y 'rdud'
-      const s2 = parsedUrl.searchParams.get('s2');
-      const rd_proj_ud = parsedUrl.searchParams.get('rd_proj_ud');
-      const rdud = parsedUrl.searchParams.get('rdud'); // Buscar el parámetro rdud
-
-      // Verificar que rd_proj_ud siempre esté presente
+      // Verificar que el parámetro rd_proj_ud esté presente
       if (!rd_proj_ud) {
-        // Si no se encuentra rd_proj_ud, retornar null porque es obligatorio
-        return null;
+        throw new Error('El parámetro "rd_proj_ud" es obligatorio.');
       }
 
-      // Si ambos parámetros están presentes, se usará rdud
+      // Generar la nueva URL
       if (s2 && rdud) {
-        return `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
-      }
-
-      // Si solo s2 está presente, usarlo
-      if (s2) {
-        return `https://www.rdsecured.com/return?inbound_code=1000&rdud=${s2}&rd_proj_ud=${rd_proj_ud}`;
-      }
-
-      // Si solo rdud está presente, usarlo
-      if (rdud) {
-        return `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
-      }
-
-      // Si no se encuentra ni s2 ni rdud, usar el valor de rd_proj_ud sin uno de los otros parámetros
-      return `https://www.rdsecured.com/return?inbound_code=1000&rd_proj_ud=${rd_proj_ud}`;
-    }
-
-    // Verificar si el dominio es de Decipher
-    if (domain.includes('decipherinc.com')) {
-      let tsid = parsedUrl.searchParams.get('tsid'); // Extraer el valor de tsid
-
-      let generatedUrl = '';
-
-      if (tsid) {
-        // Generar la nueva URL con el parámetro tsid
-        generatedUrl = `https://tssrvy.com/r/?st=1&tsid=${tsid}`;
-        return generatedUrl;
+        generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
+      } else if (s2) {
+        generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${s2}&rd_proj_ud=${rd_proj_ud}`;
+      } else if (rdud) {
+        generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
       } else {
-        throw new Error('URL no válida, parámetro "tsid" no encontrado.');
+        generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rd_proj_ud=${rd_proj_ud}`;
       }
+    } else {
+      throw new Error('Dominio no válido');
     }
 
-    // Si el dominio no es ninguno de los dos, retornar null
-    return null;
-
+    return generatedUrl;
   } catch (e) {
-    // Manejo de errores: Si la URL es inválida, imprimir el error
     console.error('Error en la URL:', e.message);
     return null;
   }
@@ -68,9 +42,8 @@ document.getElementById('urlForm').addEventListener('submit', function (event) {
   event.preventDefault();
 
   const urlInput = document.getElementById('urlInput');
-  const result = processUrl(urlInput.value);  // Usamos la función processUrl
+  const result = processSurveyUrl(urlInput.value); // Usamos la función para Survey
 
-  // Mostrar la URL generada o error según corresponda
   if (result) {
     document.getElementById('generatedTitle').classList.remove('hidden');
     document.getElementById('generatedUrl').classList.remove('hidden');
@@ -93,3 +66,9 @@ document.getElementById('generatedUrl').addEventListener('click', function() {
   document.body.removeChild(el);
   document.getElementById('notification').classList.remove('hidden');
 });
+
+
+
+
+
+
