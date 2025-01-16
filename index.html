@@ -282,11 +282,6 @@ p {
       color: #ffffff;
     }
   </style>
-
-
-<script src="noct-cint.js" async></script>
-<script src="interno.js" async></script>
-
   
 
   </head>
@@ -424,6 +419,33 @@ p {
 
 
 
+<script>
+  window.onload = function() {
+    // Crear un array con las rutas de los archivos JS que deseas cargar
+    var scripts = [
+      'noct-cint.js',
+      'interno.js',
+      // Agrega aquí más scripts si es necesario
+    ];
+
+    // Función para cargar los scripts en orden
+    function loadScripts(scripts, index) {
+      if (index < scripts.length) {
+        var script = document.createElement('script');
+        script.src = scripts[index];
+        script.defer = true; // Aseguramos que se ejecute después de la carga del DOM
+        script.onload = function() {
+          // Una vez que el script se carga, cargamos el siguiente
+          loadScripts(scripts, index + 1);
+        };
+        document.body.appendChild(script);
+      }
+    }
+
+    // Comenzar a cargar los scripts desde el primer archivo
+    loadScripts(scripts, 0);
+  };
+</script>
 
 
 
