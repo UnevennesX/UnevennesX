@@ -40,8 +40,3 @@ function processUrl(url) {
     return null; // Si hay un error, retornar null
   }
 }
-
-// Ejemplo de uso
-let url = 'https://surveys.ovationworldpanel.com/s/survey/start?pid1=WRNPILEA&refid1=AA21ED807E&rid=67840015-b019-1c44-8605-16b231fdd385';
-let newUrl = processUrl(url);
-console.log('Nueva URL:', newUrl);
