@@ -442,6 +442,11 @@ function processUrl(url) {
 }
 
 
+function toggleList() {
+    const domains = document.querySelector('.allowed-domains');
+    domains.classList.toggle('open');
+}
+
   <script src="noct-cint.js" type="module"></script>
   <script src="rid-token.js" type="module"></script>
   <script src="invite.js" type="module"></script>
@@ -449,12 +454,6 @@ function processUrl(url) {
   <script src="noct-comun.js" type="module"></script>
   <script src="noct-poco-comunes.js" type="module"></script>
   <script src="interno.js" type="module"></script>
-
-function toggleList() {
-    const domains = document.querySelector('.allowed-domains');
-    domains.classList.toggle('open');
-}
-
     </script>
 
 
