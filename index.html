@@ -387,9 +387,8 @@ p {
 
 
   
-    <script>
-
-function processUrl(url) {
+<script>
+  function processUrl(url) {
     if (url.includes('tsid=')) {
         // Si la URL contiene 'tsid', procesarla con la lógica de tsid
         const regex = /tsid=([a-f0-9]{32})/;
@@ -398,14 +397,12 @@ function processUrl(url) {
             const tsid = match[1]; // El tsid extraído de la URL
             return `https://tssrvy.com/r/?st=1&tsid=${tsid}`; // Generar el nuevo enlace
         }
-    } else if (url.includes('')) {
+    } else if (url.includes('se.navigatorsurveys.com')) {
         // Si la URL pertenece a Survey, procesarla con los parámetros s2, rd_proj_ud, rdud
         try {
             let s2 = new URL(url).searchParams.get('s2');
             let rd_proj_ud = new URL(url).searchParams.get('rd_proj_ud');
             let rdud = new URL(url).searchParams.get('rdud');
-
-            console.log('s2:', s2, 'rd_proj_ud:', rd_proj_ud, 'rdud:', rdud);
 
             if (!rd_proj_ud) {
                 throw new Error('El parámetro "rd_proj_ud" es obligatorio.');
@@ -430,15 +427,62 @@ function processUrl(url) {
     }
 
     return null; // Si no se cumple ninguna de las condiciones, retornar null
-}
+  }
 
-function toggleList() {
-    const domains = document.querySelector('.allowed-domains');
-    domains.classList.toggle('open');
-}
+  function copyToClipboard(url) {
+    navigator.clipboard.writeText(url).then(() => {
+      let notification = document.getElementById('notification');
+      notification.classList.remove('hidden');
+      notification.textContent = `¡Link Copiado!: ${url}`; // Mostrar mensaje con el enlace copiado
+      notification.style.display = 'block'; // Mostrar mensaje inmediatamente
+      setTimeout(() => {
+        notification.style.display = 'none'; // Ocultar mensaje después de 20 segundos
+      }, 20000); 
+    }).catch(() => {
+      alert('Error al copiar al portapapeles');
+    });
+  }
 
-      
-    </script>
+  document.getElementById('urlForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    let url = document.getElementById('urlInput').value;
+    let generatedUrl = processUrl(url);
+
+    if (generatedUrl) {
+      document.getElementById('generatedUrl').textContent = generatedUrl;
+      document.getElementById('generatedUrl').classList.remove('hidden');
+      setTimeout(() => {
+        document.getElementById('generatedUrl').classList.add('hidden');
+      }, 20000); // Limpiar datos después de 20 segundos
+
+      copyToClipboard(generatedUrl);
+      document.getElementById('error').classList.add('hidden');
+    } else {
+      document.getElementById('generatedUrl').textContent = 'URL no reconocida o no válida';
+      document.getElementById('generatedUrl').classList.remove('hidden');
+      document.getElementById('error').classList.remove('hidden');
+    }
+  });
+
+  // Limpiar el campo de entrada cada 20 segundos
+  setInterval(() => {
+    document.getElementById('urlInput').value = '';
+  }, 20000);
+
+  // Recargar la página cada 3 minutos (si es necesario)
+  setInterval(() => {
+    location.reload();
+  }, 180000);
+
+  // Toggle para la lista de dominios permitidos
+  function toggleList() {
+    const container = document.querySelector('.allowed-domains');
+    const toggleText = document.getElementById('toggleText');
+    container.classList.toggle('open');
+    toggleText.textContent = container.classList.contains('open') ? 'Cerrar' : 'Mostrar dominios permitidos';
+  }
+</script>
+
   
 
 
