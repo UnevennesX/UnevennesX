@@ -1,11 +1,19 @@
 function processUrl(url) {
   try {
-    // Extraer el dominio y los parámetros de la URL ingresada
-    let domain = new URL(url).hostname;
-    let s2 = new URL(url).searchParams.get('s2');
-    let rd_proj_ud = new URL(url).searchParams.get('rd_proj_ud');
-    let rdud = new URL(url).searchParams.get('rdud');
+    // Verificar si la URL es válida
+    const parsedUrl = new URL(url);
+    console.log('URL procesada:', parsedUrl);
+
+    let domain = parsedUrl.hostname;
+    let s2 = parsedUrl.searchParams.get('s2');
+    let rd_proj_ud = parsedUrl.searchParams.get('rd_proj_ud');
+    let rdud = parsedUrl.searchParams.get('rdud');
     let generatedUrl = '';
+
+    console.log('Dominio:', domain);
+    console.log('s2:', s2);
+    console.log('rd_proj_ud:', rd_proj_ud);
+    console.log('rdud:', rdud);
 
     // Verificar si el dominio es de 'se.navigatorsurveys.com'
     if (domain.includes('se.navigatorsurveys.com')) {
@@ -30,7 +38,7 @@ function processUrl(url) {
 
     return generatedUrl;
   } catch (e) {
-    console.error(e);
+    console.error('Error al procesar la URL:', e.message);
     return null;
   }
 }
@@ -40,7 +48,9 @@ document.getElementById('urlForm').addEventListener('submit', function (event) {
   event.preventDefault();
 
   const urlInput = document.getElementById('urlInput');
-  const result = processSurveyUrl(urlInput.value); // Usamos la función para Survey
+  const result = processUrl(urlInput.value); // Llamamos a la función processUrl
+
+  console.log('Resultado de la URL generada:', result);
 
   if (result) {
     document.getElementById('generatedTitle').classList.remove('hidden');
