@@ -418,7 +418,6 @@ p {
 
 
 <script>
-
 // URL del archivo en GitHub
 const DATA_FILE_URL = 'https://raw.githubusercontent.com/UnevennesX/UnevennesX/main/datos-info.txt';
 
@@ -431,21 +430,30 @@ async function fetchSurveyData() {
   return response.text();
 }
 
-// Función para procesar la URL ingresada
-function processInputUrl(inputUrl) {
+// Función para procesar la URL ingresada y extraer el RID
+function extractRid(url, isSamplicious) {
   try {
-    const parsedUrl = new URL(inputUrl);
-    const domain = parsedUrl.hostname; // Extraer dominio
-    const rid = parsedUrl.searchParams.get('RID'); // Extraer RID del URL ingresado
+    const parsedUrl = new URL(url);
 
-    if (!rid) {
-      console.error('El URL ingresado no contiene un RID válido.');
-      return null;
+    // Si existe un parámetro explícito llamado RID, úsalo
+    const rid = parsedUrl.searchParams.get('RID');
+    if (rid) {
+      return rid;
     }
 
-    return { domain, rid };
+    // Si es de tipo Samplicious, busca un valor que comience con "67"
+    if (isSamplicious) {
+      const allParts = [parsedUrl.pathname, ...parsedUrl.searchParams.values()];
+      const match = allParts.find(part => part.startsWith('67'));
+      if (match) {
+        return match;
+      }
+    }
+
+    // Si no se encuentra un RID, devuelve null
+    return null;
   } catch (error) {
-    console.error('Error procesando la URL:', error);
+    console.error('Error al extraer el RID:', error);
     return null;
   }
 }
@@ -455,15 +463,6 @@ async function generateSurveyUrl(inputUrl) {
   try {
     // Cargar datos del archivo
     const fileData = await fetchSurveyData();
-
-    // Procesar la URL ingresada
-    const inputData = processInputUrl(inputUrl);
-    if (!inputData) {
-      console.error('No se pudo procesar la URL ingresada.');
-      return;
-    }
-
-    const { domain, rid } = inputData;
 
     // Dividir el archivo en encuestas
     const surveys = fileData.split('----------------').map(entry => {
@@ -478,6 +477,10 @@ async function generateSurveyUrl(inputUrl) {
       return survey;
     });
 
+    // Procesar la URL ingresada
+    const parsedUrl = new URL(inputUrl);
+    const domain = parsedUrl.hostname;
+
     // Buscar la encuesta correspondiente al dominio o nombre
     const targetSurvey = surveys.find(survey =>
       survey['nombre'] === domain || survey['url']?.includes(domain)
@@ -488,6 +491,16 @@ async function generateSurveyUrl(inputUrl) {
       return;
     }
 
+    // Determinar si es de tipo Samplicious
+    const isSamplicious = targetSurvey['tipo de survey']?.toLowerCase() === 'samplicious';
+
+    // Extraer el RID
+    const rid = extractRid(inputUrl, isSamplicious);
+    if (!rid) {
+      console.error('No se pudo extraer un RID válido.');
+      return;
+    }
+
     // Extraer el token y verificar la estructura de la URL
     const urlTemplate = targetSurvey.url;
     if (!urlTemplate) {
@@ -495,7 +508,7 @@ async function generateSurveyUrl(inputUrl) {
       return;
     }
 
-    // Verificar si el token está antes o después del RID
+    // Extraer el token desde la URL del archivo TXT
     const tokenMatch = urlTemplate.match(/token=([a-f0-9-]+)/);
     const token = tokenMatch ? tokenMatch[1] : null;
 
@@ -504,6 +517,7 @@ async function generateSurveyUrl(inputUrl) {
       return;
     }
 
+    // Verificar si el token está antes o después del RID
     let generatedUrl = '';
     if (urlTemplate.indexOf('RID=') < urlTemplate.indexOf('token=')) {
       // RID antes del token
@@ -521,9 +535,8 @@ async function generateSurveyUrl(inputUrl) {
 }
 
 // Ejemplo de uso
-generateSurveyUrl('https://surveys.example.com?RID=67888b52-5604-4da2-495b-f515eb17d2b7');
+generateSurveyUrl('https://surveys.example.com/path/67888b52-5604-4da2-495b-f515eb17d2b7');
 
-  
 </script>
 
 
