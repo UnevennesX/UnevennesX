@@ -1,4 +1,4 @@
-export async function processUrl(url) {
+function processUrl(url) {
     try{
         let domain = new URL(url).hostname;
        const token = '034287b2-1ca0-48d1-9e45-f5ca740ef529';
