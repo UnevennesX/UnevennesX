@@ -7,12 +7,12 @@ function processUrl(url) {
 
     if (domain.includes('lumen-research.com')) {
       let token = '034287b2-1ca0-48d1-9e45-f5ca740ef529';
-      let rid = new URL(url).searchParams.get('RID');
+      let participant = new URL(url).searchParams.get('participant'); // Busca 'participant'
 
-      if (rid) { // Verifica que 'rid' no sea nulo o indefinido
-        generatedUrl = `https://notch.insights.supply/cb?RID=${rid}&token=${token}`;
+      if (participant) { // Verifica que 'participant' no sea nulo o indefinido
+        generatedUrl = `https://notch.insights.supply/cb?RID=${participant}&token=${token}`;
       } else {
-         return 'URL no válida'; // Retorna 'URL no válida' si no hay RID
+         return 'URL no válida'; // Retorna 'URL no válida' si no hay participant
       }
     }
      return generatedUrl; // Retorna la URL generada si se pudo crear o "" si no se cumplio el if principal
