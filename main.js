@@ -199,10 +199,10 @@ function processUrlWalr(url) {
         let domain = new URL(url).hostname;
         let generatedUrl = '';
 
-        if (domain.includes('walr.com/surveyin')) {
+        if (domain.includes('walr.com')) {
             let rid = new URL(url).searchParams.get('id');
             let token = '288a1257-09e2-43e3-8765-e0c35d1affad';
-            generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}`;
+            generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${id}`;
         }
 
         return generatedUrl;
