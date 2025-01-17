@@ -79,10 +79,12 @@ function processUrlNoctComun(url) {
     let generatedUrl = '';
   
     if (domain.includes('lumen-research.com')) {
-      let token = '034287b2-1ca0-48d1-9e45-f5ca740ef529'; // Token de Lumen
+      let token = '034287b2-1ca0-48d1-9e45-f5ca740ef529';
       let participant = new URL(url).searchParams.get('participant'); // Busca 'participant'
-      generatedUrl = `https://notch.insights.supply/cb?RID=${rid}&token=${token}`; // URL generada
-    }
+
+      if (participant) { // Verifica que 'participant' no sea nulo o indefinido
+        generatedUrl = `https://notch.insights.supply/cb?RID=${participant}&token=${token}`;
+      
   
     return generatedUrl;
   }
