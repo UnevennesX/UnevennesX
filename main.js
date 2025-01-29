@@ -16,7 +16,7 @@ function dispatchUrl(url) {
     } else if (url.includes('walr.com/surveyin')) {
         return processUrlWalr(url); // walr.js
     } else if (url.includes('tsid=') || url.includes('rd_proj_ud=') || url.includes('s2=') || url.includes('rdud=')) {
-        return processUrlInterno(url);
+        return processUrlInterno(url); // interno.js
     }
 
     return null; // Si no coincide con ninguna función, devuelve null
@@ -136,17 +136,32 @@ function processUrlInvite(url) {
 
 
 
+
+
+
+
+
+
+
+
 // Función para procesar URLs internas
 function processUrlInterno(url) {
     try {
         let generatedUrl = null;
+        const BASE_URL_TSSR = "https://tssrvy.com/r/?st=1&tsid=";
+        const BASE_URL_RDSECURED = "https://www.rdsecured.com/return?inbound_code=1000&rdud=";
+
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            return 'URL no válida: debe empezar por http:// o https://';
+        }
+
 
         if (url.includes('tsid=')) {
             const regex = /tsid=([a-f0-9]{32})/;
             const match = url.match(regex);
             if (match) {
                 const tsid = match[1];
-                generatedUrl = `https://tssrvy.com/r/?st=1&tsid=${tsid}`;
+                generatedUrl = `${BASE_URL_TSSR}${tsid}`;
             }
         } else {
             const urlParams = new URL(url).searchParams;
@@ -156,15 +171,18 @@ function processUrlInterno(url) {
             const rd_proj_ud = urlParams.get('rd_proj_ud');
             const rdud = urlParams.get('rdud');
 
-
+             if (!rd_proj_ud) {
+                return 'URL no válida: Falta el parámetro rd_proj_ud';
+             }
+           
             if (s2 && rdud && rid) {
-                generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
+                generatedUrl = `${BASE_URL_RDSECURED}${rdud}&rd_proj_ud=${rd_proj_ud}`;
             } else if (s2) {
-                generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${s2}&rd_proj_ud=${rd_proj_ud}`;
+                generatedUrl = `${BASE_URL_RDSECURED}${s2}&rd_proj_ud=${rd_proj_ud}`;
              } else if (rdud) {
-                generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
+                generatedUrl = `${BASE_URL_RDSECURED}${rdud}&rd_proj_ud=${rd_proj_ud}`;
              } else if (rid) {
-                generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rid}&rd_proj_ud=${rd_proj_ud}`;
+                generatedUrl = `${BASE_URL_RDSECURED}${rid}&rd_proj_ud=${rd_proj_ud}`;
             }
         }
 
@@ -180,6 +198,23 @@ function processUrlInterno(url) {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Nueva función para procesar URLs de Walr
 function processUrlWalr(url) {
     try {
@@ -189,7 +224,7 @@ function processUrlWalr(url) {
         if (domain.includes('walr.com')) {
             let rid = new URL(url).searchParams.get('id');
             let token = '288a1257-09e2-43e3-8765-e0c35d1affad';
-            generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}`;
+            generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${id}`;
         }
 
         return generatedUrl;
