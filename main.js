@@ -134,25 +134,16 @@ function processUrlInvite(url) {
     }
 }
 
-// Función para procesar URLs poco comunes
-function processUrlNoctPocoComunes(url) {
-    try {
-        let domain = new URL(url).hostname;
-        let token = '04651664-4715-4620-8f59-16a272ff3e4a';
-        let pid1 = new URL(url).searchParams.get('pid1');
-        let refid1 = new URL(url).searchParams.get('refid1');
-        let rid = new URL(url).searchParams.get('rid');
-        let generatedUrl = '';
-        if (domain.includes('ovationworldpanel.com')) {
-            generatedUrl = `https://notch.insights.supply/cb?token=${token}&pid1=${pid1}&refid1=${refid1}&rid=${rid}`;
-        } else {
-            throw new Error('URL no válida');
-        }
-        return generatedUrl;
-    } catch (e) {
-        return null;
-    }
-}
+
+
+
+
+
+
+
+
+
+
 
 // Función para procesar URLs internas
 function processUrlInterno(url) {
@@ -167,11 +158,12 @@ function processUrlInterno(url) {
                 generatedUrl = `https://tssrvy.com/r/?st=1&tsid=${tsid}`;
             }
         } else {
-            let s2 = new URL(url).searchParams.get('s2');
-            let s2 = new URL(url).searchParams.get('rrid');
-            let s2 = new URL(url).searchParams.get('rid');
-            let rd_proj_ud = new URL(url).searchParams.get('rd_proj_ud');
-            let rdud = new URL(url).searchParams.get('rdud');
+            const urlParams = new URL(url).searchParams;
+            const s2 = urlParams.get('s2');
+             const rrid = urlParams.get('rrid');
+            const rid = urlParams.get('rid');
+            const rd_proj_ud = urlParams.get('rd_proj_ud');
+            const rdud = urlParams.get('rdud');
 
             if (s2 && rdud) {
                 generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
@@ -192,6 +184,29 @@ function processUrlInterno(url) {
         return 'URL no válida';
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Nueva función para procesar URLs de Walr
 function processUrlWalr(url) {
