@@ -146,6 +146,7 @@ function processUrlInvite(url) {
 
 
 // Función para procesar URLs internas
+// Función para procesar URLs internas
 function processUrlInterno(url) {
     try {
         let generatedUrl = null;
@@ -160,7 +161,7 @@ function processUrlInterno(url) {
         } else {
             const urlParams = new URL(url).searchParams;
             const s2 = urlParams.get('s2');
-             const rrid = urlParams.get('rrid');
+            const rrid = urlParams.get('rrid');
             const rid = urlParams.get('rid');
             const rd_proj_ud = urlParams.get('rd_proj_ud');
             const rdud = urlParams.get('rdud');
@@ -172,6 +173,7 @@ function processUrlInterno(url) {
             } else if (rdud) {
                 generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
             }
+            // Eliminamos el else if (rd_proj_ud)
         }
 
         if (!generatedUrl) {
@@ -184,8 +186,6 @@ function processUrlInterno(url) {
         return 'URL no válida';
     }
 }
-
-
 
 
 
