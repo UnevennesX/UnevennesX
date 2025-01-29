@@ -168,6 +168,8 @@ function processUrlInterno(url) {
             }
         } else {
             let s2 = new URL(url).searchParams.get('s2');
+            let s2 = new URL(url).searchParams.get('rrid');
+            let s2 = new URL(url).searchParams.get('rid');
             let rd_proj_ud = new URL(url).searchParams.get('rd_proj_ud');
             let rdud = new URL(url).searchParams.get('rdud');
 
@@ -177,8 +179,6 @@ function processUrlInterno(url) {
                 generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${s2}&rd_proj_ud=${rd_proj_ud}`;
             } else if (rdud) {
                 generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rdud=${rdud}&rd_proj_ud=${rd_proj_ud}`;
-            } else if (rd_proj_ud) {
-                generatedUrl = `https://www.rdsecured.com/return?inbound_code=1000&rd_proj_ud=${rd_proj_ud}`;
             }
         }
 
