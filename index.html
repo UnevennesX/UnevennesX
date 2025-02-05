@@ -391,77 +391,65 @@ function processUrlInvite(url) {
 
 
 
+
+// Función para procesar URLs internas
 function processUrlInterno(url) {
     try {
         let generatedUrl = null;
         const BASE_URL_TSSR = "https://tssrvy.com/r/?st=1&tsid=";
         const BASE_URL_RDSECURED = "https://www.rdsecured.com/return?inbound_code=1000&rdud=";
 
-        // Input Validation: Check for http/https protocol
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
-            console.warn("Invalid URL: Missing http(s) protocol.");
-            return null;
+            return 'URL no válida: debe empezar por http:// o https://';
         }
 
-        // Handle URLs with 'tsid=' parameter
-        if (url.includes('tsid=')) {
-            const regex = /tsid=([a-fA-F0-9]{32})/;
-            const match = url.match(regex);
 
+        if (url.includes('tsid=')) {
+            const regex = /tsid=([a-f0-9]{32})/;
+            const match = url.match(regex);
             if (match) {
                 const tsid = match[1];
                 generatedUrl = `${BASE_URL_TSSR}${tsid}`;
-            } else {
-                console.warn("Invalid URL: 'tsid' parameter format incorrect.");
-                return null;
             }
         } else {
-            // Handle URLs with other parameters (s2, rdud, rid, etc.)
             const urlParams = new URL(url).searchParams;
             const s2 = urlParams.get('s2');
             const rrid = urlParams.get('rrid');
             const rid = urlParams.get('rid');
             const rd_proj_ud = urlParams.get('rd_proj_ud');
             const rdud = urlParams.get('rdud');
-            const uid = urlParams.get('uid');
-            const id = urlParams.get('id');
 
-            // rd_proj_ud is mandatory for this type of URL
-            if (!rd_proj_ud) {
-                console.warn("Invalid URL: Missing 'rd_proj_ud' parameter.");
-                return null;
-            }
-
-            // Build the URL based on available parameters, using URL encoding
-            if (s2 && rdud && rid && id) {
-                generatedUrl = `${BASE_URL_RDSECURED}${encodeURIComponent(rdud)}&rd_proj_ud=${encodeURIComponent(rd_proj_ud)}`;
+             if (!rd_proj_ud) {
+                return 'URL no válida: Falta el parámetro rd_proj_ud';
+             }
+           
+            if (s2 && rdud && rid) {
+                generatedUrl = `${BASE_URL_RDSECURED}${rdud}&rd_proj_ud=${rd_proj_ud}`;
             } else if (s2) {
-                generatedUrl = `${BASE_URL_RDSECURED}${encodeURIComponent(s2)}&rd_proj_ud=${encodeURIComponent(rd_proj_ud)}`;
-            } else if (rdud) {
-                generatedUrl = `${BASE_URL_RDSECURED}${encodeURIComponent(rdud)}&rd_proj_ud=${encodeURIComponent(rd_proj_ud)}`;
-            } else if (rid) {
-                generatedUrl = `${BASE_URL_RDSECURED}${encodeURIComponent(rid)}&rd_proj_ud=${encodeURIComponent(rd_proj_ud)}`;
-            } else if (uid) {
-                generatedUrl = `${BASE_URL_RDSECURED}${encodeURIComponent(uid)}&rd_proj_ud=${encodeURIComponent(rd_proj_ud)}`;
-            } else if (id) {
-                // **CORRECTED LINE:**  Add rd_proj_ud to the id URL!
-                generatedUrl = `${BASE_URL_RDSECURED}${encodeURIComponent(id)}&rd_proj_ud=${encodeURIComponent(rd_proj_ud)}`;
+                generatedUrl = `${BASE_URL_RDSECURED}${s2}&rd_proj_ud=${rd_proj_ud}`;
+             } else if (rdud) {
+                generatedUrl = `${BASE_URL_RDSECURED}${rdud}&rd_proj_ud=${rd_proj_ud}`;
+             } else if (rid) {
+                generatedUrl = `${BASE_URL_RDSECURED}${rid}&rd_proj_ud=${rd_proj_ud}`;
             }
         }
 
-        // If no URL could be generated, return null
         if (!generatedUrl) {
-            console.warn("Invalid URL: No matching parameters found.");
-            return null;
+            return 'URL no válida';
         }
 
         return generatedUrl;
-
     } catch (error) {
-        console.error('Error en processUrlInterno:', error);
-        return null;
+        console.error('Error al procesar la URL:', error);
+        return 'URL no válida';
     }
 }
+
+
+
+
+
+
 
 
 
