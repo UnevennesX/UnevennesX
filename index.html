@@ -372,6 +372,26 @@ function processUrlInvite(url) {
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
 function processUrlInterno(url) {
     try {
         let generatedUrl = null;
@@ -397,6 +417,7 @@ function processUrlInterno(url) {
             const rd_proj_ud = urlParams.get('rd_proj_ud');
             const rdud = urlParams.get('rdud');
             const uid = urlParams.get('uid');
+            const id = urlParams.get('id');
 
             if (!rd_proj_ud) {
                 return null;
@@ -412,6 +433,8 @@ function processUrlInterno(url) {
                 generatedUrl = `${BASE_URL_RDSECURED}${rid}&rd_proj_ud=${rd_proj_ud}`;
             } else if (uid) {
                 generatedUrl = `${BASE_URL_RDSECURED}${uid}&rd_proj_ud=${rd_proj_ud}`;
+            } else if (id) {
+                generatedUrl = `${BASE_URL_RDSECURED}${id}&rd_proj_ud=${rd_proj_ud}`;
             }
         }
 
@@ -426,6 +449,21 @@ function processUrlInterno(url) {
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
 function processUrlGoodHuman(url) {
     try {
         let generatedUrl = null;
