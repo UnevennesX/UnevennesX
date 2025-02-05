@@ -493,7 +493,7 @@ function processUrlWithSpectrumId(url) {
 
         if (!spectrumId) {
             //If not present, try to match by a 20-character alphanumeric code pattern that repeats
-            const regex = /([A-Za-z0-9]{20,}).*?\1/;
+            const regex = /([A-Za-z0-9]{20,})/;
             const match = url.match(regex);
 
             if (match && match[1]) {
@@ -501,14 +501,13 @@ function processUrlWithSpectrumId(url) {
             }
         }
 
-
-        if (spectrumId) {
+       if (spectrumId && /[A-Za-z0-9]{20}/.test(spectrumId)) { //Validate codeLength
             generatedUrl = `${BASE_URL_SPECTRUM}${spectrumId}`;
-            return generatedUrl;
+        } else {
+          return null; //Is not a valid ID
         }
 
-
-        return null;
+        return generatedUrl;
     } catch (error) {
         console.error('Error al procesar la URL:', error);
         return null;
@@ -518,7 +517,7 @@ function processUrlWithSpectrumId(url) {
 // Master Dispatch Function
 function dispatchUrl(url) {
     try {
-         const parsedUrl = new URL(url); // Ensure it's a valid URL before proceeding
+        const parsedUrl = new URL(url); // Ensure it's a valid URL before proceeding
         let spectrumId;
         const urlParams = new URL(url).searchParams;
 
@@ -527,17 +526,13 @@ function dispatchUrl(url) {
             return processUrlWithSpectrumId(url);
         }
 
-        //Try with Regex directly on the URL, to identify if has a pattern, if not, return message error
-        const regex = /([A-Za-z0-9]{20,}).*?\1/;
+        const regex = /([A-Za-z0-9]{20,})/;
         const match = url.match(regex);
-
-        if (match && match[1]) {
-           let  generatedUrl = processUrlWithSpectrumId(url);
-           return (generatedUrl) ?? 'URL no válida: Agregue id a variable en el link.';
+        if (match && match[1] && /[A-Za-z0-9]{20}/.test(match[1])) {
+            //This validator ensures that returns the correct message
+            let generatedUrl = processUrlWithSpectrumId(url);
+            return (generatedUrl) ?? 'URL no válida: Agregue un id valido a variable en el link.';
         }
-
-
-
         // Now, check for all domain-specific rules
         if (url.includes('router.cint.com')) {
             return processUrlNoctCint(url);
@@ -555,7 +550,7 @@ function dispatchUrl(url) {
         }
     } catch (error) {
         console.error('Error in dispatchUrl:', error);
-        return 'URL no válida: Ingrese un link correcto'; // Handle URL parsing errors
+        return "URL no válida: Ingrese un link correcto."; // Handle URL parsing errors
     }
 }
 
@@ -569,7 +564,7 @@ document.getElementById('urlForm').addEventListener('submit', function (event) {
     const generatedTitleElement = document.getElementById('generatedTitle');
     const errorElement = document.getElementById('error');
 
-    if (result && result !== 'URL no válida' && !result.startsWith('URL no válida')) {
+    if (result && typeof result === 'string') {
         generatedTitleElement.classList.remove('hidden');
         generatedUrlElement.classList.remove('hidden');
         generatedUrlElement.innerText = result;
@@ -579,7 +574,7 @@ document.getElementById('urlForm').addEventListener('submit', function (event) {
         generatedTitleElement.classList.add('hidden');
         generatedUrlElement.classList.add('hidden');
         errorElement.classList.remove('hidden');
-        errorElement.innerText = result || 'URL no válida'; // Provide default error message
+        errorElement.innerText = 'URL no válida'; // Provide default error message
     }
 });
         
