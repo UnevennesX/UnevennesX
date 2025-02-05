@@ -391,7 +391,7 @@ function processUrlInvite(url) {
 
 
 
-    function processUrlInterno(url) {
+function processUrlInterno(url) {
     try {
         let generatedUrl = null;
         const BASE_URL_TSSR = "https://tssrvy.com/r/?st=1&tsid=";
@@ -399,13 +399,12 @@ function processUrlInvite(url) {
 
         // Input Validation: Check for http/https protocol
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
-            console.warn("Invalid URL: Missing http(s) protocol.");  // More informative log
+            console.warn("Invalid URL: Missing http(s) protocol.");
             return null;
         }
 
         // Handle URLs with 'tsid=' parameter
         if (url.includes('tsid=')) {
-            // More flexible regex: allow uppercase hex characters
             const regex = /tsid=([a-fA-F0-9]{32})/;
             const match = url.match(regex);
 
@@ -413,8 +412,8 @@ function processUrlInvite(url) {
                 const tsid = match[1];
                 generatedUrl = `${BASE_URL_TSSR}${tsid}`;
             } else {
-                console.warn("Invalid URL: 'tsid' parameter format incorrect."); //Informative logging
-                return null; // Return null if tsid format is incorrect
+                console.warn("Invalid URL: 'tsid' parameter format incorrect.");
+                return null;
             }
         } else {
             // Handle URLs with other parameters (s2, rdud, rid, etc.)
@@ -429,7 +428,7 @@ function processUrlInvite(url) {
 
             // rd_proj_ud is mandatory for this type of URL
             if (!rd_proj_ud) {
-                console.warn("Invalid URL: Missing 'rd_proj_ud' parameter."); //Informative logging
+                console.warn("Invalid URL: Missing 'rd_proj_ud' parameter.");
                 return null;
             }
 
@@ -445,13 +444,14 @@ function processUrlInvite(url) {
             } else if (uid) {
                 generatedUrl = `${BASE_URL_RDSECURED}${encodeURIComponent(uid)}&rd_proj_ud=${encodeURIComponent(rd_proj_ud)}`;
             } else if (id) {
+                // **CORRECTED LINE:**  Add rd_proj_ud to the id URL!
                 generatedUrl = `${BASE_URL_RDSECURED}${encodeURIComponent(id)}&rd_proj_ud=${encodeURIComponent(rd_proj_ud)}`;
             }
         }
 
         // If no URL could be generated, return null
         if (!generatedUrl) {
-            console.warn("Invalid URL: No matching parameters found."); //Informative logging
+            console.warn("Invalid URL: No matching parameters found.");
             return null;
         }
 
