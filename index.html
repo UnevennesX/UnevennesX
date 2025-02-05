@@ -423,7 +423,7 @@ function processUrlInterno(url) {
                 return null;
             }
 
-            if (s2 && rdud && rid) {
+            if (s2 && rdud && rid && id) {
                 generatedUrl = `${BASE_URL_RDSECURED}${rdud}&rd_proj_ud=${rd_proj_ud}`;
             } else if (s2) {
                 generatedUrl = `${BASE_URL_RDSECURED}${s2}&rd_proj_ud=${rd_proj_ud}`;
