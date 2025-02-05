@@ -348,7 +348,7 @@ function processUrlNoctCint(url) {
 
     } catch (e) {
         console.error('Error en processUrlNoctCint:', e);
-        return 'URL no válida: ' + e.message;
+        return null;
     }
 }
 
@@ -368,7 +368,7 @@ function processUrlInvite(url) {
         return generatedUrl;
     } catch (e) {
         console.error('Error en processUrlInvite:', e);
-        return 'URL no válida: ' + e.message;
+        return null;
     }
 }
 
@@ -422,7 +422,7 @@ function processUrlInterno(url) {
         return generatedUrl;
     } catch (error) {
         console.error('Error en processUrlInterno:', error);
-        return 'URL no válida: ' + error.message;
+        return null;
     }
 }
 
@@ -441,7 +441,7 @@ function processUrlGoodHuman(url) {
             if (idValue) {
                 generatedUrl = `${BASE_URL_SPECTRUM}${idValue}`;
             } else {
-                return 'URL no válida: Falta el parámetro "id"';
+                throw new Error('URL no válida: Falta el parámetro "id"');
             }
         }
        if (!generatedUrl) {
@@ -451,7 +451,7 @@ function processUrlGoodHuman(url) {
         return generatedUrl;
     } catch (error) {
         console.error('Error al procesar la URL:', error);
-        return 'URL no válida';
+        return null;
     }
 }
 
@@ -472,7 +472,8 @@ function processUrlOvation(url) {
     }
     return generatedUrl;
   } catch (e) {
-    return 'URL no válida: ' + e.message;
+    console.error('Error al procesar la URL:', e);
+    return null;
   }
 }
 
@@ -497,15 +498,16 @@ function processUrlWithTransactionId(url) {
         return generatedUrl;
     } catch (error) {
         console.error('Error al procesar la URL:', error);
-        return 'URL no válida';
+        return null;
     }
 }
 
 // Master Dispatch Function
 function dispatchUrl(url) {
     try {
-        // First, process ANY URL with transaction_id
         const parsedUrl = new URL(url); // Ensure it's a valid URL before proceeding
+
+        // First, process ANY URL with transaction_id
         if (parsedUrl.searchParams.has('transaction_id')) {
             return processUrlWithTransactionId(url);
         }
