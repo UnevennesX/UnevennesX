@@ -492,7 +492,7 @@ function processUrlWithTransactionId(url) {
         if (transactionId) {
             generatedUrl = `${BASE_URL_SPECTRUM}${transactionId}`;
         } else {
-             return 'URL no válida: Falta el parámetro "transaction_id"';
+            return 'URL no válida: Falta el parámetro "transaction_id"';
         }
         return generatedUrl;
     } catch (error) {
@@ -503,24 +503,31 @@ function processUrlWithTransactionId(url) {
 
 // Master Dispatch Function
 function dispatchUrl(url) {
-    // First, process ANY URL with transaction_id
-    if (url.searchParams.has('transaction_id')) {
-        return processUrlWithTransactionId(url);
-    }
-    // Now, check for all domain-specific rules
-    else if (url.includes('router.cint.com')) {
-        return processUrlNoctCint(url);
-    } else if (url.includes('ipsosinteractive.com')) {
-        return processUrlInvite(url);
-    } else if (url.includes('platform.goodhumanpartners.com')) {
-        return processUrlGoodHuman(url);
-    } else if (url.includes('ovationworldpanel.com')) {
-        return processUrlOvation(url);
-    }
+    try {
+        // First, process ANY URL with transaction_id
+        const parsedUrl = new URL(url); // Ensure it's a valid URL before proceeding
+        if (parsedUrl.searchParams.has('transaction_id')) {
+            return processUrlWithTransactionId(url);
+        }
 
-    // If nothing else matches, attempt internal URL processing
-    else {
-        return processUrlInterno(url);
+        // Now, check for all domain-specific rules
+        if (url.includes('router.cint.com')) {
+            return processUrlNoctCint(url);
+        } else if (url.includes('ipsosinteractive.com')) {
+            return processUrlInvite(url);
+        } else if (url.includes('platform.goodhumanpartners.com')) {
+            return processUrlGoodHuman(url);
+        } else if (url.includes('ovationworldpanel.com')) {
+            return processUrlOvation(url);
+        }
+
+        // If nothing else matches, attempt internal URL processing
+        else {
+            return processUrlInterno(url);
+        }
+    } catch (error) {
+        console.error('Error in dispatchUrl:', error);
+        return 'URL no válida: ' + error.message; // Handle URL parsing errors
     }
 }
 
