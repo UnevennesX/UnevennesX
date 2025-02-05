@@ -432,6 +432,49 @@
                 }
             }
         });
+
+
+
+
+
+
+
+
+
+
+
+// Function to process walr.com URLs
+function processUrlWalr(url) {
+    try {
+        let generatedUrl = null;
+        const BASE_URL_SPECTRUM = "https://spectrumsurveys.com/surveydone?st=21&transaction_id=";
+
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            return 'URL no válida: debe empezar por http:// o https://';
+        }
+
+        if (url.includes('walr.com')) {
+            const urlParams = new URL(url).searchParams;
+            const idValue = urlParams.get('id');
+
+            if (idValue) {
+                generatedUrl = `${BASE_URL_SPECTRUM}${idValue}`;
+            } else {
+                return 'URL no válida: Falta el parámetro "id"';
+            }
+        }
+
+        if (!generatedUrl) {
+            return 'URL no válida';
+        }
+
+        return generatedUrl;
+    } catch (error) {
+        console.error('Error al procesar la URL:', error);
+        return 'URL no válida';
+    }
+}
+        
     </script>
 
 </body>
