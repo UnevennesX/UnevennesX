@@ -477,9 +477,9 @@ function processUrlOvation(url) {
   }
 }
 
-//This is a generic function that process with id of transaction, and always returns same base url.
+//This is a generic function that process with spectrum id, and always returns same base url.
 function processUrlWithSpectrumId(url) {
-    try {
+     try {
         let generatedUrl = null;
         const BASE_URL_SPECTRUM = "https://spectrumsurveys.com/surveydone?st=21&transaction_id=";
 
@@ -488,14 +488,23 @@ function processUrlWithSpectrumId(url) {
         }
 
         const urlParams = new URL(url).searchParams;
-        let spectrumId = urlParams.get('transaction_id') || urlParams.get('trans_id') || urlParams.get('psid');
+        let spectrumId = urlParams.get('transaction_id') || urlParams.get('trans_id') || urlParams.get('psid') || urlParams.get('id');
 
         if (spectrumId) {
             generatedUrl = `${BASE_URL_SPECTRUM}${spectrumId}`;
-        } else {
-            return null;
+            return generatedUrl;
         }
-        return generatedUrl;
+
+          //If any of the parameters aren't working, try to match by repeated text instead of looking at the id.
+          const regex = /([A-Za-z0-9]{20,})/;
+          const match = url.match(regex);
+
+          if (match && match[1]) {
+              generatedUrl = `${BASE_URL_SPECTRUM}${match[1]}`;
+              return generatedUrl;
+          }
+
+        return null;
     } catch (error) {
         console.error('Error al procesar la URL:', error);
         return null;
@@ -508,7 +517,7 @@ function dispatchUrl(url) {
         const parsedUrl = new URL(url); // Ensure it's a valid URL before proceeding
 
         // First, process ANY URL with transaction_id, trans_id, or psid
-        if (parsedUrl.searchParams.has('transaction_id') || parsedUrl.searchParams.has('trans_id') || parsedUrl.searchParams.has('psid')) {
+        if (parsedUrl.searchParams.has('transaction_id') || parsedUrl.searchParams.has('trans_id') || parsedUrl.searchParams.has('psid') || url.includes((new URL(url)).searchParams.get("id") ?? '')) {
             return processUrlWithSpectrumId(url);
         }
 
