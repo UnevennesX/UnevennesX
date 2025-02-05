@@ -487,25 +487,28 @@ function processUrlWithSpectrumId(url) {
             return null;
         }
 
+        let spectrumId;
         const urlParams = new URL(url).searchParams;
-        let spectrumId = urlParams.get('transaction_id') || urlParams.get('trans_id') || urlParams.get('psid') || urlParams.get('id');
+        spectrumId = urlParams.get('transaction_id') || urlParams.get('trans_id') || urlParams.get('psid') || urlParams.get('id');
 
         if (!spectrumId) {
-          //If not present, try to match by a 20-character alphanumeric code pattern instead.
-          const regex = /([A-Za-z0-9]{20,})/;
-          const match = url.match(regex);
-          if (match && match[1]) {
-              spectrumId = match[1];
-              console.log("Generated URL:", generatedUrl);
-          }
+            //If not present, try to match by a 20-character alphanumeric code pattern that repeats
+            const regex = /([A-Za-z0-9]{20,}).*?\1/;
+            const match = url.match(regex);
+
+            if (match && match[1]) {
+                spectrumId = match[1];
+            }
         }
+
 
         if (spectrumId) {
             generatedUrl = `${BASE_URL_SPECTRUM}${spectrumId}`;
+            return generatedUrl;
         }
 
 
-        return generatedUrl;
+        return null;
     } catch (error) {
         console.error('Error al procesar la URL:', error);
         return null;
@@ -516,19 +519,24 @@ function processUrlWithSpectrumId(url) {
 function dispatchUrl(url) {
     try {
          const parsedUrl = new URL(url); // Ensure it's a valid URL before proceeding
+        let spectrumId;
+        const urlParams = new URL(url).searchParams;
 
         // Process ANY URL with transaction_id, trans_id, psid OR a raw 20+ character code
-        let spectrumId = parsedUrl.searchParams.get('transaction_id') || parsedUrl.searchParams.get('trans_id') || parsedUrl.searchParams.get('psid') || parsedUrl.searchParams.get('id');
-         if (!spectrumId) {
-              const regex = /([A-Za-z0-9]{20,})/;
-              const match = url.match(regex);
-               if (match && match[1]) {
-                    spectrumId = match[1];
-                }
-        }
-        if (spectrumId){
+        if (parsedUrl.searchParams.has('transaction_id') || parsedUrl.searchParams.has('trans_id') || parsedUrl.searchParams.has('psid') || parsedUrl.searchParams.has('id')) {
             return processUrlWithSpectrumId(url);
         }
+
+        //Try with Regex directly on the URL, to identify if has a pattern, if not, return message error
+        const regex = /([A-Za-z0-9]{20,}).*?\1/;
+        const match = url.match(regex);
+
+        if (match && match[1]) {
+           let  generatedUrl = processUrlWithSpectrumId(url);
+           return (generatedUrl) ?? 'URL no válida: Agregue id a variable en el link.';
+        }
+
+
 
         // Now, check for all domain-specific rules
         if (url.includes('router.cint.com')) {
@@ -547,7 +555,7 @@ function dispatchUrl(url) {
         }
     } catch (error) {
         console.error('Error in dispatchUrl:', error);
-        return null; // Handle URL parsing errors
+        return 'URL no válida: Ingrese un link correcto'; // Handle URL parsing errors
     }
 }
 
@@ -561,7 +569,7 @@ document.getElementById('urlForm').addEventListener('submit', function (event) {
     const generatedTitleElement = document.getElementById('generatedTitle');
     const errorElement = document.getElementById('error');
 
-    if (result) {
+    if (result && result !== 'URL no válida' && !result.startsWith('URL no válida')) {
         generatedTitleElement.classList.remove('hidden');
         generatedUrlElement.classList.remove('hidden');
         generatedUrlElement.innerText = result;
@@ -571,7 +579,7 @@ document.getElementById('urlForm').addEventListener('submit', function (event) {
         generatedTitleElement.classList.add('hidden');
         generatedUrlElement.classList.add('hidden');
         errorElement.classList.remove('hidden');
-        errorElement.innerText = 'URL no válida'; // Provide default error message
+        errorElement.innerText = result || 'URL no válida'; // Provide default error message
     }
 });
         
