@@ -455,31 +455,6 @@ function processUrlGoodHuman(url) {
     }
 }
 
-//This is a generic function that process with id of transaction, and always returns same base url.
-function processUrlWithTransactionId(url) {
-     try {
-        let generatedUrl = null;
-        const BASE_URL_SPECTRUM = "https://spectrumsurveys.com/surveydone?st=21&transaction_id=";
-
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-            return 'URL no válida: debe empezar por http:// o https://';
-        }
-
-        const urlParams = new URL(url).searchParams;
-        const transactionId = urlParams.get('transaction_id');
-
-        if (transactionId) {
-            generatedUrl = `${BASE_URL_SPECTRUM}${transactionId}`;
-        } else {
-            return 'URL no válida: Falta el parámetro "transaction_id"';
-        }
-        return generatedUrl;
-    } catch (error) {
-        console.error('Error al procesar la URL:', error);
-        return 'URL no válida';
-    }
-}
-
 function processUrlOvation(url) {
   try {
     let domain = new URL(url).hostname;
@@ -501,20 +476,50 @@ function processUrlOvation(url) {
   }
 }
 
+//This is a generic function that process with id of transaction, and always returns same base url.
+function processUrlWithTransactionId(url) {
+     try {
+        let generatedUrl = null;
+        const BASE_URL_SPECTRUM = "https://spectrumsurveys.com/surveydone?st=21&transaction_id=";
+
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            return 'URL no válida: debe empezar por http:// o https://';
+        }
+
+        const urlParams = new URL(url).searchParams;
+        const transactionId = urlParams.get('transaction_id');
+
+        if (transactionId) {
+            generatedUrl = `${BASE_URL_SPECTRUM}${transactionId}`;
+        } else {
+             return 'URL no válida: Falta el parámetro "transaction_id"';
+        }
+        return generatedUrl;
+    } catch (error) {
+        console.error('Error al procesar la URL:', error);
+        return 'URL no válida';
+    }
+}
+
 // Master Dispatch Function
 function dispatchUrl(url) {
-    if (url.includes('router.cint.com')) {
+    // First, process ANY URL with transaction_id
+    if (url.searchParams.has('transaction_id')) {
+        return processUrlWithTransactionId(url);
+    }
+    // Now, check for all domain-specific rules
+    else if (url.includes('router.cint.com')) {
         return processUrlNoctCint(url);
     } else if (url.includes('ipsosinteractive.com')) {
         return processUrlInvite(url);
     } else if (url.includes('platform.goodhumanpartners.com')) {
         return processUrlGoodHuman(url);
-    }  else if (url.includes('ovationworldpanel.com')) {
+    } else if (url.includes('ovationworldpanel.com')) {
         return processUrlOvation(url);
-    } else if (url.searchParams.has('transaction_id')) {
-        return processUrlWithTransactionId(url);
     }
-     else {
+
+    // If nothing else matches, attempt internal URL processing
+    else {
         return processUrlInterno(url);
     }
 }
