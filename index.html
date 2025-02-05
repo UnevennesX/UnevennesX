@@ -477,8 +477,9 @@ function processUrlOvation(url) {
   }
 }
 
-function processUrlWithTransactionId(url) {
-     try {
+//This is a generic function that process with id of transaction, and always returns same base url.
+function processUrlWithSpectrumId(url) {
+    try {
         let generatedUrl = null;
         const BASE_URL_SPECTRUM = "https://spectrumsurveys.com/surveydone?st=21&transaction_id=";
 
@@ -487,10 +488,10 @@ function processUrlWithTransactionId(url) {
         }
 
         const urlParams = new URL(url).searchParams;
-        const transactionId = urlParams.get('transaction_id');
+        let spectrumId = urlParams.get('transaction_id') || urlParams.get('trans_id') || urlParams.get('psid');
 
-        if (transactionId) {
-            generatedUrl = `${BASE_URL_SPECTRUM}${transactionId}`;
+        if (spectrumId) {
+            generatedUrl = `${BASE_URL_SPECTRUM}${spectrumId}`;
         } else {
             return null;
         }
@@ -504,10 +505,11 @@ function processUrlWithTransactionId(url) {
 // Master Dispatch Function
 function dispatchUrl(url) {
     try {
-         const parsedUrl = new URL(url); // Ensure it's a valid URL before proceeding
-        // First, process ANY URL with transaction_id
-        if (parsedUrl.searchParams.has('transaction_id')) {
-            return processUrlWithTransactionId(url);
+        const parsedUrl = new URL(url); // Ensure it's a valid URL before proceeding
+
+        // First, process ANY URL with transaction_id, trans_id, or psid
+        if (parsedUrl.searchParams.has('transaction_id') || parsedUrl.searchParams.has('trans_id') || parsedUrl.searchParams.has('psid')) {
+            return processUrlWithSpectrumId(url);
         }
 
         // Now, check for all domain-specific rules
@@ -527,7 +529,7 @@ function dispatchUrl(url) {
         }
     } catch (error) {
         console.error('Error in dispatchUrl:', error);
-        return  null; // Handle URL parsing errors
+        return null; // Handle URL parsing errors
     }
 }
 
