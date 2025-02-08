@@ -3,10 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width-width, initial-scale=1.0">
     <title>Herramienta URL</title>
     <link rel="icon" type="image/png"
-        href="https://cdn.dribbble.com/users/7549673/screenshots/17206704/media/1210a9d0ec8af427967e735935861eeb.png?resize=400x300&vertical=center" />
+        href="https://cdn.dribbble.com/users/7549673/screenshots/17206704/media/1210a9d0ec8af427967eeb.png?resize=400x300&vertical=center" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -102,6 +102,7 @@
             font-size: 16px;
             font-weight: 500;
             transition: background-color 0.3s ease;
+            margin: 5px;
         }
 
         button:hover {
@@ -145,6 +146,13 @@
             font-weight: 500;
             border-radius: var(--border-radius);
             text-align: center;
+            position: fixed;
+            /* Fixed position for centering */
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            /* Ensure it's on top */
         }
 
         .allowed-domains {
@@ -210,26 +218,10 @@
             }
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            input[type="text"],
-            button,
-            p,
-            .allowed-domains {
-                font-size: 14px;
-            }
-
-            .allowed-domains h3 {
-                font-size: 1.2rem;
-            }
+        /* Style for active/enabled buttons */
+        .active {
+            background-color: var(--accent-color);
+            color: var(--btn-color);
         }
     </style>
 </head>
@@ -242,13 +234,19 @@
             <label for="urlInput">Paste your link here: </label>
             <input type="text" id="urlInput" name="url" required
                 placeholder="Ej. https://welcome.walr/..." autocomplete="off">
+
+            <div>
+                <button type="button" id="enableSpectrumButton">Enable Spectrum</button>
+                <button type="button" id="enableRdSecuredButton">Enable Rd.Secured</button>
+            </div>
+
             <button type="submit">Generate Link</button>
         </form>
 
         <h2 id="generatedTitle" class="hidden">Generated Link:</h2>
         <p id="generatedUrl" class="hidden"></p>
         <p id="notification" class="notification hidden">URL copied to clipboard!</p>
-        <p id="error" class="error hidden">Only valid URLs are allowed!</p>
+        <p id="error" class="error hidden"></p>
 
         <div class="allowed-domains">
             <h3 onclick="toggleList()">
@@ -273,6 +271,9 @@
     </div>
 
     <script>
+        let spectrumEnabled = false; // Spectrum *not* enabled by default
+        let rdSecuredEnabled = false;
+
         function toggleList() {
             const container = document.querySelector('.allowed-domains');
             const toggleText = document.getElementById('toggleText');
@@ -291,332 +292,364 @@
                 alert('Error al copiar al portapapeles');
             });
         }
-    </script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    <script>
-// Utility Functions
-function toggleList() {
-    const container = document.querySelector('.allowed-domains');
-    const toggleText = document.getElementById('toggleText');
-    container.classList.toggle('open');
-    toggleText.textContent = container.classList.contains('open') ? '' : '';
-}
-
-// Function to copy text to clipboard and show notification
-function copyToClipboard(url) {
-    navigator.clipboard.writeText(url).then(() => {
-        let notification = document.getElementById('notification');
-        notification.classList.remove('hidden');
-        setTimeout(() => {
-            notification.classList.add('hidden');
-        }, 3000);
-    }).catch(() => {
-        alert('Error al copiar al portapapeles');
-    });
-}
-
-// Core URL Processing Functions
-function processUrlNoctCint(url) {
-    try {
-        let domain = new URL(url).hostname;
-        let arid = new URL(url).pathname.split('/')[2];
-        let rid = new URL(url).searchParams.get('RID');
-        let generatedUrl = '';
-
-        if (domain.includes('router.cint.com')) {
-            let token = '0749a007-a1d3-48c1-8ff3-12960c555867';
-            generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}&cint_arid=${arid}`;
-        } else {
-            return null;
-        }
-        return generatedUrl;
-
-    } catch (e) {
-        console.error('Error en processUrlNoctCint:', e);
-        return null;
-    }
-}
-
-function processUrlInvite(url) {
-    try {
-        let domain = new URL(url).hostname;
-        let generatedUrl = '';
-
-        if (domain.includes('ipsosinteractive.com')) {
-            let proj = new URL(url).searchParams.get('id');
-            let param = new URL(url).searchParams.get('param1');
-            generatedUrl = `https://redirect.mindsharesurveys.com/v1/M7FMAqNSgNBiTKRoDbiNJ4YiXPN2cBin?proj=${param}&id=${proj}&status=1`;
-        } else {
-            return null; // Not a valid URL for this processor
+        // Utility Functions
+        function toggleList() {
+            const container = document.querySelector('.allowed-domains');
+            const toggleText = document.getElementById('toggleText');
+            container.classList.toggle('open');
+            toggleText.textContent = container.classList.contains('open') ? '' : '';
         }
 
-        return generatedUrl;
-    } catch (e) {
-        console.error('Error en processUrlInvite:', e);
-        return null;
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Función para procesar URLs internas
-function processUrlInterno(url) {
-    try {
-        let generatedUrl = null;
-        const BASE_URL_TSSR = "https://tssrvy.com/r/?st=1&tsid=";
-        const BASE_URL_RDSECURED = "https://www.rdsecured.com/return?inbound_code=1000&rdud=";
-
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-            return 'URL no válida: debe empezar por http:// o https://';
+        // Function to copy text to clipboard and show notification
+        function copyToClipboard(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                let notification = document.getElementById('notification');
+                notification.classList.remove('hidden');
+                setTimeout(() => {
+                    notification.classList.add('hidden');
+                }, 3000);
+            }).catch(() => {
+                alert('Error al copiar al portapapeles');
+            });
         }
 
+        // Core URL Processing Functions
+        function processUrlNoctCint(url) {
+            try {
+                let domain = new URL(url).hostname;
+                let arid = new URL(url).pathname.split('/')[2];
+                let rid = new URL(url).searchParams.get('RID');
+                let generatedUrl = '';
 
-        if (url.includes('tsid=')) {
-            const regex = /tsid=([a-f0-9]{32})/;
-            const match = url.match(regex);
-            if (match) {
-                const tsid = match[1];
-                generatedUrl = `${BASE_URL_TSSR}${tsid}`;
-            }
-        } else {
-            const urlParams = new URL(url).searchParams;
-            const s2 = urlParams.get('s2');
-            const rrid = urlParams.get('rrid');
-            const rid = urlParams.get('rid');
-            const rd_proj_ud = urlParams.get('rd_proj_ud');
-            const rdud = urlParams.get('rdud');
+                if (domain.includes('router.cint.com')) {
+                    let token = '0749a007-a1d3-48c1-8ff3-12960c555867';
+                    generatedUrl = `https://notch.insights.supply/cb?token=${token}&RID=${rid}&cint_arid=${arid}`;
+                } else {
+                    return null;
+                }
+                return generatedUrl;
 
-             if (!rd_proj_ud) {
-                return 'URL no válida: Falta el parámetro rd_proj_ud';
-             }
-           
-            if (s2 && rdud && rid) {
-                generatedUrl = `${BASE_URL_RDSECURED}${rdud}&rd_proj_ud=${rd_proj_ud}`;
-            } else if (s2) {
-                generatedUrl = `${BASE_URL_RDSECURED}${s2}&rd_proj_ud=${rd_proj_ud}`;
-             } else if (rdud) {
-                generatedUrl = `${BASE_URL_RDSECURED}${rdud}&rd_proj_ud=${rd_proj_ud}`;
-             } else if (rid) {
-                generatedUrl = `${BASE_URL_RDSECURED}${rid}&rd_proj_ud=${rd_proj_ud}`;
-            }
-        }
-
-        if (!generatedUrl) {
-            return 'URL no válida';
-        }
-
-        return generatedUrl;
-    } catch (error) {
-        console.error('Error al procesar la URL:', error);
-        return 'URL no válida';
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-function processUrlGoodHuman(url) {
-    try {
-        let generatedUrl = null;
-        const BASE_URL_SPECTRUM = "https://spectrumsurveys.com/surveydone?st=21&transaction_id=";
-
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-            return null;
-        }
-        if (url.includes('platform.goodhumanpartners.com')) {
-            const urlParams = new URL(url).searchParams;
-            const idValue = urlParams.get('id');
-
-            if (idValue) {
-                generatedUrl = `${BASE_URL_SPECTRUM}${idValue}`;
-            } else {
+            } catch (e) {
+                console.error('Error en processUrlNoctCint:', e);
                 return null;
             }
         }
-       if (!generatedUrl) {
-            return null;
-        }
 
-        return generatedUrl;
-    } catch (error) {
-        console.error('Error al procesar la URL:', error);
-        return null;
-    }
-}
+        function processUrlInvite(url) {
+            try {
+                let domain = new URL(url).hostname;
+                let generatedUrl = '';
 
-function processUrlOvation(url) {
-  try {
-    let domain = new URL(url).hostname;
-    let token = '04651664-4715-4620-8f59-16a272ff3e4a'; // Token de Notch
-    let pid1 = new URL(url).searchParams.get('pid1');
-    let refid1 = new URL(url).searchParams.get('refid1');
-    let rid = new URL(url).searchParams.get('rid');
-    let generatedUrl = '';
+                if (domain.includes('ipsosinteractive.com')) {
+                    let proj = new URL(url).searchParams.get('id');
+                    let param = new URL(url).searchParams.get('param1');
+                    generatedUrl = `https://redirect.mindsharesurveys.com/v1/M7FMAqNSgNBiTKRoDbiNJ4YiXPN2cBin?proj=${param}&id=${proj}&status=1`;
+                } else {
+                    return null; // Not a valid URL for this processor
+                }
 
-    if (domain.includes('ovationworldpanel.com')) {
-      // Se genera la nueva URL con los parámetros obtenidos
-      generatedUrl = `https://notch.insights.supply/cb?token=${token}&pid1=${pid1}&refid1=${refid1}&rid=${rid}`;
-    } else {
-        return null;
-    }
-    return generatedUrl;
-  } catch (e) {
-    console.error('Error al procesar la URL:', e);
-    return null;
-  }
-}
-
-//This is a generic function that process with spectrum id, and always returns same base url.
-function processUrlWithSpectrumId(url) {
-    try {
-        let generatedUrl = null;
-        const BASE_URL_SPECTRUM = "https://spectrumsurveys.com/surveydone?st=21&transaction_id=";
-
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-            return null;
-        }
-
-        let spectrumId;
-        const urlParams = new URL(url).searchParams;
-        spectrumId = urlParams.get('transaction_id') || urlParams.get('trans_id') || urlParams.get('psid') || urlParams.get('id');
-
-        if (!spectrumId) {
-            //If not present, try to match by a 20-character alphanumeric code pattern that repeats
-            const regex = /([A-Za-z0-9]{20,})/;
-            const match = url.match(regex);
-
-            if (match && match[1]) {
-                spectrumId = match[1];
+                return generatedUrl;
+            } catch (e) {
+                console.error('Error en processUrlInvite:', e);
+                return null;
             }
         }
 
-       if (spectrumId && /[A-Za-z0-9]{20}/.test(spectrumId)) { //Validate codeLength
-            generatedUrl = `${BASE_URL_SPECTRUM}${spectrumId}`;
-        } else {
-          return null; //Is not a valid ID
+    // Función para procesar URLs internas (solo TSID)
+        function processUrlInterno(url) {
+            try {
+                let generatedUrl = null;
+                const BASE_URL_TSSR = "https://tssrvy.com/r/?st=1&tsid=";
+
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    return null; // Not a valid URL for this processor
+                }
+
+                if (url.includes('tsid=')) {
+                    const regex = /tsid=([a-f0-9]{32})/;
+                    const match = url.match(regex);
+                    if (match) {
+                        const tsid = match[1];
+                        generatedUrl = `${BASE_URL_TSSR}${tsid}`;
+                    } else {
+                       return null;  // Not a valid URL for this processor
+                    }
+                } else {
+                    return null; // Indicate that Rd.Secured processing should NOT occur here
+                }
+
+                if (!generatedUrl) {
+                    return null; // Indicate that Rd.Secured processing should NOT occur here
+                }
+
+                return generatedUrl;
+            } catch (error) {
+                console.error('Error al procesar la URL:', error);
+                return null; // Indicate that Rd.Secured processing should NOT occur here
+            }
         }
 
-        return generatedUrl;
-    } catch (error) {
-        console.error('Error al procesar la URL:', error);
-        return null;
-    }
-}
+        function processUrlGoodHuman(url) {
+            try {
+                let generatedUrl = null;
+                const BASE_URL_SPECTRUM = "https://spectrumsurveys.com/surveydone?st=21&transaction_id=";
 
-// Master Dispatch Function
-function dispatchUrl(url) {
-    try {
-        const parsedUrl = new URL(url); // Ensure it's a valid URL before proceeding
-        let spectrumId;
-        const urlParams = new URL(url).searchParams;
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    return null;
+                }
+                if (url.includes('platform.goodhumanpartners.com')) {
+                    const urlParams = new URL(url).searchParams;
+                    const idValue = urlParams.get('id');
 
-        // Process ANY URL with transaction_id, trans_id, psid OR a raw 20+ character code
-        if (parsedUrl.searchParams.has('transaction_id') || parsedUrl.searchParams.has('trans_id') || parsedUrl.searchParams.has('psid') || parsedUrl.searchParams.has('id')) {
-            return processUrlWithSpectrumId(url);
+                    if (idValue) {
+                        generatedUrl = `${BASE_URL_SPECTRUM}${idValue}`;
+                    } else {
+                        return null;
+                    }
+                }
+               if (!generatedUrl) {
+                    return null;
+                }
+
+                return generatedUrl;
+            } catch (error) {
+                console.error('Error al procesar la URL:', error);
+                return null;
+            }
         }
 
-        const regex = /([A-Za-z0-9]{20,})/;
-        const match = url.match(regex);
-        if (match && match[1] && /[A-Za-z0-9]{20}/.test(match[1])) {
-            //This validator ensures that returns the correct message
-            let generatedUrl = processUrlWithSpectrumId(url);
-            return (generatedUrl) ?? 'URL no válida: Agregue un id valido a variable en el link.';
+        function processUrlOvation(url) {
+          try {
+            let domain = new URL(url).hostname;
+            let token = '04651664-4715-4620-8f59-16a272ff3e4a'; // Token de Notch
+            let pid1 = new URL(url).searchParams.get('pid1');
+            let refid1 = new URL(url).searchParams.get('refid1');
+            let rid = new URL(url).searchParams.get('rid');
+            let generatedUrl = '';
+
+            if (domain.includes('ovationworldpanel.com')) {
+              // Se genera la nueva URL con los parámetros obtenidos
+              generatedUrl = `https://notch.insights.supply/cb?token=${token}&pid1=${pid1}&refid1=${refid1}&rid=${rid}`;
+            } else {
+                return null;
+            }
+            return generatedUrl;
+          } catch (e) {
+            console.error('Error al procesar la URL:', e);
+            return null;
+          }
         }
-        // Now, check for all domain-specific rules
-        if (url.includes('router.cint.com')) {
-            return processUrlNoctCint(url);
-        } else if (url.includes('ipsosinteractive.com')) {
-            return processUrlInvite(url);
-        } else if (url.includes('platform.goodhumanpartners.com')) {
-            return processUrlGoodHuman(url);
-        } else if (url.includes('ovationworldpanel.com')) {
-            return processUrlOvation(url);
+
+        function processUrlWithSpectrumId(url) {
+            try {
+                let generatedUrl = null;
+                const BASE_URL_SPECTRUM = "https://spectrumsurveys.com/surveydone?st=21&transaction_id=";
+
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    return null;
+                }
+
+                let spectrumId;
+                const urlParams = new URL(url).searchParams;
+                spectrumId = urlParams.get('transaction_id') || urlParams.get('trans_id') || urlParams.get('psid') || urlParams.get('id');
+
+                if (!spectrumId) {
+                    //If not present, try to match by a 20-character alphanumeric code pattern that repeats
+                    const regex = /([A-Za-z0-9]{20,})/;
+                    const match = url.match(regex);
+
+                    if (match && match[1]) {
+                        spectrumId = match[1];
+                    }
+                }
+
+                if (spectrumId && /[A-Za-z0-9]{20}/.test(spectrumId)) { //Validate codeLength
+                    generatedUrl = `${BASE_URL_SPECTRUM}${spectrumId}`;
+                } else {
+                    return null; //Is not a valid ID
+                }
+
+                return generatedUrl;
+            } catch (error) {
+                console.error('Error al procesar la URL:', error);
+                return null;
+            }
         }
 
-        // If nothing else matches, attempt internal URL processing
-        else {
-            return processUrlInterno(url);
+        function processUrlRdSecured(url) {
+            try {
+                const BASE_URL_RDSECURED = "https://www.rdsecured.com/return?inbound_code=1000&rdud=";
+                let generatedUrl = null;
+
+                const urlParams = new URL(url).searchParams;
+                const s2 = urlParams.get('s2');
+                const rrid = urlParams.get('rrid');
+                const rid = urlParams.get('rid');
+                const rd_proj_ud = urlParams.get('rd_proj_ud');
+                const rdud = urlParams.get('rdud');
+
+                if (!rd_proj_ud) {
+                    return null;
+                }
+
+                if (s2 && rdud && rid) {
+                    generatedUrl = `${BASE_URL_RDSECURED}${rdud}&rd_proj_ud=${rd_proj_ud}`;
+                } else if (s2) {
+                    generatedUrl = `${BASE_URL_RDSECURED}${s2}&rd_proj_ud=${rd_proj_ud}`;
+                } else if (rdud) {
+                    generatedUrl = `${BASE_URL_RDSECURED}${rdud}&rd_proj_ud=${rd_proj_ud}`;
+                } else if (rid) {
+                    generatedUrl = `${BASE_URL_RDSECURED}${rid}&rd_proj_ud=${rd_proj_ud}`;
+                }
+
+                if (generatedUrl) {
+                    return generatedUrl;
+                } else {
+                    return null;
+                }
+
+
+            } catch (e) {
+                console.error("Error processing Rd.Secured URL:", e);
+                return null;
+            }
         }
-    } catch (error) {
-        console.error('Error in dispatchUrl:', error);
-        return "URL no válida: Ingrese un link correcto."; // Handle URL parsing errors
-    }
-}
 
-// Event Listener and Result Display
-document.getElementById('urlForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    const urlInput = document.getElementById('urlInput');
-    const result = dispatchUrl(urlInput.value);
+        // Master Dispatch Function
+       function dispatchUrl(url) {
+          // Check if the URL input is empty
+          if (!url.trim()) {
+              return Promise.reject("URL no válida: Ingrese un link correcto."); // Reject with error message
+          }
 
-    const generatedUrlElement = document.getElementById('generatedUrl');
-    const generatedTitleElement = document.getElementById('generatedTitle');
-    const errorElement = document.getElementById('error');
+          return new Promise((resolve, reject) => {
+              try {
+                  const parsedUrl = new URL(url); // Ensure it's a valid URL
 
-    if (result && typeof result === 'string') {
-        generatedTitleElement.classList.remove('hidden');
-        generatedUrlElement.classList.remove('hidden');
-        generatedUrlElement.innerText = result;
-        errorElement.classList.add('hidden');
-        copyToClipboard(result); // Auto-copy
-    } else {
-        generatedTitleElement.classList.add('hidden');
-        generatedUrlElement.classList.add('hidden');
-        errorElement.classList.remove('hidden');
-        errorElement.innerText = 'URL no válida'; // Provide default error message
-    }
-});
-        
+                  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                      throw new Error('URL no válida: Debe comenzar con http:// o https://');
+                  }
+
+                  let spectrumResult = null;
+                  let rdSecuredResult = null;
+
+                  // First, process with Spectrum and Rd.Secured IFF enabled
+                  if (spectrumEnabled) {
+                      spectrumResult = processUrlWithSpectrumId(url);
+                      if (spectrumResult) return resolve(spectrumResult); // Resolve if Spectrum processing was successful
+                  }
+
+                  if (rdSecuredEnabled) {
+                      rdSecuredResult = processUrlRdSecured(url);
+                      if (rdSecuredResult) return resolve(rdSecuredResult); // Resolve if Rd.Secured processing was successful
+                  }
+
+                  // If Spectrum or Rd.Secured didn't match or weren't enabled, proceed with other processors
+                  let finalResult = null;  // Store the final result
+                  if (url.includes('router.cint.com')) {
+                      finalResult = processUrlNoctCint(url);
+                  } else if (url.includes('ipsosinteractive.com')) {
+                      finalResult = processUrlInvite(url);
+                  } else if (url.includes('platform.goodhumanpartners.com')) {
+                      finalResult = processUrlGoodHuman(url);
+                  } else if (url.includes('ovationworldpanel.com')) {
+                      finalResult = processUrlOvation(url);
+                  }
+                  if (finalResult) return resolve(finalResult);
+
+                  // If nothing matches, check if there was a Spectrum or Rd.Secured attempt, and throw specific error
+                  if (spectrumEnabled && !spectrumResult) {
+                      throw new Error('URL no válida para Spectrum');
+                  } else if (rdSecuredEnabled && !rdSecuredResult) {
+                      throw new Error('URL no válida para Rd.Secured');
+                  } else {
+                      throw new Error('URL no válida'); // Generic error if nothing worked.
+                  }
+
+              } catch (error) {
+                  console.error('Error in dispatchUrl:', error);
+                  return reject(error.message); // Reject promise with error message
+              }
+          });
+      }
+
+        function displayErrorMessage(message) {
+            const errorElement = document.getElementById('error');
+            errorElement.innerText = message;
+            errorElement.classList.remove('hidden');
+
+            // Automatically hide the message after a few seconds (e.g., 5 seconds)
+            setTimeout(() => {
+                errorElement.classList.add('hidden');
+                errorElement.innerText = '';
+            }, 5000); // 5000 milliseconds = 5 seconds
+        }
+
+        // Event Listener and Result Display
+        document.getElementById('urlForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const urlInput = document.getElementById('urlInput');
+
+            dispatchUrl(urlInput.value)
+                .then(result => {
+                    const generatedUrlElement = document.getElementById('generatedUrl');
+                    const generatedTitleElement = document.getElementById('generatedTitle');
+                    const errorElement = document.getElementById('error');
+
+                    generatedTitleElement.classList.add('hidden');  // Hide every time
+                    generatedUrlElement.classList.add('hidden');
+                    errorElement.classList.add('hidden');
+
+                    if (result && typeof result === 'string') {  // Successful result
+                        generatedTitleElement.classList.remove('hidden');
+                        generatedUrlElement.classList.remove('hidden');
+                        generatedUrlElement.innerText = result;
+                        copyToClipboard(result); // Auto-copy
+                    }
+                })
+                .catch(error => {
+                   console.error('Error en la solicitud:', error);
+                    displayErrorMessage(error); // Show error message
+                });
+        });
+
+       // Enable Spectrum Button
+        document.getElementById('enableSpectrumButton').addEventListener('click', function() {
+            if (rdSecuredEnabled) {
+                rdSecuredEnabled = false;
+                document.getElementById('enableRdSecuredButton').classList.remove('active');
+            }
+            spectrumEnabled = !spectrumEnabled;
+            this.classList.toggle('active'); // Toggle 'active' class for styling
+
+              // If Spectrum is now disabled, remove the active class
+            if (!spectrumEnabled) {
+                this.classList.remove('active');
+            }
+        });
+
+        // Enable Rd.Secured Button
+        document.getElementById('enableRdSecuredButton').addEventListener('click', function() {
+            if (spectrumEnabled) {
+                spectrumEnabled = false;
+                document.getElementById('enableSpectrumButton').classList.remove('active');
+                 // If Spectrum is now disabled, remove the active class
+            }
+            rdSecuredEnabled = !rdSecuredEnabled;
+            this.classList.toggle('active'); // Toggle 'active' class for styling
+
+             // If Rd.Secured is now disabled, remove the active class
+            if (!rdSecuredEnabled) {
+                this.classList.remove('active');
+            }
+        });
+
+         // Initially enable Spectrum
+        document.addEventListener('DOMContentLoaded', function() {
+            spectrumEnabled = false;
+            document.getElementById('enableSpectrumButton').classList.remove('active');
+        });
     </script>
 
 </body>
