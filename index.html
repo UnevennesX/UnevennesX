@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width-width, initial-scale=1.0">
+    <meta name="viewport" content="width=width, initial-scale=1.0">
     <title>Herramienta URL</title>
     <link rel="icon" type="image/png"
         href="https://cdn.dribbble.com/users/7549673/screenshots/17206704/media/1210a9d0ec8af427967e735935861eeb.png?resize=400x300&vertical=center" />
@@ -226,10 +226,6 @@
             <input type="text" id="urlInput" name="url" required
                 placeholder="Ej. https://welcome.walr/..." autocomplete="off">
 
-            <div>
-                <button type="button" id="enableSpectrumButton">Spectrum</button>
-            </div>
-
             <button type="submit">Generate Link</button>
         </form>
 
@@ -250,18 +246,12 @@
                     <li class="extra">Samplicious > surveys.ovationworldpanel.com 👌</li>
                     <li>redirect > ipsosinteractive.com 👌</li>
                     <li>Samplicious > Cint 👌</li>
-                    <li>Spectrum > Corto 👌<li>
-
-
                     <li class="extra"></li>
             </ul>
         </div>
     </div>
 
     <script>
-        let spectrumEnabled = false; // Spectrum *not* enabled by default
-
-
         function toggleList() {
             const container = document.querySelector('.allowed-domains');
             const toggleText = document.getElementById('toggleText');
@@ -392,41 +382,6 @@
             }
         }
 
-        function processUrlWithSpectrumId(url) {
-            try {
-                let generatedUrl = null;
-                const BASE_URL_SPECTRUM = "https://spectrumsurveys.com/surveydone?st=21&transaction_id=";
-
-                if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                    return null;
-                }
-
-                let spectrumId;
-                const urlParams = new URL(url).searchParams;
-                spectrumId = urlParams.get('transaction_id') || urlParams.get('trans_id') || urlParams.get('psid') || urlParams.get('id');
-
-                if (!spectrumId) {
-                    const regex = /([A-Za-z0-9]{20,})/;
-                    const match = url.match(regex);
-
-                    if (match && match[1]) {
-                        spectrumId = match[1];
-                    }
-                }
-
-                if (spectrumId && /[A-Za-z0-9]{20}/.test(spectrumId)) {
-                    generatedUrl = `${BASE_URL_SPECTRUM}${spectrumId}`;
-                } else {
-                    return null; // No es un ID válido
-                }
-
-                return generatedUrl;
-            } catch (error) {
-                console.error('Error al procesar la URL:', error);
-                return null;
-            }
-        }
-
         function dispatchUrl(url) {
             if (!url.trim()) {
                 return Promise.reject("URL no válida: Ingrese un link correcto.");
@@ -440,15 +395,6 @@
                         throw new Error('URL no válida: Debe comenzar con http:// o https://');
                     }
 
-                    let spectrumResult = null;
-
-
-                    if (spectrumEnabled) {
-                        spectrumResult = processUrlWithSpectrumId(url);
-                        if (spectrumResult) return resolve(spectrumResult);
-                    }
-
-
                     let finalResult = null;
                     if (url.includes('router.cint.com')) {
                         finalResult = processUrlNoctCint(url);
@@ -461,12 +407,7 @@
                     }
                     if (finalResult) return resolve(finalResult);
 
-
-                    if (spectrumEnabled && !spectrumResult) {
-                        throw new Error('URL no válida para Spectrum');
-                    } else {
-                        throw new Error('URL no válida'); // Error genérico si nada funcionó.
-                    }
+                    throw new Error('URL no válida'); // Error genérico si nada funcionó.
 
                 } catch (error) {
                     console.error('Error in dispatchUrl:', error);
@@ -512,21 +453,6 @@
                     console.error('Error en la solicitud:', error);
                     displayErrorMessage(error); // Muestra el mensaje de error
                 });
-        });
-
-        document.getElementById('enableSpectrumButton').addEventListener('click', function () {
-
-            spectrumEnabled = !spectrumEnabled;
-            this.classList.toggle('active');
-
-            if (!spectrumEnabled) {
-                this.classList.remove('active');
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', function () {
-            spectrumEnabled = false;
-            document.getElementById('enableSpectrumButton').classList.remove('active');
         });
     </script>
 
